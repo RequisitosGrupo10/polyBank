@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -129,7 +129,7 @@ public class RegisterCompany {
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.setSeed(bytes);
         String salt = BCrypt.gensalt("$2b", 15, secureRandom);
-        client.setSalt(new String(bytes, Charset.forName("UTF-8")));
+        client.setSalt(new String(bytes, StandardCharsets.UTF_8));
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 15, secureRandom);
         client.setPassword(encoder.encode(client.getPassword()));
     }
