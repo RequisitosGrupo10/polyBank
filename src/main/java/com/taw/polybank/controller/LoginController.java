@@ -70,10 +70,8 @@ public class LoginController {
         AuthorizedAccountEntity authorizedAccount = new AuthorizedAccountEntity();
 
         authorizedAccount.setClientByClientId(new ClientEntity());
-        authorizedAccount.setClientId(authorizedAccount.getClientByClientId().getId());
 
         authorizedAccount.setBankAccountByBankAccountId(company.getBankAccountByBankAccountId());
-        authorizedAccount.setBankAccountId(company.getBankAccountByBankAccountId().getId());
 
         authorizedAccount.setBlocked((byte) 0); // active
         model.addAttribute("authorizedAccount", authorizedAccount);
@@ -100,6 +98,7 @@ public class LoginController {
         client.setCreationDate(Timestamp.from(Instant.now()));
         client.setAuthorizedAccountsById(List.of(authorizedAccount));
         client.setBankAccountsById(List.of(bankAccount));
+        client.setRequestsById(List.of(request));
         generatePassword(client);
 
         // filling up Authorized Account fields
@@ -121,7 +120,7 @@ public class LoginController {
         request.setBankAccountByBankAccountId(bankAccount);
         List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
         request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));
-
+        request.setClientByClientId(client);
         requestRepository.save(request);
         session.invalidate();
 

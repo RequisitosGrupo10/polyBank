@@ -15,8 +15,8 @@
 <h1>Add representative to ${company.name}</h1>
 
 <form:form method="post" modelAttribute="authorizedAccount" action="/saveNewCompany">
-    <form:hidden path="clientId"/>
-    <form:hidden path="bankAccountId"/>
+    <form:hidden path="clientByClientId.id"/>
+    <form:hidden path="bankAccountByBankAccountId.id"/>
 
     <form:label path="clientByClientId.dni">Representative's ID:</form:label>
     <form:input path="clientByClientId.dni" size="45" maxlength="45"/>

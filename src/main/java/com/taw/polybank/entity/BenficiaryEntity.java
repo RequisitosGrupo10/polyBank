@@ -3,26 +3,25 @@ package com.taw.polybank.entity;
 import jakarta.persistence.*;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Benficiary", schema = "polyBank", catalog = "")
 public class BenficiaryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
     @Basic
-    @Column(name = "badge")
+    @Column(name = "badge", nullable = false, length = 3)
     private String badge;
     @Basic
-    @Column(name = "IBAN")
+    @Column(name = "IBAN", nullable = false, length = 34)
     private String iban;
     @Basic
-    @Column(name = "swift")
+    @Column(name = "swift", nullable = false, length = 45)
     private String swift;
     @OneToMany(mappedBy = "benficiaryByBenficiaryId")
     private Collection<PaymentEntity> paymentsById;
@@ -71,13 +70,26 @@ public class BenficiaryEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         BenficiaryEntity that = (BenficiaryEntity) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(badge, that.badge) && Objects.equals(iban, that.iban) && Objects.equals(swift, that.swift);
+
+        if (id != that.id) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (badge != null ? !badge.equals(that.badge) : that.badge != null) return false;
+        if (iban != null ? !iban.equals(that.iban) : that.iban != null) return false;
+        if (swift != null ? !swift.equals(that.swift) : that.swift != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, badge, iban, swift);
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (badge != null ? badge.hashCode() : 0);
+        result = 31 * result + (iban != null ? iban.hashCode() : 0);
+        result = 31 * result + (swift != null ? swift.hashCode() : 0);
+        return result;
     }
 
     public Collection<PaymentEntity> getPaymentsById() {

@@ -2,17 +2,15 @@ package com.taw.polybank.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 @Entity
 @Table(name = "SuspiciousAccount", schema = "polyBank", catalog = "")
 public class SuspiciousAccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "IBAN")
+    @Column(name = "IBAN", nullable = false, length = 34)
     private String iban;
 
     public int getId() {
@@ -35,12 +33,19 @@ public class SuspiciousAccountEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         SuspiciousAccountEntity that = (SuspiciousAccountEntity) o;
-        return id == that.id && Objects.equals(iban, that.iban);
+
+        if (id != that.id) return false;
+        if (iban != null ? !iban.equals(that.iban) : that.iban != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, iban);
+        int result = id;
+        result = 31 * result + (iban != null ? iban.hashCode() : 0);
+        return result;
     }
 }

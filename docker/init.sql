@@ -62,8 +62,8 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`BankAccount` (
   CONSTRAINT `fk_BankAccount_Badge1`
     FOREIGN KEY (`Badge_id`)
     REFERENCES `polyBank`.`Badge` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -97,13 +97,13 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`CurrencyExchange` (
   CONSTRAINT `fk_CurrencyExchange_Badge1`
     FOREIGN KEY (`initialBadge_id`)
     REFERENCES `polyBank`.`Badge` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_CurrencyExchange_Badge2`
     FOREIGN KEY (`finalBadge_id`)
     REFERENCES `polyBank`.`Badge` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -120,8 +120,8 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Company` (
   CONSTRAINT `fk_Enterprise_BankAccount1`
     FOREIGN KEY (`BankAccount_id`)
     REFERENCES `polyBank`.`BankAccount` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -165,23 +165,23 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Transaction` (
   CONSTRAINT `fk_Transaction_BankAccount2`
     FOREIGN KEY (`BankAccount_id`)
     REFERENCES `polyBank`.`BankAccount` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Transaction_CurrencyExchange1`
     FOREIGN KEY (`CurrencyExchange_id`)
     REFERENCES `polyBank`.`CurrencyExchange` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Transaction_Payment1`
     FOREIGN KEY (`Payment_id`)
     REFERENCES `polyBank`.`Payment` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Transaction_Client1`
     FOREIGN KEY (`Client_id`)
     REFERENCES `polyBank`.`Client` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -222,18 +222,18 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Request` (
   CONSTRAINT `fk_Petition_BankAccount1`
     FOREIGN KEY (`BankAccount_id`)
     REFERENCES `polyBank`.`BankAccount` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Request_Client1`
     FOREIGN KEY (`Client_id`)
     REFERENCES `polyBank`.`Client` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Request_Employee1`
     FOREIGN KEY (`Employee_id`)
     REFERENCES `polyBank`.`Employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -261,13 +261,13 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Chat` (
   CONSTRAINT `fk_Chat_Client1`
     FOREIGN KEY (`Client_id`)
     REFERENCES `polyBank`.`Client` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Chat_Assistant1`
     FOREIGN KEY (`Assistant_id`)
     REFERENCES `polyBank`.`Employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -288,18 +288,18 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Message` (
   CONSTRAINT `fk_Message_Chat1`
     FOREIGN KEY (`Chat_id`)
     REFERENCES `polyBank`.`Chat` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Message_Employee1`
     FOREIGN KEY (`Employee_id`)
     REFERENCES `polyBank`.`Employee` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Message_Client1`
     FOREIGN KEY (`Client_id`)
     REFERENCES `polyBank`.`Client` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -307,25 +307,26 @@ ENGINE = InnoDB;
 -- Table `polyBank`.`AuthorizedAccount`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `polyBank`.`AuthorizedAccount` (
+  `AuthorizedAccount_id`INT NOT NULL AUTO_INCREMENT,
   `Client_id` INT NOT NULL,
   `BankAccount_id` INT NOT NULL,
   `blocked` TINYINT NOT NULL,
-  PRIMARY KEY (`Client_id`, `BankAccount_id`),
+  PRIMARY KEY (`AuthorizedAccount_id`),
   INDEX `fk_Client_has_BankAccount_BankAccount1_idx` (`BankAccount_id` ASC) VISIBLE,
   INDEX `fk_Client_has_BankAccount_Client1_idx` (`Client_id` ASC) VISIBLE,
   CONSTRAINT `fk_Client_has_BankAccount_Client1`
     FOREIGN KEY (`Client_id`)
     REFERENCES `polyBank`.`Client` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Client_has_BankAccount_BankAccount1`
     FOREIGN KEY (`BankAccount_id`)
     REFERENCES `polyBank`.`BankAccount` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
-
+Alter table `polyBank`.`AuthorizedAccount` ADD UNIQUE `unique_idx` (Client_id, BankAccount_id);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

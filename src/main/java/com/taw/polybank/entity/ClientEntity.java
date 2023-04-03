@@ -4,32 +4,31 @@ import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Client", schema = "polyBank", catalog = "")
 public class ClientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "DNI")
+    @Column(name = "DNI", nullable = false, length = 45)
     private String dni;
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
     @Basic
-    @Column(name = "password")
+    @Column(name = "password", nullable = false, length = 64)
     private String password;
     @Basic
-    @Column(name = "salt")
+    @Column(name = "salt", nullable = false, length = 32)
     private String salt;
     @Basic
-    @Column(name = "surname")
+    @Column(name = "surname", nullable = false, length = 45)
     private String surname;
     @Basic
-    @Column(name = "creationDate")
+    @Column(name = "creationDate", nullable = false)
     private Timestamp creationDate;
     @OneToMany(mappedBy = "clientByClientId")
     private Collection<AuthorizedAccountEntity> authorizedAccountsById;
@@ -104,13 +103,31 @@ public class ClientEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ClientEntity client = (ClientEntity) o;
-        return id == client.id && Objects.equals(dni, client.dni) && Objects.equals(name, client.name) && Objects.equals(password, client.password) && Objects.equals(salt, client.salt) && Objects.equals(surname, client.surname) && Objects.equals(creationDate, client.creationDate);
+
+        if (id != client.id) return false;
+        if (dni != null ? !dni.equals(client.dni) : client.dni != null) return false;
+        if (name != null ? !name.equals(client.name) : client.name != null) return false;
+        if (password != null ? !password.equals(client.password) : client.password != null) return false;
+        if (salt != null ? !salt.equals(client.salt) : client.salt != null) return false;
+        if (surname != null ? !surname.equals(client.surname) : client.surname != null) return false;
+        if (creationDate != null ? !creationDate.equals(client.creationDate) : client.creationDate != null)
+            return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dni, name, password, salt, surname, creationDate);
+        int result = id;
+        result = 31 * result + (dni != null ? dni.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (salt != null ? salt.hashCode() : 0);
+        result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        return result;
     }
 
     public Collection<AuthorizedAccountEntity> getAuthorizedAccountsById() {

@@ -3,29 +3,28 @@ package com.taw.polybank.entity;
 import jakarta.persistence.*;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Employee", schema = "polyBank", catalog = "")
 public class EmployeeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "DNI")
+    @Column(name = "DNI", nullable = false, length = 45)
     private String dni;
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
     @Basic
-    @Column(name = "password")
+    @Column(name = "password", nullable = false, length = 64)
     private String password;
     @Basic
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private Object type;
     @Basic
-    @Column(name = "salt")
+    @Column(name = "salt", nullable = true, length = 32)
     private String salt;
     @OneToMany(mappedBy = "employeeByAssistantId")
     private Collection<ChatEntity> chatsById;
@@ -86,13 +85,28 @@ public class EmployeeEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         EmployeeEntity that = (EmployeeEntity) o;
-        return id == that.id && Objects.equals(dni, that.dni) && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(type, that.type) && Objects.equals(salt, that.salt);
+
+        if (id != that.id) return false;
+        if (dni != null ? !dni.equals(that.dni) : that.dni != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (salt != null ? !salt.equals(that.salt) : that.salt != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dni, name, password, type, salt);
+        int result = id;
+        result = 31 * result + (dni != null ? dni.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (salt != null ? salt.hashCode() : 0);
+        return result;
     }
 
     public Collection<ChatEntity> getChatsById() {

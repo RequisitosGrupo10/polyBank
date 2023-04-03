@@ -3,17 +3,16 @@ package com.taw.polybank.entity;
 import jakarta.persistence.*;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Chat", schema = "polyBank", catalog = "")
 public class ChatEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "closed")
+    @Column(name = "closed", nullable = false)
     private byte closed;
     @ManyToOne
     @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
@@ -44,13 +43,20 @@ public class ChatEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ChatEntity that = (ChatEntity) o;
-        return id == that.id && closed == that.closed;
+
+        if (id != that.id) return false;
+        if (closed != that.closed) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, closed);
+        int result = id;
+        result = 31 * result + (int) closed;
+        return result;
     }
 
     public ClientEntity getClientByClientId() {

@@ -3,23 +3,22 @@ package com.taw.polybank.entity;
 import jakarta.persistence.*;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "BankAccount", schema = "polyBank", catalog = "")
 public class BankAccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "IBAN")
+    @Column(name = "IBAN", nullable = false, length = 34)
     private String iban;
     @Basic
-    @Column(name = "active")
+    @Column(name = "active", nullable = false)
     private byte active;
     @Basic
-    @Column(name = "balance")
+    @Column(name = "balance", nullable = false, precision = 0)
     private double balance;
     @OneToMany(mappedBy = "bankAccountByBankAccountId")
     private Collection<AuthorizedAccountEntity> authorizedAccountsById;
@@ -72,13 +71,27 @@ public class BankAccountEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         BankAccountEntity that = (BankAccountEntity) o;
-        return id == that.id && active == that.active && Double.compare(that.balance, balance) == 0 && Objects.equals(iban, that.iban);
+
+        if (id != that.id) return false;
+        if (active != that.active) return false;
+        if (Double.compare(that.balance, balance) != 0) return false;
+        if (iban != null ? !iban.equals(that.iban) : that.iban != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, iban, active, balance);
+        int result;
+        long temp;
+        result = id;
+        result = 31 * result + (iban != null ? iban.hashCode() : 0);
+        result = 31 * result + (int) active;
+        temp = Double.doubleToLongBits(balance);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 
     public Collection<AuthorizedAccountEntity> getAuthorizedAccountsById() {

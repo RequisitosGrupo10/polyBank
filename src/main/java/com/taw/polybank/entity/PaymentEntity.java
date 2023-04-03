@@ -3,17 +3,16 @@ package com.taw.polybank.entity;
 import jakarta.persistence.*;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Payment", schema = "polyBank", catalog = "")
 public class PaymentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false, precision = 0)
     private double amount;
     @ManyToOne
     @JoinColumn(name = "Benficiary_id", referencedColumnName = "id", nullable = false)
@@ -44,13 +43,23 @@ public class PaymentEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         PaymentEntity that = (PaymentEntity) o;
-        return id == that.id && Double.compare(that.amount, amount) == 0;
+
+        if (id != that.id) return false;
+        if (Double.compare(that.amount, amount) != 0) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, amount);
+        int result;
+        long temp;
+        result = id;
+        temp = Double.doubleToLongBits(amount);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 
     public BenficiaryEntity getBenficiaryByBenficiaryId() {

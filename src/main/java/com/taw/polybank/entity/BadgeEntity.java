@@ -3,20 +3,19 @@ package com.taw.polybank.entity;
 import jakarta.persistence.*;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Badge", schema = "polyBank", catalog = "")
 public class BadgeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private int id;
     @Basic
-    @Column(name = "value")
+    @Column(name = "value", nullable = false, precision = 0)
     private double value;
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 5)
     private String name;
     @OneToMany(mappedBy = "badgeByBadgeId")
     private Collection<BankAccountEntity> bankAccountsById;
@@ -53,13 +52,25 @@ public class BadgeEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         BadgeEntity that = (BadgeEntity) o;
-        return id == that.id && Double.compare(that.value, value) == 0 && Objects.equals(name, that.name);
+
+        if (id != that.id) return false;
+        if (Double.compare(that.value, value) != 0) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, value, name);
+        int result;
+        long temp;
+        result = id;
+        temp = Double.doubleToLongBits(value);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 
     public Collection<BankAccountEntity> getBankAccountsById() {
