@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Badge` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `value` FLOAT NOT NULL,
   `name` VARCHAR(5) NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `Unique_name` (`name`) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -350,44 +351,40 @@ insert into Employee (`name`, dni, `password`, `salt`, `type`) values ('Levon Iz
 insert into Employee (`name`, dni, `password`, `salt`, `type`) values ('Martguerita Strase', '40397815P','6hUdplam76Wd', '1234', 'assistant');
 insert into Employee (`name`, dni, `password`, `salt`, `type`) values ('Julissa Bernade', '40397815J','Si5yIaDK', '1234', 'manager');
 
-insert into Badge (`name`, `value`) values ('RUB', 2059.1);
 insert into Badge (`name`, `value`) values ('MXN', 6188.03);
+insert into Badge (`name`, `value`) values ('EUR', 681.98);
 insert into Badge (`name`, `value`) values ('DKK', 5774.94);
 insert into Badge (`name`, `value`) values ('IRR', 3800.86);
 insert into Badge (`name`, `value`) values ('XOF', 3465.79);
-insert into Badge (`name`, `value`) values ('EUR', 9125.59);
 insert into Badge (`name`, `value`) values ('IDR', 2122.9);
 insert into Badge (`name`, `value`) values ('TJS', 6756.73);
 insert into Badge (`name`, `value`) values ('USD', 7912.92);
-insert into Badge (`name`, `value`) values ('IDR', 9580.17);
 insert into Badge (`name`, `value`) values ('AFN', 2548.01);
 insert into Badge (`name`, `value`) values ('CLP', 9513.29);
 insert into Badge (`name`, `value`) values ('HNL', 6266.4);
-insert into Badge (`name`, `value`) values ('CNY', 9078.98);
+insert into Badge (`name`, `value`) values ('RUB', 2059.1);
 insert into Badge (`name`, `value`) values ('CAD', 7969.3);
 insert into Badge (`name`, `value`) values ('ETB', 9203.5);
 insert into Badge (`name`, `value`) values ('PEN', 1370.84);
 insert into Badge (`name`, `value`) values ('CNY', 2132.18);
-insert into Badge (`name`, `value`) values ('IDR', 4218.74);
-insert into Badge (`name`, `value`) values ('EUR', 681.98);
 
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('XQ52 3493 5842 02 6281016579', 1, 1033.41, 1, 9);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('LW85 5056 1367 71 5597786337', 0, 1889.7, 2, 8);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('RE73 8424 2517 02 2726764989', 1, 2898.91, 3, 7);
-insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('EQ53 2965 5873 76 8550831055', 1, 7580.68, 4, 20);
+insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('EQ53 2965 5873 76 8550831055', 1, 7580.68, 4, 11);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('BG33 6067 7579 09 0578769649', 1, 1372.65, 5, 3);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('PE91 2168 9016 54 7246606933', 1, 1928.13, 6, 1);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('OV47 5795 0107 81 3232382316', 0, 6088.84, 1, 6);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('MO64 8237 3988 86 2354670412', 1, 2004.76, 1, 3);
-insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('DU76 9522 8334 44 9282702541', 0, 4009.16, 7, 18);
-insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('US97 8983 9210 61 4292047390', 1, 7216.86, 5, 18);
-insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('AP89 8004 8050 89 2128300007', 1, 6501.55, 6, 20);
+insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('DU76 9522 8334 44 9282702541', 0, 4009.16, 7, 15);
+insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('US97 8983 9210 61 4292047390', 1, 7216.86, 5, 13);
+insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('AP89 8004 8050 89 2128300007', 1, 6501.55, 6, 12);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('XQ51 3580 7169 65 4884017513', 0, 9491.4, 7, 10);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('IW49 9245 0204 65 7939552987', 1, 2703.41, 6, 1);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('WA70 2433 2905 09 4866387675', 0, 8085.21, 10, 2);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('RH35 7727 2247 18 4691738863', 0, 8425.7, 8, 4);
 insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('CQ92 6746 6922 96 8680676979', 1, 38.62, 9, 5);
-insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('DK32 2212 8929 74 2121292462', 1, 4221.52, 10, 20);
+insert into BankAccount (IBAN, `active`, balance, client_id, Badge_id) values ('DK32 2212 8929 74 2121292462', 1, 4221.52, 10, 14);
 
 insert into SuspiciousAccount (IBAN) values ('RQ31 9139 4872 90 1035739992');
 insert into SuspiciousAccount (IBAN) values ('FW44 5895 9732 48 8786444400');
