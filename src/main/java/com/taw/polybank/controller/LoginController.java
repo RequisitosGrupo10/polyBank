@@ -44,6 +44,11 @@ public class LoginController {
     @Autowired
     protected EmployeeRepository employeeRepository;
 
+    @GetMapping("/")
+    public String doShowIndex(){
+        return "index";
+    }
+
     @GetMapping("/login")
     public String doLogin()
     {
@@ -124,7 +129,7 @@ public class LoginController {
         requestRepository.save(request);
         session.invalidate();
 
-        return "/";
+        return "redirect:/";
     }
 
     private void generatePassword(ClientEntity client) {
