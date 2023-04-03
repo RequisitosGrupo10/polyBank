@@ -28,6 +28,6 @@ To change this template use File | Settings | File Templates.
 <h1>Polybank</h1>
 <h2>Your trusted polygonal bank</h2>
 <a href="login">Sign-in</a>
-<a href="registerCompany">Create corporate account</a>
+<a href="/company/registerCompany">Create corporate account</a>
 </body>
 </html>

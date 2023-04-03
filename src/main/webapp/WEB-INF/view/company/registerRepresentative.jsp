@@ -14,7 +14,7 @@
 <body>
 <h1>Add representative to ${company.name}</h1>
 
-<form:form method="post" modelAttribute="authorizedAccount" action="/saveNewCompany">
+<form:form method="post" modelAttribute="authorizedAccount" action="/company/saveNewCompany">
     <form:hidden path="clientByClientId.id"/>
     <form:hidden path="bankAccountByBankAccountId.id"/>
 
