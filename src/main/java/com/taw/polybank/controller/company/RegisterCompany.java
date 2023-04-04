@@ -4,8 +4,6 @@ import com.taw.polybank.dao.*;
 import com.taw.polybank.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,7 +92,9 @@ public class RegisterCompany {
         client.setAuthorizedAccountsById(List.of(authorizedAccount));
         client.setBankAccountsById(List.of(bankAccount));
         client.setRequestsById(List.of(request));
-        generatePassword(client);
+
+        PasswordManager passwordManager = new PasswordManager();
+        passwordManager.savePassword(client);
 
         // filling up Authorized Account fields
         authorizedAccount.setBankAccountByBankAccountId(bankAccount);
@@ -120,17 +120,6 @@ public class RegisterCompany {
         session.invalidate();
 
         return "redirect:/";
-    }
-
-    private void generatePassword(ClientEntity client) {
-        byte[] bytes = new byte[32];
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(bytes);
-        secureRandom.setSeed(bytes);
-        String salt = BCrypt.gensalt("$2b", 15, secureRandom);
-        client.setSalt(new String(bytes, StandardCharsets.ISO_8859_1));
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 15, secureRandom);
-        client.setPassword(encoder.encode(client.getPassword()));
     }
 
     private void updateBankAccount(CompanyEntity company) {

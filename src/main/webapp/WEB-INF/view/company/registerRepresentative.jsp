@@ -18,14 +18,14 @@
     <form:hidden path="clientByClientId.id"/>
     <form:hidden path="bankAccountByBankAccountId.id"/>
 
-    <form:label path="clientByClientId.dni">Representative's ID:</form:label>
-    <form:input path="clientByClientId.dni" size="45" maxlength="45"/>
-    <br/>
     <form:label path="clientByClientId.name">Representative's name:</form:label>
     <form:input path="clientByClientId.name" size="45" maxlength="45"/>
     <br/>
     <form:label path="clientByClientId.surname">Representative's surname:</form:label>
     <form:input path="clientByClientId.surname" size="45" maxlength="45"/>
+    <br/>
+    <form:label path="clientByClientId.dni">Representative's ID:</form:label>
+    <form:input path="clientByClientId.dni" size="45" maxlength="45"/>
     <br/>
     <form:label path="clientByClientId.password">Representative's password:</form:label>
     <form:password path="clientByClientId.password" size="20" maxlength="64"/>

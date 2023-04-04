@@ -37,7 +37,7 @@
     <label for="dni">ID: </label>
     <input type="text" id="dni" name="dni"><br>
     <label for="password">Password: </label>
-    <input type="password" id="password" name="password"><br>
+    <input type="password"  id="password" name="password"><br>
 
     <input class="prettyButton" type="button" value="I am client" name="save" onclick="asClient()" />    <%-- // Insert your link in the below <script> --%>
     <input class="prettyButton" type="button" value="I am Company Representative" name="finished" onclick="asRepresentative()" />
