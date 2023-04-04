@@ -28,7 +28,7 @@
     <form:input path="clientByClientId.surname" size="45" maxlength="45"/>
     <br/>
     <form:label path="clientByClientId.password">Representative's password:</form:label>
-    <form:input path="clientByClientId.password" size="20" maxlength="64"/>
+    <form:password path="clientByClientId.password" size="20" maxlength="64"/>
     <br/>
     <form:button name="Add representative">Add representative</form:button>
 

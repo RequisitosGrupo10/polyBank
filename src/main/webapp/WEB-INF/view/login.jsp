@@ -26,6 +26,13 @@
 <body>
 <h1>Insert your id and password:</h1>
 
+<c:if test="${error != null}">
+    <p style="color:red;">
+            ${error}
+    </p>
+</c:if>
+
+
 <form id="someForm" action="" method="POST">
     <label for="dni">ID: </label>
     <input type="text" id="dni" name="dni"><br>

@@ -124,12 +124,11 @@ public class RegisterCompany {
 
     private void generatePassword(ClientEntity client) {
         byte[] bytes = new byte[32];
-        Random random = new Random();
-        random.nextBytes(bytes);
         SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(bytes);
         secureRandom.setSeed(bytes);
         String salt = BCrypt.gensalt("$2b", 15, secureRandom);
-        client.setSalt(new String(bytes, StandardCharsets.UTF_8));
+        client.setSalt(new String(bytes, StandardCharsets.ISO_8859_1));
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 15, secureRandom);
         client.setPassword(encoder.encode(client.getPassword()));
     }
