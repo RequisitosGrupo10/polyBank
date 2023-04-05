@@ -14,21 +14,20 @@
 <body>
 <h1>Add representative to ${company.name}</h1>
 
-<form:form method="post" modelAttribute="authorizedAccount" action="/company/saveNewCompany">
-    <form:hidden path="clientByClientId.id"/>
-    <form:hidden path="bankAccountByBankAccountId.id"/>
+<form:form method="post" modelAttribute="client" action="/company/saveNewCompany">
+    <form:hidden path="id"/>
 
-    <form:label path="clientByClientId.name">Representative's name:</form:label>
-    <form:input path="clientByClientId.name" size="45" maxlength="45"/>
+    <form:label path="name">Representative's name:</form:label>
+    <form:input path="name" size="45" maxlength="45"/>
     <br/>
-    <form:label path="clientByClientId.surname">Representative's surname:</form:label>
-    <form:input path="clientByClientId.surname" size="45" maxlength="45"/>
+    <form:label path="surname">Representative's surname:</form:label>
+    <form:input path="surname" size="45" maxlength="45"/>
     <br/>
-    <form:label path="clientByClientId.dni">Representative's ID:</form:label>
-    <form:input path="clientByClientId.dni" size="45" maxlength="45"/>
+    <form:label path="dni">Representative's ID:</form:label>
+    <form:input path="dni" size="45" maxlength="45"/>
     <br/>
-    <form:label path="clientByClientId.password">Representative's password:</form:label>
-    <form:password path="clientByClientId.password" size="20" maxlength="64"/>
+    <form:label path="password">Representative's password:</form:label>
+    <form:password path="password" size="20" maxlength="64"/>
     <br/>
     <form:button name="Add representative">Add representative</form:button>
 
