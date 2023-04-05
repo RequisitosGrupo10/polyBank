@@ -12,6 +12,7 @@ To change this template use File | Settings | File Templates.
     <meta charset="UTF-8">
     <title>Polybank</title>
     <link rel="stylesheet" type="text/css" href="../../commonStyle.css">
+
 </head>
 <body>
 <h1>Polybank</h1>
