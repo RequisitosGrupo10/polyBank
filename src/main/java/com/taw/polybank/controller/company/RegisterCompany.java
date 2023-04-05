@@ -44,13 +44,14 @@ public class RegisterCompany {
     protected EmployeeRepository employeeRepository;
 
     @GetMapping("/registerCompany")
-    public String doRegister(Model model){
+    public String doRegister(Model model,
+                             HttpSession session){
         CompanyEntity company = new CompanyEntity();
         model.addAttribute("company", company);
 
         List<BadgeEntity> badgeList = badgeRepository.findAll();
         model.addAttribute("badgeList", badgeList);
-
+        session.setAttribute("owner", (boolean) true);
         return "/company/registerCompany";
     }
 
@@ -59,15 +60,16 @@ public class RegisterCompany {
                                                   Model model,
                                                   HttpSession session){
         updateBankAccount(company);
-
+        ClientEntity client = new ClientEntity();
+        boolean owner = (boolean) session.getAttribute("owner");
         AuthorizedAccountEntity authorizedAccount = new AuthorizedAccountEntity();
-
-        authorizedAccount.setClientByClientId(new ClientEntity());
-
-        authorizedAccount.setBankAccountByBankAccountId(company.getBankAccountByBankAccountId());
-
-        authorizedAccount.setBlocked((byte) 0); // active
+        if(!owner) {
+            authorizedAccount.setClientByClientId(client);
+            authorizedAccount.setBankAccountByBankAccountId(company.getBankAccountByBankAccountId());
+            authorizedAccount.setBlocked((byte) 0); // active
+        }
         model.addAttribute("authorizedAccount", authorizedAccount);
+        //session.setAttribute("client", client);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         session.setAttribute("company", company);
         return "/company/registerRepresentative";
@@ -77,19 +79,20 @@ public class RegisterCompany {
     public String doSaveNewCompany(@ModelAttribute("authorizedAccount") AuthorizedAccountEntity authorizedAccount,
                                    Model model,
                                    HttpSession session){
+        boolean owner = (boolean) session.getAttribute("owner");
         BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
         ClientEntity client = authorizedAccount.getClientByClientId();
         RequestEntity request = new RequestEntity();
 
+
         // filling up bank account fields
-        bankAccount.setAuthorizedAccountsById(List.of(authorizedAccount));
-        bankAccount.setClientByClientId(authorizedAccount.getClientByClientId());
+
+        bankAccount.setClientByClientId(client);
         bankAccount.setRequestsById(List.of(request));
 
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
-        client.setAuthorizedAccountsById(List.of(authorizedAccount));
         client.setBankAccountsById(List.of(bankAccount));
         client.setRequestsById(List.of(request));
 
@@ -97,13 +100,19 @@ public class RegisterCompany {
         passwordManager.savePassword(client);
 
         // filling up Authorized Account fields
-        authorizedAccount.setBankAccountByBankAccountId(bankAccount);
 
         // saving Entities
         clientRepository.save(client);
         bankAccountRepository.save(bankAccount);
         companyRepository.save(company);
-        authorizedAccountRepository.save(authorizedAccount);
+
+        if(!owner){
+            bankAccount.setAuthorizedAccountsById(List.of(authorizedAccount));
+            client.setAuthorizedAccountsById(List.of(authorizedAccount));
+            authorizedAccount.setBankAccountByBankAccountId(bankAccount);
+            authorizedAccountRepository.save(authorizedAccount);
+        }
+
 
         // TODO create ticket for accountant
 
