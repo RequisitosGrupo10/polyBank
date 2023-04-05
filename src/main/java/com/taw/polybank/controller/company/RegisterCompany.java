@@ -52,7 +52,7 @@ public class RegisterCompany {
 
 
     @PostMapping("/registerCompanyOwner")
-    public String doRegisterCompanyRepresentative(@ModelAttribute("company") CompanyEntity company,
+    public String doRegisterCompanyOwner(@ModelAttribute("company") CompanyEntity company,
                                                   Model model,
                                                   HttpSession session){
         updateBankAccount(company);
@@ -60,7 +60,7 @@ public class RegisterCompany {
         model.addAttribute("client", client);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         session.setAttribute("company", company);
-        return "/company/registerRepresentative";
+        return "/company/registerOwner";
     }
 
     @PostMapping("/saveNewCompany")
