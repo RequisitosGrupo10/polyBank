@@ -15,7 +15,7 @@
 
 <h1>Create your company account</h1>
 
-<form:form method="post" modelAttribute="company" action="/company/registerCompanyRepresentative">
+<form:form method="post" modelAttribute="company" action="/company/registerCompanyOwner">
     <form:hidden path="id"/>
     <form:hidden path="bankAccountByBankAccountId.id"/>
 

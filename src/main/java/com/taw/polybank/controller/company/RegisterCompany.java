@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -51,7 +49,7 @@ public class RegisterCompany {
         return "/company/registerCompany";
     }
 
-    @PostMapping("/registerCompanyRepresentative")
+    @PostMapping("/registerCompanyOwner")
     public String doRegisterCompanyRepresentative(@ModelAttribute("company") CompanyEntity company,
                                                   Model model,
                                                   HttpSession session){

@@ -14,23 +14,20 @@
 <html>
 <head>
     <title>Welcome ${client.name}</title>
-    <style>
-        .prettyButton {
-            margin-right: 1rem;
-            padding: 0.2rem;
-            width: fit-content;
-            height: 1.5rem;
-            border: solid 1px black;
-            border-radius: 5px;
-            background-color: #ecffa8;
-            text-decoration:none;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
 </head>
 <body>
 
-<h1>Welcome ${client.name} currently you representing ${company.name} </h1>
+<jsp:include page="corporateHeader.jsp" />
 
+<h2>Available actions:</h2>
+
+<a class="prettyButton" href="/company/addRepresentative">Add representative</a>
+<a class="prettyButton" href="/company/editMyData">Modify my data</a>
+<a class="prettyButton" href="/company/listAllRepresentatives">Show all representatives</a>
+<a class="prettyButton" href="/company/newTransfer">New Transfer</a>
+<a class="prettyButton" href="/company/moneyExchange">Exchange money</a>
+<a class="prettyButton" href="/company/operationHistory">Operation history</a>
 
 
 </body>

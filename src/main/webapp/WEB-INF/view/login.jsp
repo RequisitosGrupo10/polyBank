@@ -10,18 +10,7 @@
 <html>
 <head>
     <title>Polybank - Login</title>
-    <style>
-        .prettyButton {
-            margin-right: 1rem;
-            padding: 0.2rem;
-            width: fit-content;
-            height: 1.5rem;
-            border: solid 1px black;
-            border-radius: 5px;
-            background-color: #ecffa8;
-            text-decoration:none;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../../commonStyle.css">
 </head>
 <body>
 <h1>Insert your id and password:</h1>
