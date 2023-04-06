@@ -1,4 +1,4 @@
-<%@ page import="com.taw.polybank.entity.ClientEntity" %>
+<%@ page import="com.taw.polybank.controller.company.Client" %>
 <%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collection" %>

@@ -1,5 +1,6 @@
 <%@ page import="com.taw.polybank.entity.ClientEntity" %>
 <%@ page import="com.taw.polybank.entity.CompanyEntity" %>
+<%@ page import="com.taw.polybank.controller.company.Client" %>
 
 <%--
   Created by IntelliJ IDEA.
@@ -11,7 +12,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    ClientEntity client = (ClientEntity) session.getAttribute("client");
+    Client client = (Client) session.getAttribute("client");
     if(client == null){
 %>
 <jsp:forward page="../login.jsp"/>

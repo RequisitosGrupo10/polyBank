@@ -62,7 +62,12 @@ public class UserCompany {
                                   HttpSession session,
                                   Model model) {
         PasswordManager passwordManager = new PasswordManager();
-        passwordManager.resetPassword(client.getClient(), client.getPassword());
+        if(client.getIsNew()){
+            passwordManager.savePassword(client.getClient());
+        }else {
+            Client oldClient = (Client) session.getAttribute("client");
+            passwordManager.resetPassword(oldClient.getClient(), client.getPassword());
+        }
         updateUser(client, session, model);
         return "/company/userHomepage";
     }
@@ -99,7 +104,20 @@ public class UserCompany {
             authorizedAccountRepository.save(authorizedAccount);
             bankAccountRepository.save(bankAccount);
         } else {
-            clientRepository.save(client.getClient());
+            Client oldClient = (Client) session.getAttribute("client");
+            oldClient.setName(client.getName());
+            oldClient.setSurname(client.getSurname());
+            oldClient.setDni(client.getDni());
+            clientRepository.save(oldClient.getClient());
         }
     }
+
+    @GetMapping("/editMyData")
+    public String editMyData(HttpSession session,
+                             Model model){
+        Client client = (Client) session.getAttribute("client");
+        model.addAttribute("client", client);
+        return "/company/newRepresentative";
+    }
+
 }
