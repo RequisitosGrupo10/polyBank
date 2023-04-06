@@ -40,6 +40,9 @@ public class LoginCompany {
                     company = companyRepository.findCompanyRepresentedByClientUsingAuthAcc(client.getId());
                 }
                 session.setAttribute("company", company);
+                if(client.getAuthorizedAccountsById().size() >= 1 && client.getAuthorizedAccountsById().stream().reduce((a,b) -> a).orElse(null).getBlocked() == (byte) 1){
+                    return "redirect:/company/user/blockedUser";
+                }
                 return "redirect:/company/user/";
             }
         }
