@@ -30,6 +30,7 @@
 
 <a class="prettyButton" href="/company/user/addRepresentative">Add representative</a>
 <a class="prettyButton" href="/company/user/editMyData">Modify my data</a>
+<a class="prettyButton" href="/company/user/editCompanyData">Modify company data</a>
 <a class="prettyButton" href="/company/user/listAllRepresentatives">Show all representatives</a>
 <a class="prettyButton" href="/company/user/newTransfer">New Transfer</a>
 <a class="prettyButton" href="/company/user/moneyExchange">Exchange money</a>

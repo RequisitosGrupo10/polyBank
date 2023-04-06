@@ -3,6 +3,7 @@ package com.taw.polybank.controller.company;
 import com.taw.polybank.dao.AuthorizedAccountRepository;
 import com.taw.polybank.dao.BankAccountRepository;
 import com.taw.polybank.dao.ClientRepository;
+import com.taw.polybank.dao.CompanyRepository;
 import com.taw.polybank.entity.AuthorizedAccountEntity;
 import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.ClientEntity;
@@ -32,6 +33,9 @@ public class UserCompany {
 
     @Autowired
     protected BankAccountRepository bankAccountRepository;
+
+    @Autowired
+    protected CompanyRepository companyRepository;
 
     @GetMapping("/")
     public String showUserHomepage() {
@@ -118,6 +122,21 @@ public class UserCompany {
         Client client = (Client) session.getAttribute("client");
         model.addAttribute("client", client);
         return "/company/newRepresentative";
+    }
+
+    @GetMapping("/editCompanyData")
+    public String editCompanyData(HttpSession session, Model model){
+        model.addAttribute("company", (CompanyEntity) session.getAttribute("company"));
+        return "/company/editCompanyData";
+    }
+
+    @PostMapping("/updateCompanyData")
+    public String updateCompanyData(@ModelAttribute("company") CompanyEntity company, HttpSession session, Model model){
+        CompanyEntity oldCompany = (CompanyEntity) session.getAttribute("company");
+        oldCompany.setName(company.getName());
+        companyRepository.save(oldCompany);
+        model.addAttribute("message", "Company name was successfully changed to " + company.getName() );
+        return "/company/userHomepage";
     }
 
 }
