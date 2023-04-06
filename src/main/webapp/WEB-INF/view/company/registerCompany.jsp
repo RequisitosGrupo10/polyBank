@@ -20,7 +20,7 @@
     <form:hidden path="bankAccountByBankAccountId.id"/>
 
     <form:label path="name">Company name:</form:label>
-    <form:input path="name" size="45" maxlength="45"/>
+    <form:input path="name" size="45" maxlength="45" />
     <br/>
     <form:label path="bankAccountByBankAccountId.badgeByBadgeId">Currency:</form:label>
     <form:select path="bankAccountByBankAccountId.badgeByBadgeId"

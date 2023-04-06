@@ -8,9 +8,13 @@
 --%>
 
 <%@ page import="com.taw.polybank.entity.CompanyEntity" %>
+<%@ page import="com.taw.polybank.controller.company.Client" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <%
+        Client client = (Client) request.getAttribute("client");
+    %>
     <title>Add new Representative to ${company.name}</title>
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
 </head>
@@ -18,23 +22,53 @@
 <jsp:include page="corporateHeader.jsp"/>
 <h1>Add new Representative to ${company.name}</h1>
 
-<form:form action="/company/user/saveRepresenative" modelAttribute="client" method="post">
-    <form:hidden path="id"/>
+<form:form id="mainForm" action="" modelAttribute="client" method="post">
+    <form:hidden path="client.id"/>
+    <form:hidden path="isNew"/>
 
-    <form:label path="name">Representative's name:</form:label>
-    <form:input path="name" size="45" maxlength="45"/>
+    <form:label path="client.name">Representative's name:</form:label>
+    <form:input path="client.name" size="45" maxlength="45" class="formElement"/>
     <br/>
-    <form:label path="surname">Representative's surname:</form:label>
-    <form:input path="surname" size="45" maxlength="45"/>
+    <form:label path="client.surname">Representative's surname:</form:label>
+    <form:input path="client.surname" size="45" maxlength="45" class="formElement"/>
     <br/>
-    <form:label path="dni">Representative's ID:</form:label>
-    <form:input path="dni" size="45" maxlength="45"/>
+    <form:label path="client.dni">Representative's ID:</form:label>
+    <form:input path="client.dni" size="45" maxlength="45" class="formElement"/>
     <br/>
-    <form:label path="password">Representative's password:</form:label>
-    <form:password path="password" size="20" maxlength="64"/>
-    <br/>
-    <form:button name="Add representative">Add representative</form:button>
+    <form:hidden path="client.password"/>
+
+    <a id="submitButtonOne" class="prettyButton" onclick="setUpPassword()">Set up password</a>
+    <a id="submitButtonTwo" class="prettyButton" onclick="saveRepresentative()">Save</a>
 </form:form>
+
+<script>
+    const newClient = <%=client.getIsNew()%>;
+    const mainForm = document.getElementById("mainForm");
+    const actionNewPassword = "/company/user/setUpPassword";
+    const actionKeepPassword = "/company/user/saveRepresentative"
+    const submitButtonOne = document.getElementById("submitButtonOne");
+    const submitButtonTwo = document.getElementById("submitButtonTwo");
+
+    window.addEventListener('load', passwordField, false);
+
+    function passwordField(){
+        if(newClient) {
+            submitButtonTwo.style.setProperty("display", "none");
+        }else {
+            submitButtonOne.innerHTML = "Change Password"
+        }
+    };
+
+    function setUpPassword(){
+        mainForm.action = actionNewPassword;
+        mainForm.submit();
+    }
+    function saveRepresentative(){
+        mainForm.action = actionKeepPassword;
+        mainForm.submit();
+    }
+
+</script>
 
 </body>
 </html>

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Controller
@@ -34,49 +34,72 @@ public class UserCompany {
     protected BankAccountRepository bankAccountRepository;
 
     @GetMapping("/")
-    public String showUserHomepage(){
+    public String showUserHomepage() {
         return "/company/userHomepage";
     }
 
     @GetMapping("/logout")
-    public String endSession(HttpSession session){
+    public String endSession(HttpSession session) {
         session.invalidate();
         return "redirect:/";
     }
 
     @GetMapping("/addRepresentative")
-    public String addRepresentative(Model model){
-        model.addAttribute("client", new ClientEntity());
+    public String addRepresentative(Model model) {
+        model.addAttribute("client", new Client(new ClientEntity(), true));
         return "/company/newRepresentative";
     }
 
-    @PostMapping("/saveRepresenative")
-    public String save(@ModelAttribute("client") ClientEntity client,
+    @PostMapping("/setUpPassword")
+    public String setUpPassword(@ModelAttribute("client") Client client,
+                                Model model) {
+        model.addAttribute("client", client);
+        return "/company/setUpPassword";
+    }
+
+    @PostMapping("/saveNewPassword")
+    public String saveNewPassword(@ModelAttribute("client") Client client,
+                                  HttpSession session,
+                                  Model model) {
+        PasswordManager passwordManager = new PasswordManager();
+        passwordManager.resetPassword(client.getClient(), client.getPassword());
+        updateUser(client, session, model);
+        return "/company/userHomepage";
+    }
+
+    @PostMapping("/saveRepresentative")
+    public String save(@ModelAttribute("client") Client client,
                        HttpSession session,
-                       Model model){
+                       Model model) {
+        updateUser(client, session, model);
+        return "/company/userHomepage";
+    }
+
+    private void updateUser(Client client, HttpSession session, Model model) {
         model.addAttribute("message", "User " + client.getName() +
                 " " + client.getSurname() + " is successfully saved");
-        ClientEntity recoveredClient = clientRepository.findById(client.getId()).orElse(null);
 
-        boolean notExist = recoveredClient == null;
-        if(notExist){
+        if (client.getIsNew()) {
             CompanyEntity company = (CompanyEntity) session.getAttribute("company");
             BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
             AuthorizedAccountEntity authorizedAccount = new AuthorizedAccountEntity();
-            authorizedAccount.setClientByClientId(client);
+            authorizedAccount.setClientByClientId(client.getClient());
             authorizedAccount.setBankAccountByBankAccountId(bankAccount);
-            Collection<AuthorizedAccountEntity> authAccountCollection = bankAccount.getAuthorizedAccountsById();
-            List<AuthorizedAccountEntity> list = new ArrayList<>(authAccountCollection);
-            list.add(authorizedAccount);
-            bankAccount.setAuthorizedAccountsById(list);
-            clientRepository.save(client);
+            authorizedAccount.setBlocked((byte) 0);
+
+            List<AuthorizedAccountEntity> authAccountList = authorizedAccountRepository.findAuthorizedAccountEntitiesOfGivenBankAccount(bankAccount.getId());
+
+            authAccountList.add(authorizedAccount);
+            bankAccount.setAuthorizedAccountsById(authAccountList);
+
+            client.setCreationDate(Timestamp.from(Instant.now()));
+            client.setAuthorizedAccountsById(List.of(authorizedAccount));
+
+            clientRepository.save(client.getClient());
             authorizedAccountRepository.save(authorizedAccount);
             bankAccountRepository.save(bankAccount);
-        } else{
-
-            clientRepository.save(client);
+        } else {
+            clientRepository.save(client.getClient());
         }
-
-        return "/company/userHomepage";
     }
 }
