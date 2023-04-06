@@ -25,6 +25,8 @@
     <form:label path="nameOrSurname">Name or surname:</form:label>
     <form:input path="nameOrSurname"/>
     <br/>
+    <form:label path="registeredAfter">Registered after</form:label>
+    <form:input type="date" path="registeredAfter" name="registeredAfter"/>
     <form:label path="registeredBefore">Registered before</form:label>
     <form:input type="date" path="registeredBefore" name="registeredBefore"/>
     <br/>

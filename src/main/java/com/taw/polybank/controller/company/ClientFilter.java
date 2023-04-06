@@ -8,11 +8,13 @@ import java.time.LocalDate;
 
 public class ClientFilter {
     private String nameOrSurname;
+    private Date registeredAfter;
     private Date registeredBefore;
 
     public ClientFilter(){
         nameOrSurname = "";
-        registeredBefore = null;
+        registeredAfter = Date.valueOf(LocalDate.now());
+        registeredBefore = Date.valueOf(LocalDate.now());
     }
 
     public String getNameOrSurname() {
@@ -21,6 +23,14 @@ public class ClientFilter {
 
     public void setNameOrSurname(String nameOrSurname) {
         this.nameOrSurname = nameOrSurname;
+    }
+
+    public Date getRegisteredAfter() {
+        return registeredAfter;
+    }
+
+    public void setRegisteredAfter(Date registeredAfter) {
+        this.registeredAfter = registeredAfter;
     }
 
     public Date getRegisteredBefore() {

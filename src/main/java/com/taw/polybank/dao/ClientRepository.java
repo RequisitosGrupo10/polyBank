@@ -25,16 +25,37 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
             "JOIN aa.bankAccountByBankAccountId bank " +
             "JOIN bank.companiesById com " +
             "WHERE com.id = :companyId " +
-            "AND (ce.name LIKE :nameOrSurname OR ce.surname LIKE :nameOrSurname) " +
+            "AND (lower(ce.name) LIKE lower(concat('%', :nameOrSurname, '%')) OR lower(ce.surname) LIKE lower(concat('%', :nameOrSurname, '%'))) " +
             "AND ce.creationDate <= :registeredBefore " +
+            "AND ce.creationDate >= :registeredAfter " +
             "UNION " +
             "SELECT ce FROM ClientEntity ce " +
             "JOIN ce.bankAccountsById bank " +
             "JOIN bank.companiesById com " +
             "WHERE com.id = :companyId " +
-            "AND (ce.name LIKE :nameOrSurname OR ce.surname LIKE :nameOrSurname) " +
-            "AND ce.creationDate <= :registeredBefore")
-    List<ClientEntity> findAllRepresentativesOfACompanyThatHasANameOrSurnameOrTheirLastMessageContains(@Param("companyId") Integer id,
-                                                                                                       @Param("nameOrSurname") String nameOrSurname,
-                                                                                                       @Param("registeredBefore") Timestamp registeredBefore);
+            "AND (lower(ce.name) LIKE lower(concat('%', :nameOrSurname, '%')) OR lower(ce.surname) LIKE lower(concat('%', :nameOrSurname, '%'))) " +
+            "AND ce.creationDate <= :registeredBefore " +
+            "AND ce.creationDate >= :registeredAfter")
+    List<ClientEntity> findAllRepresentativesOfACompanyThatHasANameOrSurnameAndWasRegisteredBetweenDates(@Param("companyId") Integer id,
+                                                                                                         @Param("nameOrSurname") String nameOrSurname,
+                                                                                                         @Param("registeredBefore") Timestamp registeredBefore,
+                                                                                                         @Param("registeredAfter") Timestamp registeredAfter);
+
+    @Query("SELECT ce FROM ClientEntity ce " +
+            "JOIN ce.authorizedAccountsById aa " +
+            "JOIN aa.bankAccountByBankAccountId bank " +
+            "JOIN bank.companiesById com " +
+            "WHERE com.id = :companyId " +
+            "AND ce.creationDate <= :registeredBefore " +
+            "AND ce.creationDate >= :registeredAfter " +
+            "UNION " +
+            "SELECT ce FROM ClientEntity ce " +
+            "JOIN ce.bankAccountsById bank " +
+            "JOIN bank.companiesById com " +
+            "WHERE com.id = :companyId " +
+            "AND ce.creationDate <= :registeredBefore " +
+            "AND ce.creationDate >= :registeredAfter")
+    List<ClientEntity> findAllRepresentativesOfACompanyThatWasRegisteredBetweenDates(@Param("companyId") Integer id,
+                                                                                     @Param("registeredBefore") Timestamp registeredBefore,
+                                                                                     @Param("registeredAfter") Timestamp registeredAfter);
 }

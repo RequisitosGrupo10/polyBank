@@ -157,11 +157,15 @@ public class UserCompany {
             clientList = clientRepository.findAllRepresentativesOfGivenCompany(company.getId());
         } else {
             model.addAttribute("clientFilter", clientFilter);
-
+            Timestamp registeredAfter = new Timestamp(clientFilter.getRegisteredAfter().getTime());
             Timestamp registeredBefore = new Timestamp(clientFilter.getRegisteredBefore().getTime());
-
-            clientList = clientRepository.findAllRepresentativesOfACompanyThatHasANameOrSurnameOrTheirLastMessageContains(company.getId(),
-                    clientFilter.getNameOrSurname(), registeredBefore);
+            if(clientFilter.getNameOrSurname().isBlank()){
+                clientList = clientRepository.findAllRepresentativesOfACompanyThatWasRegisteredBetweenDates(company.getId(),
+                        registeredBefore, registeredAfter);
+            }else {
+                clientList = clientRepository.findAllRepresentativesOfACompanyThatHasANameOrSurnameAndWasRegisteredBetweenDates(company.getId(),
+                        clientFilter.getNameOrSurname(), registeredBefore, registeredAfter);
+            }
         }
         model.addAttribute("clientList", clientList);
         return "/company/allRepresentatives";
