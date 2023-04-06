@@ -66,9 +66,9 @@ public class UserCompany {
                                   HttpSession session,
                                   Model model) {
         PasswordManager passwordManager = new PasswordManager();
-        if(client.getIsNew()){
+        if (client.getIsNew()) {
             passwordManager.savePassword(client.getClient());
-        }else {
+        } else {
             Client oldClient = (Client) session.getAttribute("client");
             passwordManager.resetPassword(oldClient.getClient(), client.getPassword());
         }
@@ -118,25 +118,39 @@ public class UserCompany {
 
     @GetMapping("/editMyData")
     public String editMyData(HttpSession session,
-                             Model model){
+                             Model model) {
         Client client = (Client) session.getAttribute("client");
         model.addAttribute("client", client);
         return "/company/newRepresentative";
     }
 
     @GetMapping("/editCompanyData")
-    public String editCompanyData(HttpSession session, Model model){
+    public String editCompanyData(HttpSession session, Model model) {
         model.addAttribute("company", (CompanyEntity) session.getAttribute("company"));
         return "/company/editCompanyData";
     }
 
     @PostMapping("/updateCompanyData")
-    public String updateCompanyData(@ModelAttribute("company") CompanyEntity company, HttpSession session, Model model){
+    public String updateCompanyData(@ModelAttribute("company") CompanyEntity company, HttpSession session, Model model) {
         CompanyEntity oldCompany = (CompanyEntity) session.getAttribute("company");
         oldCompany.setName(company.getName());
         companyRepository.save(oldCompany);
-        model.addAttribute("message", "Company name was successfully changed to " + company.getName() );
+        model.addAttribute("message", "Company name was successfully changed to " + company.getName());
         return "/company/userHomepage";
     }
+
+    @GetMapping("/listAllRepresentatives")
+    public String listAllRepresentatives(Model model, HttpSession session) {
+        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
+        List<ClientEntity> clientList = clientRepository.findAllRepresentativesOfGivenCompany(company.getId());
+        model.addAttribute("clientList", clientList);
+        return "/company/allRepresentatives";
+    }
+
+    @PostMapping("/listFilteredRepresentatives")
+    public String listFilteredRepresentatives(@ModelAttribute("clientFilter") ClientFilter clientFilter) {
+        return "";
+    }
+
 
 }
