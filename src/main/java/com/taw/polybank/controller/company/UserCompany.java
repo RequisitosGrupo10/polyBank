@@ -141,16 +141,29 @@ public class UserCompany {
 
     @GetMapping("/listAllRepresentatives")
     public String listAllRepresentatives(Model model, HttpSession session) {
-        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        List<ClientEntity> clientList = clientRepository.findAllRepresentativesOfGivenCompany(company.getId());
-        model.addAttribute("clientList", clientList);
-        return "/company/allRepresentatives";
+        return applyFilters(null, model, session);
     }
 
     @PostMapping("/listFilteredRepresentatives")
-    public String listFilteredRepresentatives(@ModelAttribute("clientFilter") ClientFilter clientFilter) {
-        return "";
+    public String listFilteredRepresentatives(@ModelAttribute("clientFilter") ClientFilter clientFilter, Model model, HttpSession session) {
+        return applyFilters(clientFilter, model, session);
     }
 
+    private String applyFilters(ClientFilter clientFilter, Model model, HttpSession session) {
+        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
+        List<ClientEntity> clientList;
+        if (clientFilter == null) {
+            model.addAttribute("clientFilter", new ClientFilter());
+            clientList = clientRepository.findAllRepresentativesOfGivenCompany(company.getId());
+        } else {
+            model.addAttribute("clientFilter", clientFilter);
 
+            Timestamp registeredBefore = new Timestamp(clientFilter.getRegisteredBefore().getTime());
+
+            clientList = clientRepository.findAllRepresentativesOfACompanyThatHasANameOrSurnameOrTheirLastMessageContains(company.getId(),
+                    clientFilter.getNameOrSurname(), registeredBefore);
+        }
+        model.addAttribute("clientList", clientList);
+        return "/company/allRepresentatives";
+    }
 }

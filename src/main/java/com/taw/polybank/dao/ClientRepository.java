@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -14,6 +15,26 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
     @Query("select c from ClientEntity c where c.dni = :dni")
     ClientEntity findByDNI(@Param("dni") String dni);
 
-    @Query("select ce from ClientEntity ce join ce.authorizedAccountsById aa join aa.bankAccountByBankAccountId bank join bank.companiesById com where com.id = :id union select ce from ClientEntity ce join ce.bankAccountsById bank join bank.companiesById com where com.id = :id")
+    @Query("select ce from ClientEntity ce join ce.authorizedAccountsById aa join aa.bankAccountByBankAccountId bank " +
+            "join bank.companiesById com where com.id = :id union select ce from ClientEntity ce " +
+            "join ce.bankAccountsById bank join bank.companiesById com where com.id = :id")
     List<ClientEntity> findAllRepresentativesOfGivenCompany(@Param("id") Integer id);
+
+    @Query("SELECT ce FROM ClientEntity ce " +
+            "JOIN ce.authorizedAccountsById aa " +
+            "JOIN aa.bankAccountByBankAccountId bank " +
+            "JOIN bank.companiesById com " +
+            "WHERE com.id = :companyId " +
+            "AND (ce.name LIKE :nameOrSurname OR ce.surname LIKE :nameOrSurname) " +
+            "AND ce.creationDate <= :registeredBefore " +
+            "UNION " +
+            "SELECT ce FROM ClientEntity ce " +
+            "JOIN ce.bankAccountsById bank " +
+            "JOIN bank.companiesById com " +
+            "WHERE com.id = :companyId " +
+            "AND (ce.name LIKE :nameOrSurname OR ce.surname LIKE :nameOrSurname) " +
+            "AND ce.creationDate <= :registeredBefore")
+    List<ClientEntity> findAllRepresentativesOfACompanyThatHasANameOrSurnameOrTheirLastMessageContains(@Param("companyId") Integer id,
+                                                                                                       @Param("nameOrSurname") String nameOrSurname,
+                                                                                                       @Param("registeredBefore") Timestamp registeredBefore);
 }

@@ -1,8 +1,19 @@
 package com.taw.polybank.controller.company;
 
+import org.apache.logging.log4j.CloseableThreadContext;
+
+import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+
 public class ClientFilter {
     private String nameOrSurname;
-    private String messageText;
+    private Date registeredBefore;
+
+    public ClientFilter(){
+        nameOrSurname = "";
+        registeredBefore = null;
+    }
 
     public String getNameOrSurname() {
         return nameOrSurname;
@@ -12,11 +23,13 @@ public class ClientFilter {
         this.nameOrSurname = nameOrSurname;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public Date getRegisteredBefore() {
+        return registeredBefore;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public void setRegisteredBefore(Date registeredBefore) {
+        this.registeredBefore = registeredBefore;
     }
+
+
 }

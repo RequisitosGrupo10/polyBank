@@ -21,12 +21,12 @@
 <jsp:include page="corporateHeader.jsp"/>
 <h1>Representatives of ${company.name} company</h1>
 
-<form:form modelAttribute="clientFilter" method="post" action="/company/listFilteredRepresentatives">
+<form:form modelAttribute="clientFilter" method="post" action="/company/user/listFilteredRepresentatives">
     <form:label path="nameOrSurname">Name or surname:</form:label>
     <form:input path="nameOrSurname"/>
     <br/>
-    <form:label path="messageText">Message text</form:label>
-    <form:input path="messageText"/>
+    <form:label path="registeredBefore">Registered before</form:label>
+    <form:input type="date" path="registeredBefore" name="registeredBefore"/>
     <br/>
     <form:button class="prettyButton" name="Submit">Filter</form:button>
 </form:form>
@@ -36,6 +36,7 @@
         <th>Name</th>
         <th>Surname</th>
         <th>ID number</th>
+        <th>Registration date</th>
         <th>Last Message</th>
     </tr>
     <%
@@ -45,6 +46,7 @@
         <td><%=client.getName()%></td>
         <th><%=client.getSurname()%></th>
         <th><%=client.getDni()%></th>
+        <th><%=client.getCreationDate().toLocalDateTime()%></th>
         <th><%=client.getMessagesById().stream().reduce((a, b) -> b).map(MessageEntity::getContent).orElse("")%></th>
     </tr>
     <%
@@ -53,6 +55,7 @@
 </table>
 
 <a class="prettyButton" href="/company/user/">Return</a>
+
 
 </body>
 </html>
