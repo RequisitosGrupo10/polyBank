@@ -4,10 +4,7 @@ import com.taw.polybank.dao.AuthorizedAccountRepository;
 import com.taw.polybank.dao.BankAccountRepository;
 import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dao.CompanyRepository;
-import com.taw.polybank.entity.AuthorizedAccountEntity;
-import com.taw.polybank.entity.BankAccountEntity;
-import com.taw.polybank.entity.ClientEntity;
-import com.taw.polybank.entity.CompanyEntity;
+import com.taw.polybank.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -184,5 +181,12 @@ public class UserCompany {
             authorizedAccountRepository.save(authorizedAccount);
         }
         return "redirect:/company/user/listAllRepresentatives";
+    }
+
+    @GetMapping("/newTransfer")
+    public String newTransfer(){
+        TransactionEntity transaction = new TransactionEntity();
+
+        return "/company/newTransfer";
     }
 }
