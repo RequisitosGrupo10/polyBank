@@ -219,11 +219,7 @@ public class UserCompany {
 
         BadgeEntity originBadge = bankAccount.getBadgeByBadgeId();
         BadgeEntity recipientBadge = new BadgeEntity();
-        TransactionEntity transaction = new TransactionEntity();
-
-        transaction.setTimestamp(Timestamp.from(Instant.now()));
-        transaction.setClientByClientId(client.getClient());
-        transaction.setBankAccountByBankAccountId(bankAccount);
+        TransactionEntity transaction = defineTransaction(client, bankAccount);
 
         List<TransactionEntity> allTransactions = transactionRepository.findTransactionEntitiesByClientByClientIdId(client.getId());
         allTransactions.add(transaction);
@@ -298,6 +294,51 @@ public class UserCompany {
         // success message
         model.addAttribute("message", amount + " " + bankAccount.getBadgeByBadgeId().getName() + " was successfully transferred to " + beneficiaryName);
         return "/company/userHomepage";
+    }
+
+    @GetMapping("/moneyExchange")
+    public String moneyExchange(Model model){
+        BadgeEntity badge = new BadgeEntity();
+        List<BadgeEntity> badgeList = badgeRepository.findAll();
+
+        model.addAttribute("badge", badge);
+        model.addAttribute("badgeList", badgeList);
+        return "/company/moneyExchange";
+    }
+
+    @PostMapping("/makeExchange")
+    public String makeExchange(@ModelAttribute BadgeEntity targedBadge, HttpSession session, Model model){
+
+        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
+        Client client = (Client) session.getAttribute("client");
+        BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
+        BadgeEntity currentBadge = bankAccount.getBadgeByBadgeId();
+        targedBadge = badgeRepository.findById(targedBadge.getId()).get();
+        TransactionEntity transaction = defineTransaction(client,bankAccount);
+
+        if(currentBadge.getId() != targedBadge.getId()){
+            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge,targedBadge,bankAccount.getBalance(),transaction);
+            transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
+            updateBadges(currentBadge, targedBadge, currencyExchange);
+            currencyExchangeRepository.save(currencyExchange);
+            bankAccount.setBalance(currencyExchange.getFinalAmount());
+            bankAccount.setBadgeByBadgeId(targedBadge);
+            transactionRepository.save(transaction);
+            clientRepository.save(client.getClient());
+            bankAccountRepository.save(bankAccount);
+            model.addAttribute("message", currencyExchange.getInitialAmount() + " " + currentBadge.getName() + " was successfully exchanged to " + currencyExchange.getFinalAmount() + " " + targedBadge.getName());
+        }else{
+            model.addAttribute("message", "No exchange was made, chosen currency is actual currency of your bank account.");
+        }
+        return "/company/userHomepage";
+    }
+
+    private TransactionEntity defineTransaction(Client client, BankAccountEntity bankAccount) {
+        TransactionEntity transaction = new TransactionEntity();
+        transaction.setTimestamp(Timestamp.from(Instant.now()));
+        transaction.setClientByClientId(client.getClient());
+        transaction.setBankAccountByBankAccountId(bankAccount);
+        return transaction;
     }
 
     private void updateBadges(BadgeEntity originBadge, BadgeEntity recipientBadge, CurrencyExchangeEntity currencyExchange) {

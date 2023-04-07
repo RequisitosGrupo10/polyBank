@@ -1,15 +1,17 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="com.taw.polybank.entity.CompanyEntity" %>
 <%@ page import="com.taw.polybank.entity.BankAccountEntity" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
   Date: 07/04/2023
-  Time: 12:43
+  Time: 23:34
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>New Transaction for ${company.name}</title>
+    <title>Exchange money of ${company.name}</title>
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
     <%
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
@@ -20,27 +22,21 @@
 <body>
 <jsp:include page="corporateHeader.jsp"/>
 
-
 <div id="transactionWindow">
-  <h1>Make Transfer</h1>
+    <h1>Money Exchange</h1>
     <p>Balance: <%=companyBankAccount.getBalance()%> <%=companyBankAccount.getBadgeByBadgeId().getName()%></p>
-    <form action="/company/user/processTransfer" method="post">
-        <label for="beneficiary">Name of recipient: </label>
-        <input id="beneficiary" type="text" name="beneficiary" maxlength="45" size="45"/>
-        <br/>
-        <label for="iban">IBAN of recipient: </label>
-        <input id="iban" type="text" name="iban" maxlength="34" size="34"/>
-        <br/>
-        <label for="amount">Amount: </label>
-        <input id="amount" type="text" name="amount" maxlength="10" size="10">
-        <br/>
-        <button class="prettyButton" type="submit" >Make transaction</button>
 
-    </form>
+    <form:form modelAttribute="badge" method="post" action="/company/user/makeExchange">
+        <form:label path="id">Desired currency*</form:label>
+        <form:select path="id" items="${badgeList}" itemLabel="name" itemValue="id"/>
+        <form:button class="prettyButton">Exchange</form:button>
+    </form:form>
+<p style="font-size: 6pt">* This action will exchange all available funds to desired currency</p>
+
 </div>
 
 <div id="blockedAccountWindow">
-  <h1>Your account is not active</h1>
+    <h1>Your account is not active</h1>
     <p>Contact your bank in order to activate your account.</p>
 </div>
 
@@ -60,5 +56,7 @@
         };
 
 </script>
+
+
 </body>
 </html>
