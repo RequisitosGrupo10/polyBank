@@ -58,4 +58,6 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
     List<ClientEntity> findAllRepresentativesOfACompanyThatWasRegisteredBetweenDates(@Param("companyId") Integer id,
                                                                                      @Param("registeredBefore") Timestamp registeredBefore,
                                                                                      @Param("registeredAfter") Timestamp registeredAfter);
+
+    ClientEntity findClientEntityByBankAccountsByIdAndName(Integer id, String name);
 }
