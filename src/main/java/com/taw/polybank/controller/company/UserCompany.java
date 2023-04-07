@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -246,16 +245,12 @@ public class UserCompany {
                     return "/company/userHomepage";
                 }
                 // name matching proceed to transfer.
-
-
             }// Company is going to receive money
             recipientBadge = recipientBankAccount.getBadgeByBadgeId();
 
-            if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange
-                CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount);
-                currencyExchange.setTransactionsById(List.of(transaction));
+            if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange?
+                CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction);
                 transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
-
                 updateBadges(originBadge, recipientBadge, currencyExchange);
                 currencyExchangeRepository.save(currencyExchange);
                 recipientBankAccount.setBalance(recipientBankAccount.getBalance() + currencyExchange.getFinalAmount());
@@ -281,24 +276,14 @@ public class UserCompany {
 
             payment.setAmount(amount);
             payment.setBenficiaryByBenficiaryId(beneficiary);
-
-            Collection<TransactionEntity> allPaymentTransactions = payment.getTransactionsById();
-            if(allPaymentTransactions == null){
-                allPaymentTransactions = new ArrayList<>();
-            }
-            allPaymentTransactions.add(transaction);
-            payment.setTransactionsById(allPaymentTransactions);
+            payment.setTransactionsById(List.of(transaction));
 
             if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange
-                CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount);
+                CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction, payment);
                 payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
-                currencyExchange.setPaymentsById(List.of(payment));
-                currencyExchange.setTransactionsById(List.of(transaction));
                 transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
-
                 updateBadges(originBadge, recipientBadge, currencyExchange);
                 currencyExchangeRepository.save(currencyExchange);
-
             }
             transaction.setPaymentByPaymentId(payment);
             beneficiaryRepository.save(beneficiary);
@@ -328,13 +313,20 @@ public class UserCompany {
         badgeRepository.save(recipientBadge);
     }
 
-    private CurrencyExchangeEntity defineCurrencyExchange(BadgeEntity originBadge, BadgeEntity recipientBadge, Double amount) {
+    private CurrencyExchangeEntity defineCurrencyExchange(BadgeEntity originBadge, BadgeEntity recipientBadge, Double amount, TransactionEntity transaction, PaymentEntity payment) {
+        CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction);
+        currencyExchange.setPaymentsById(List.of(payment));
+        return currencyExchange;
+    }
+
+    private CurrencyExchangeEntity defineCurrencyExchange(BadgeEntity originBadge, BadgeEntity recipientBadge, Double amount, TransactionEntity transaction) {
         CurrencyExchangeEntity currencyExchange = new CurrencyExchangeEntity();
         currencyExchange.setBadgeByInitialBadgeId(originBadge);
         currencyExchange.setBadgeByFinalBadgeId(recipientBadge);
         currencyExchange.setInitialAmount(amount);
         double amountAfterExchange = (recipientBadge.getValue() / originBadge.getValue()) * amount;
         currencyExchange.setFinalAmount(amountAfterExchange);
+        currencyExchange.setTransactionsById(List.of(transaction));
         return currencyExchange;
     }
 
