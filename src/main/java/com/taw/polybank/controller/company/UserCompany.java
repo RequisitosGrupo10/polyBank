@@ -333,6 +333,16 @@ public class UserCompany {
         return "/company/userHomepage";
     }
 
+    @GetMapping("/operationHistory")
+    public String operationHistory(HttpSession session, Model model){
+        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
+        BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
+        List<TransactionEntity> transactionList = transactionRepository.findTransactionEntitiesByBankAccountByBankAccountIdId(bankAccount.getId());
+
+        model.addAttribute("transactionList", transactionList);
+        return "/company/operationHistory";
+    }
+
     private TransactionEntity defineTransaction(Client client, BankAccountEntity bankAccount) {
         TransactionEntity transaction = new TransactionEntity();
         transaction.setTimestamp(Timestamp.from(Instant.now()));
