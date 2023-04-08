@@ -39,7 +39,7 @@
         form.submit();
     }
     function asRepresentative() {
-        form.action="/company/login";
+        form.action="/employee/login";
         form.submit();
     }
 </script>

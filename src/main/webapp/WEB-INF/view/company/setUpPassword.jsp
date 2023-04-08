@@ -1,7 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="com.taw.polybank.controller.company.Client" %><%--
   Created by IntelliJ IDEA.
-  User: panva
+  User: Illya Rozumovskyy
   Date: 05/04/2023
   Time: 23:56
   To change this template use File | Settings | File Templates.

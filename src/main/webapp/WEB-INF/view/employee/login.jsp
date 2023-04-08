@@ -13,10 +13,10 @@
 <body>
 <h1>Inicia sesión como empleado:</h1>
 <form action="/employee/login" method="post">
-    <label for="name">Nombre: </label>
-    <input type="text" id="name"><br>
+    <label for="username">Nombre: </label>
+    <input type="text" id="username" name="DNI"><br>
     <label for="password">Contraseña: </label>
-    <input type="password" id="password"><br>
+    <input type="password" id="password" name="password"><br>
     <input type="submit">
 </form>
 </body>
