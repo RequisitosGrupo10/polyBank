@@ -12,37 +12,33 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/company/user")
 public class UserCompany {
-
     @Autowired
     protected ClientRepository clientRepository;
-
     @Autowired
     protected AuthorizedAccountRepository authorizedAccountRepository;
-
     @Autowired
     protected BankAccountRepository bankAccountRepository;
-
     @Autowired
     protected CompanyRepository companyRepository;
-
     @Autowired
     protected BadgeRepository badgeRepository;
-
     @Autowired
     protected BeneficiaryRepository beneficiaryRepository;
-
     @Autowired
     protected CurrencyExchangeRepository currencyExchangeRepository;
-
     @Autowired
     protected PaymentRepository paymentRepository;
-
     @Autowired
     protected TransactionRepository transactionRepository;
+    @Autowired
+    protected EmployeeRepository employeeRepository;
+    @Autowired
+    protected RequestRepository requestRepository;
 
     @GetMapping("/")
     public String showUserHomepage() {
@@ -50,9 +46,36 @@ public class UserCompany {
     }
 
     @GetMapping("/blockedUser")
-    public String blockedUserMenu() {
+    public String blockedUserMenu(Model model) {
+        model.addAttribute("message", "Your access have has been revoked. Submit your application to unblock.");
 
-        return "/company/blockedUser"; // TODO US-15
+        return "/company/blockedUser";
+    }
+
+    @PostMapping("/allegation")
+    public String allegation(@RequestParam("msg") String message, HttpSession session, Model model){
+
+        Client client = (Client) session.getAttribute("client");
+        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
+        BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
+
+        RequestEntity request = new RequestEntity();
+
+        request.setSolved((byte) 0);
+        request.setTimestamp(Timestamp.from(Instant.now()));
+        request.setType("activation");
+        request.setDescription(message);
+        request.setApproved((byte) 0);
+        request.setBankAccountByBankAccountId(bankAccount);
+        List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
+        request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));
+        request.setClientByClientId(client.getClient());
+
+        requestRepository.save(request);
+
+        model.addAttribute("message", "Allegation successfully submitted. Wait patiently for its resolution.");
+
+        return "/company/blockedUser";
     }
 
     @GetMapping("/logout")
@@ -385,6 +408,8 @@ public class UserCompany {
     public String operationHistory(@ModelAttribute("transactionFilter") TransactionFilter transactionFilter, HttpSession session, Model model) {
         return operationHistoryFilters(transactionFilter, session, model);
     }
+
+
 
     private String operationHistoryFilters(TransactionFilter transactionFilter, HttpSession session, Model model) {
         List<TransactionEntity> transactionList;

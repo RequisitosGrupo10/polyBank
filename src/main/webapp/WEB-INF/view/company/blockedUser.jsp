@@ -13,6 +13,20 @@
 </head>
 <body>
 <jsp:include page="corporateHeader.jsp" />
-<h1>Your access have has been revoked. Submit your application to unblock.</h1>
+
+<c:if test="${message != null}" >
+    <h4 style="color:red;">
+            ${message}
+    </h4>
+</c:if>
+
+
+<form method="post" action="/company/user/allegation">
+    <label for="msg">Allegation message</label>
+    <br/>
+    <textarea cols="50" rows="4" maxlength="100" name="msg" id="msg"></textarea>
+    <br/>
+    <button class="prettyButton" type="submit" name="submit" value="submit">Submit allegation</button>
+</form>
 </body>
 </html>
