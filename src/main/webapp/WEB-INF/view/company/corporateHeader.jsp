@@ -25,4 +25,5 @@
 
 <h1>Welcome ${client.name} you acting on behalf of ${company.name} company</h1>
 
+<a class="prettyButton" href="/company/user/">Home</a>
 <a class="prettyButton" style="background-color:#ffdb90" href="/company/user/logout">Exit</a>
