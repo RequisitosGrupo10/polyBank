@@ -29,10 +29,21 @@
 
 <table border="1">
     <tr>
-        <th>Transaction</th>
-        <th>CurrencyExchange</th>
+        <th rowspan="2">Time</th>
+        <th colspan="5">Sender</th>
+        <th colspan="4">Recipient</th>
     </tr>
     <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>ID</th>
+        <th>Amount send</th>
+        <th>Currency</th>
+
+        <th>Name</th>
+        <th>Iban</th>
+        <th>Amount</th>
+        <th>Currency</th>
 
     </tr>
 
@@ -41,11 +52,34 @@
     %>
 
     <tr>
-      <td><%=t.getClientByClientId().getName()%></td>
-      <td><%=t.getClientByClientId().getSurname()%></td>
-      <td><%=t.getClientByClientId().getDni()%></td>
-      <td><%=t.getTimestamp().toLocalDateTime()%></td>
-      <td><%=t.getCurrencyExchangeByCurrencyExchangeId()%></td>
+        <td><%=t.getTimestamp()%></td>
+
+        <td><%=t.getClientByClientId().getName()%></td>
+        <td><%=t.getClientByClientId().getSurname()%></td>
+        <td><%=t.getClientByClientId().getDni()%></td>
+        <td><%=t.getPaymentByPaymentId().getAmount()%></td>
+        <%
+            String currency = t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getBadge();
+            if (t.getCurrencyExchangeByCurrencyExchangeId() != null) {
+                currency = t.getCurrencyExchangeByCurrencyExchangeId().getBadgeByInitialBadgeId().getName();
+            }
+        %>
+        <th><%=currency%></th>
+
+        <td><%=t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getName()%></td>
+        <td><%=t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getIban()%></td>
+        <%
+            Double receivedAmount = null;
+            if(t.getCurrencyExchangeByCurrencyExchangeId() != null){
+                receivedAmount = t.getCurrencyExchangeByCurrencyExchangeId().getFinalAmount();
+            }else{
+                receivedAmount = t.getPaymentByPaymentId().getAmount();
+            }
+
+        %>
+        <td><%=receivedAmount%></td>
+        <td><%=t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getBadge()%></td>
+
     </tr>
 
     <%

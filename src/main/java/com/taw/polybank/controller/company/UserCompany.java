@@ -255,6 +255,8 @@ public class UserCompany {
                 beneficiary.setPaymentsById(allPayments);
             }
 
+            payment.setBenficiaryByBenficiaryId(beneficiary);
+
             if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange?
                 CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction, payment);
                 payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
@@ -284,6 +286,7 @@ public class UserCompany {
                 allPayments.add(payment);
                 beneficiary.setPaymentsById(allPayments);
             }
+            payment.setBenficiaryByBenficiaryId(beneficiary);
 
             if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange
                 CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction, payment);
@@ -307,14 +310,6 @@ public class UserCompany {
         return "/company/userHomepage";
     }
 
-    private PaymentEntity definePayment(Double amount, BenficiaryEntity beneficiary, TransactionEntity transaction) {
-        PaymentEntity payment = new PaymentEntity();
-        payment.setAmount(amount);
-        payment.setBenficiaryByBenficiaryId(beneficiary);
-        payment.setTransactionsById(List.of(transaction));
-        return payment;
-    }
-
     @GetMapping("/moneyExchange")
     public String moneyExchange(Model model){
         BadgeEntity badge = new BadgeEntity();
@@ -335,13 +330,29 @@ public class UserCompany {
         targedBadge = badgeRepository.findById(targedBadge.getId()).get();
         TransactionEntity transaction = defineTransaction(client,bankAccount);
 
+        BenficiaryEntity beneficiary = beneficiaryRepository.findBenficiaryEntityByNameAndIban(company.getName(), bankAccount.getIban());
+        PaymentEntity payment = definePayment(bankAccount.getBalance(), beneficiary, transaction);
+
+        if (beneficiary == null){
+            beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targedBadge, payment);
+        } else {
+            Collection<PaymentEntity> allPayments = beneficiary.getPaymentsById();
+            allPayments.add(payment);
+            beneficiary.setPaymentsById(allPayments);
+        }
+        payment.setBenficiaryByBenficiaryId(beneficiary);
+
         if(currentBadge.getId() != targedBadge.getId()){
-            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge,targedBadge,bankAccount.getBalance(),transaction);
+            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge,targedBadge,bankAccount.getBalance(),transaction, payment);
+            payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
             transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
+            transaction.setPaymentByPaymentId(payment);
             updateBadges(currentBadge, targedBadge, currencyExchange);
             currencyExchangeRepository.save(currencyExchange);
             bankAccount.setBalance(currencyExchange.getFinalAmount());
             bankAccount.setBadgeByBadgeId(targedBadge);
+            beneficiaryRepository.save(beneficiary);
+            paymentRepository.save(payment);
             transactionRepository.save(transaction);
             clientRepository.save(client.getClient());
             bankAccountRepository.save(bankAccount);
@@ -350,6 +361,14 @@ public class UserCompany {
             model.addAttribute("message", "No exchange was made, chosen currency is actual currency of your bank account.");
         }
         return "/company/userHomepage";
+    }
+
+    private PaymentEntity definePayment(Double amount, BenficiaryEntity beneficiary, TransactionEntity transaction) {
+        PaymentEntity payment = new PaymentEntity();
+        payment.setAmount(amount);
+        payment.setBenficiaryByBenficiaryId(beneficiary);
+        payment.setTransactionsById(List.of(transaction));
+        return payment;
     }
 
     @GetMapping("/operationHistory")
