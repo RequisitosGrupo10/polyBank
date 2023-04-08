@@ -74,7 +74,6 @@
     %>
 </table>
 <p style="font-size: 6pt">Can not block your own account, neither account of the company's owner</p>
-<a class="prettyButton" href="/company/user/">Return</a>
 
 
 </body>

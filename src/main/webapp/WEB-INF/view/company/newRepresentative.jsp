@@ -37,8 +37,8 @@
     <br/>
     <form:hidden path="client.password"/>
 
-    <a id="submitButtonOne" class="prettyButton" onclick="setUpPassword()">Set up password</a>
-    <a id="submitButtonTwo" class="prettyButton" onclick="saveRepresentative()">Save</a>
+    <form:button id="submitButtonOne" class="prettyButton" onclick="setUpPassword()">Set up password</form:button>
+    <form:button id="submitButtonTwo" class="prettyButton" onclick="saveRepresentative()">Save</form:button>
 </form:form>
 
 <script>

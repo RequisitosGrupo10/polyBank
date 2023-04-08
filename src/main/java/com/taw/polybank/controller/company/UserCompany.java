@@ -207,6 +207,11 @@ public class UserCompany {
                                   @RequestParam("amount") Double amount,
                                   HttpSession session, Model model) {
 
+        if (amount <= 0) {
+            //fail message negative or zero amount
+            model.addAttribute("message", "Money transfer was denied, invalid amount (amount = " + amount + ")");
+            return "/company/userHomepage";
+        }
 
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
         Client client = (Client) session.getAttribute("client");
@@ -247,7 +252,7 @@ public class UserCompany {
             BenficiaryEntity beneficiary = beneficiaryRepository.findBenficiaryEntityByNameAndIban(beneficiaryName, iban);
             PaymentEntity payment = definePayment(amount, beneficiary, transaction);
 
-            if (beneficiary == null){
+            if (beneficiary == null) {
                 beneficiary = defineBeneficiary(beneficiaryName, iban, recipientBadge, payment);
             } else {
                 Collection<PaymentEntity> allPayments = beneficiary.getPaymentsById();
@@ -311,7 +316,7 @@ public class UserCompany {
     }
 
     @GetMapping("/moneyExchange")
-    public String moneyExchange(Model model){
+    public String moneyExchange(Model model) {
         BadgeEntity badge = new BadgeEntity();
         List<BadgeEntity> badgeList = badgeRepository.findAll();
 
@@ -321,19 +326,19 @@ public class UserCompany {
     }
 
     @PostMapping("/makeExchange")
-    public String makeExchange(@ModelAttribute BadgeEntity targedBadge, HttpSession session, Model model){
+    public String makeExchange(@ModelAttribute BadgeEntity targedBadge, HttpSession session, Model model) {
 
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
         Client client = (Client) session.getAttribute("client");
         BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
         BadgeEntity currentBadge = bankAccount.getBadgeByBadgeId();
         targedBadge = badgeRepository.findById(targedBadge.getId()).get();
-        TransactionEntity transaction = defineTransaction(client,bankAccount);
+        TransactionEntity transaction = defineTransaction(client, bankAccount);
 
         BenficiaryEntity beneficiary = beneficiaryRepository.findBenficiaryEntityByNameAndIban(company.getName(), bankAccount.getIban());
         PaymentEntity payment = definePayment(bankAccount.getBalance(), beneficiary, transaction);
 
-        if (beneficiary == null){
+        if (beneficiary == null) {
             beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targedBadge, payment);
         } else {
             Collection<PaymentEntity> allPayments = beneficiary.getPaymentsById();
@@ -342,8 +347,8 @@ public class UserCompany {
         }
         payment.setBenficiaryByBenficiaryId(beneficiary);
 
-        if(currentBadge.getId() != targedBadge.getId()){
-            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge,targedBadge,bankAccount.getBalance(),transaction, payment);
+        if (currentBadge.getId() != targedBadge.getId()) {
+            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge, targedBadge, bankAccount.getBalance(), transaction, payment);
             payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
             transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
             transaction.setPaymentByPaymentId(payment);
@@ -357,7 +362,7 @@ public class UserCompany {
             clientRepository.save(client.getClient());
             bankAccountRepository.save(bankAccount);
             model.addAttribute("message", currencyExchange.getInitialAmount() + " " + currentBadge.getName() + " was successfully exchanged to " + currencyExchange.getFinalAmount() + " " + targedBadge.getName());
-        }else{
+        } else {
             model.addAttribute("message", "No exchange was made, chosen currency is actual currency of your bank account.");
         }
         return "/company/userHomepage";
@@ -372,11 +377,69 @@ public class UserCompany {
     }
 
     @GetMapping("/operationHistory")
-    public String operationHistory(HttpSession session, Model model){
+    public String operationHistory(HttpSession session, Model model) {
+        return operationHistoryFilters(null, session, model);
+    }
+
+    @PostMapping("/operationHistory")
+    public String operationHistory(@ModelAttribute("transactionFilter") TransactionFilter transactionFilter, HttpSession session, Model model) {
+        return operationHistoryFilters(transactionFilter, session, model);
+    }
+
+    private String operationHistoryFilters(TransactionFilter transactionFilter, HttpSession session, Model model) {
+        List<TransactionEntity> transactionList;
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
         BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
-        List<TransactionEntity> transactionList = transactionRepository.findTransactionEntitiesByBankAccountByBankAccountIdId(bankAccount.getId());
 
+        if (transactionFilter == null) {
+            transactionList = transactionRepository.findTransactionEntitiesByBankAccountByBankAccountIdId(bankAccount.getId());
+            transactionFilter = new TransactionFilter();
+
+        } else {
+            Timestamp dateAfter = new Timestamp(transactionFilter.getTransactionAfter().getTime());
+            Timestamp dateBefore = new Timestamp(transactionFilter.getTransactionBefore().getTime());
+            if (transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
+                transactionList = transactionRepository.
+                        findAllTransactionsByBankAccountAndDatesAndSendAmountInRange(
+                                bankAccount.getId(),
+                                dateAfter,
+                                dateBefore,
+                                transactionFilter.getMinAmount(),
+                                transactionFilter.getMaxAmount());
+
+            } else if (!transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
+                transactionList = transactionRepository.
+                        findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDni(
+                                bankAccount.getId(),
+                                dateAfter,
+                                dateBefore,
+                                transactionFilter.getMinAmount(),
+                                transactionFilter.getMaxAmount(),
+                                transactionFilter.getSenderId());
+
+            } else if (transactionFilter.getSenderId().isBlank() && !transactionFilter.getRecipientName().isBlank()) {
+                transactionList = transactionRepository.
+                        findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenRecipientName(
+                                bankAccount.getId(),
+                                dateAfter,
+                                dateBefore,
+                                transactionFilter.getMinAmount(),
+                                transactionFilter.getMaxAmount(),
+                                transactionFilter.getRecipientName());
+
+            } else {
+                transactionList = transactionRepository.
+                        findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDniAndRecipientName(
+                                bankAccount.getId(),
+                                dateAfter,
+                                dateBefore,
+                                transactionFilter.getMinAmount(),
+                                transactionFilter.getMaxAmount(),
+                                transactionFilter.getSenderId(),
+                                transactionFilter.getRecipientName());
+            }
+        }
+        model.addAttribute("transactionFilter", transactionFilter);
         model.addAttribute("transactionList", transactionList);
         return "/company/operationHistory";
     }

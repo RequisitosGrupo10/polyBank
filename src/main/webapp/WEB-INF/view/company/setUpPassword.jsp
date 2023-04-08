@@ -33,7 +33,7 @@
     <label for="passwordRep">Repeat password: </label>
     <input id="passwordRep" type="password" size="25" maxlength="64"/>
     <br/>
-    <a id="submitButtonOne" class="prettyButton" onclick="checkPass()">Submit</a>
+    <form:button id="submitButtonOne" class="prettyButton" onclick="checkPass()">Submit</form:button>
 </form:form>
 
 <script>

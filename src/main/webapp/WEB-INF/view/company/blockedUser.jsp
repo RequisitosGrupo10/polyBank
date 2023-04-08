@@ -13,6 +13,6 @@
 </head>
 <body>
 <jsp:include page="corporateHeader.jsp" />
-<h1>Your access have been blocked. Submit your application to unblock.</h1>
+<h1>Your access have has been revoked. Submit your application to unblock.</h1>
 </body>
 </html>

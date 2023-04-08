@@ -23,8 +23,24 @@
 <h2>Operation history of ${company.name} company</h2>
 
 <h3>Filters</h3>
-<form:form>
+<form:form modelAttribute="transactionFilter" method="post" action="/company/user/operationHistory">
+    <form:label path="senderId">Sender id:</form:label>
+    <form:input path="senderId" size="45" maxlength="45" class="formElement" onclick="this.select()"/>
+    <form:label path="recipientName">Recipient name</form:label>
+    <form:input path="recipientName" size="45" maxlength="45" class="formElement" onclick="this.select()"/>
+    <br/>
+    <form:label path="minAmount">Amount send greater than</form:label>
+    <form:input type="number" path="minAmount" size="10" maxlength="10" class="formElement" onclick="this.select()"/>
+    <form:label path="maxAmount">Amount send smaller than</form:label>
+    <form:input type="number" path="maxAmount" size="10" maxlength="10" class="formElement" onclick="this.select()"/>
+    <br/>
+    <form:label path="transactionAfter">Date after</form:label>
+    <form:input type="date" path="transactionAfter"/>
+    <form:label path="transactionAfter">Date before</form:label>
+    <form:input type="date" path="transactionBefore"/>
 
+    <br/>
+    <form:button class="prettyButton" type="submit" value="filter" name="filter">Filter</form:button>
 </form:form>
 
 <table border="1">
