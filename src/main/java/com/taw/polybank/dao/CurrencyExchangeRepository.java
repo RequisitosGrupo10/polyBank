@@ -8,5 +8,7 @@ import java.util.List;
 public interface CurrencyExchangeRepository extends JpaRepository<CurrencyExchangeEntity, Integer> {
 
     List<CurrencyExchangeEntity> findCurrencyExchangeEntitiesByBadgeByInitialBadgeIdId(Integer id);
+
     List<CurrencyExchangeEntity> findCurrencyExchangeEntitiesByBadgeByFinalBadgeIdId(Integer id);
 }
+s

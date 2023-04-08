@@ -10,6 +10,8 @@
 <html>
 <head>
     <title>Polybank. Create your company account</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
 </head>
 <body>
 
@@ -17,10 +19,10 @@
 
 <form:form method="post" modelAttribute="company" action="/company/registerCompanyOwner">
     <form:hidden path="id"/>
-    <form:hidden path="bankAccountByBankAccountId.id"/>
+    <form:hidden path="bankAccountByBankAccountId.id" class="formElement" />
 
     <form:label path="name">Company name:</form:label>
-    <form:input path="name" size="45" maxlength="45" />
+    <form:input path="name" size="45" maxlength="45" class="formElement" />
     <br/>
     <form:label path="bankAccountByBankAccountId.badgeByBadgeId">Currency:</form:label>
     <form:select path="bankAccountByBankAccountId.badgeByBadgeId"
@@ -31,7 +33,7 @@
     <br/>
 
     As a part of registration process you required to associate at least one manager to your bank account
-    <form:button name="Register">Add a manager</form:button>
+    <form:button class="prettyButton" name="Register">Add a manager</form:button>
 </form:form>
 
 </body>

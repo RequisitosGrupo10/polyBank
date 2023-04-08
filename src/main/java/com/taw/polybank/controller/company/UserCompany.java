@@ -53,7 +53,7 @@ public class UserCompany {
     }
 
     @PostMapping("/allegation")
-    public String allegation(@RequestParam("msg") String message, HttpSession session, Model model){
+    public String allegation(@RequestParam("msg") String message, HttpSession session, Model model) {
 
         Client client = (Client) session.getAttribute("client");
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
@@ -229,7 +229,7 @@ public class UserCompany {
                                   @RequestParam("iban") String iban,
                                   @RequestParam("amount") Double amount,
                                   HttpSession session, Model model) {
-
+// TODO Refactor shitcode
         if (amount <= 0) {
             //fail message negative or zero amount
             model.addAttribute("message", "Money transfer was denied, invalid amount (amount = " + amount + ")");
@@ -259,7 +259,7 @@ public class UserCompany {
 
 
         BankAccountEntity recipientBankAccount = bankAccountRepository.findBankAccountEntityByIban(iban);
-        if (recipientBankAccount != null) {// Internal bank money transfer no need Payment and Beneficiary entities
+        if (recipientBankAccount != null) {// Internal bank money transfer
             CompanyEntity companyRecipient = recipientBankAccount.getCompaniesById().stream().filter(c -> c.getName().equals(beneficiaryName)).findFirst().orElse(null);
             if (companyRecipient == null) { // Private Client is going to receive money, Authorized person can not figure as beneficiary only proper owner of the account.
                 ClientEntity clientRecipient = recipientBankAccount.getClientByClientId();
@@ -300,7 +300,7 @@ public class UserCompany {
             paymentRepository.save(payment);
             bankAccountRepository.save(recipientBankAccount);
 
-        } else { // External bank money transfer using Payment & Beneficiary entities
+        } else { // External bank money transfer
             BenficiaryEntity beneficiary = beneficiaryRepository.findBenficiaryEntityByNameAndIban(beneficiaryName, iban);
             PaymentEntity payment = definePayment(amount, beneficiary, transaction);
 
@@ -316,7 +316,7 @@ public class UserCompany {
             }
             payment.setBenficiaryByBenficiaryId(beneficiary);
 
-            if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange
+            if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange?
                 CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction, payment);
                 payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
                 transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
@@ -349,20 +349,20 @@ public class UserCompany {
     }
 
     @PostMapping("/makeExchange")
-    public String makeExchange(@ModelAttribute BadgeEntity targedBadge, HttpSession session, Model model) {
+    public String makeExchange(@ModelAttribute BadgeEntity targetBadge, HttpSession session, Model model) {
 
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
         Client client = (Client) session.getAttribute("client");
         BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
         BadgeEntity currentBadge = bankAccount.getBadgeByBadgeId();
-        targedBadge = badgeRepository.findById(targedBadge.getId()).get();
+        targetBadge = badgeRepository.findById(targetBadge.getId()).get();
         TransactionEntity transaction = defineTransaction(client, bankAccount);
 
         BenficiaryEntity beneficiary = beneficiaryRepository.findBenficiaryEntityByNameAndIban(company.getName(), bankAccount.getIban());
         PaymentEntity payment = definePayment(bankAccount.getBalance(), beneficiary, transaction);
 
         if (beneficiary == null) {
-            beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targedBadge, payment);
+            beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targetBadge, payment);
         } else {
             Collection<PaymentEntity> allPayments = beneficiary.getPaymentsById();
             allPayments.add(payment);
@@ -370,21 +370,21 @@ public class UserCompany {
         }
         payment.setBenficiaryByBenficiaryId(beneficiary);
 
-        if (currentBadge.getId() != targedBadge.getId()) {
-            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge, targedBadge, bankAccount.getBalance(), transaction, payment);
+        if (currentBadge.getId() != targetBadge.getId()) {
+            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, bankAccount.getBalance(), transaction, payment);
             payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
             transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
             transaction.setPaymentByPaymentId(payment);
-            updateBadges(currentBadge, targedBadge, currencyExchange);
+            updateBadges(currentBadge, targetBadge, currencyExchange);
             currencyExchangeRepository.save(currencyExchange);
             bankAccount.setBalance(currencyExchange.getFinalAmount());
-            bankAccount.setBadgeByBadgeId(targedBadge);
+            bankAccount.setBadgeByBadgeId(targetBadge);
             beneficiaryRepository.save(beneficiary);
             paymentRepository.save(payment);
             transactionRepository.save(transaction);
             clientRepository.save(client.getClient());
             bankAccountRepository.save(bankAccount);
-            model.addAttribute("message", currencyExchange.getInitialAmount() + " " + currentBadge.getName() + " was successfully exchanged to " + currencyExchange.getFinalAmount() + " " + targedBadge.getName());
+            model.addAttribute("message", currencyExchange.getInitialAmount() + " " + currentBadge.getName() + " was successfully exchanged to " + currencyExchange.getFinalAmount() + " " + targetBadge.getName());
         } else {
             model.addAttribute("message", "No exchange was made, chosen currency is actual currency of your bank account.");
         }
@@ -408,7 +408,6 @@ public class UserCompany {
     public String operationHistory(@ModelAttribute("transactionFilter") TransactionFilter transactionFilter, HttpSession session, Model model) {
         return operationHistoryFilters(transactionFilter, session, model);
     }
-
 
 
     private String operationHistoryFilters(TransactionFilter transactionFilter, HttpSession session, Model model) {

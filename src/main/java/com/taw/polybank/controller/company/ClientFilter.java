@@ -1,9 +1,7 @@
 package com.taw.polybank.controller.company;
 
-import org.apache.logging.log4j.CloseableThreadContext;
 
 import java.sql.Date;
-import java.time.Instant;
 import java.time.LocalDate;
 
 public class ClientFilter {
@@ -11,7 +9,7 @@ public class ClientFilter {
     private Date registeredAfter;
     private Date registeredBefore;
 
-    public ClientFilter(){
+    public ClientFilter() {
         nameOrSurname = "";
         registeredAfter = Date.valueOf(LocalDate.now());
         registeredBefore = Date.valueOf(LocalDate.now());

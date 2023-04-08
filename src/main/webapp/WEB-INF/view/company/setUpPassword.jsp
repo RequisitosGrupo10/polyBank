@@ -28,10 +28,10 @@
     <form:hidden path="client.dni"></form:hidden>
 
     <form:label path="client.password">Password: </form:label>
-    <form:password path="client.password" id="password" size="25" maxlength="64"/>
+    <form:password path="client.password" id="password" size="25" maxlength="64" class="formElement"/>
     <br/>
     <label for="passwordRep">Repeat password: </label>
-    <input id="passwordRep" type="password" size="25" maxlength="64"/>
+    <input id="passwordRep" type="password" size="25" maxlength="64" class="formElement" />
     <br/>
     <form:button id="submitButtonOne" class="prettyButton" onclick="checkPass()">Submit</form:button>
 </form:form>

@@ -10,7 +10,7 @@ public class Client {
     private boolean isNew;
 
 
-    public ClientEntity getClient(){
+    public ClientEntity getClient() {
         return client;
     }
 
@@ -23,10 +23,10 @@ public class Client {
     }
 
     public void setIsNew(boolean isNew) {
-        isNew = isNew;
+        this.isNew = isNew;
     }
 
-    public Client(ClientEntity client, boolean isNew){
+    public Client(ClientEntity client, boolean isNew) {
         this.client = client;
         this.isNew = isNew;
     }

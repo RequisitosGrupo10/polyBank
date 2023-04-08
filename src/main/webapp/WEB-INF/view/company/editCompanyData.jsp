@@ -18,7 +18,7 @@
 
 <form:form modelAttribute="company" method="post" action="/company/user/updateCompanyData">
     <form:label path="name">Company name:</form:label>
-    <form:input path="name" size="45" maxlength="45" />
+    <form:input path="name" size="45" maxlength="45" class="formElement" />
     <br/>
     <form:button class="prettyButton" value="submit">Submit</form:button>
 </form:form>

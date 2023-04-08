@@ -11,7 +11,7 @@ public class TransactionFilter {
     private double minAmount;
     private double maxAmount;
 
-    public TransactionFilter(){
+    public TransactionFilter() {
         this.transactionAfter = Date.valueOf(LocalDate.now());
         this.transactionBefore = Date.valueOf(LocalDate.now());
         this.maxAmount = Double.MAX_VALUE;

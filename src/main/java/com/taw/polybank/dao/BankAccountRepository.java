@@ -11,7 +11,7 @@ import java.util.List;
 public interface BankAccountRepository extends JpaRepository<BankAccountEntity, Integer> {
 
     BankAccountEntity findBankAccountEntityByIban(String iban);
-    
+
     //@Query("select payment.transactionsById[0].bankAccountByBankAccountId from SuspiciousAccountEntity sus join PaymentEntity payment on sus.iban = payment.benficiaryByBenficiaryId.iban ")
     //List<BankAccountEntity> findSuspiciousTransactionAccount();
 }

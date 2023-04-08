@@ -16,12 +16,12 @@ public class PasswordManager {
     private SecureRandom secureRandom;
     private BCryptPasswordEncoder encoder;
 
-    public PasswordManager(){
+    public PasswordManager() {
         this.secureRandom = new SecureRandom();
     }
 
-    public void savePassword(ClientEntity client){
-        if(client.getSalt() != null){
+    public void savePassword(ClientEntity client) {
+        if (client.getSalt() != null) {
             throw new RuntimeException("ERROR: can not reset password using this method.");
         }
         // generating new salt
@@ -36,7 +36,7 @@ public class PasswordManager {
         client.setPassword(encoder.encode(client.getPassword()));
     }
 
-    public boolean verifyPassword(ClientEntity client, String password){
+    public boolean verifyPassword(ClientEntity client, String password) {
         boolean result = false;
         if (client != null) {
             String salt = client.getSalt();
@@ -48,7 +48,7 @@ public class PasswordManager {
         return result;
     }
 
-    public void resetPassword(ClientEntity client, String newPassword){
+    public void resetPassword(ClientEntity client, String newPassword) {
         client.setPassword(newPassword);
         client.setSalt(null);
         this.savePassword(client);

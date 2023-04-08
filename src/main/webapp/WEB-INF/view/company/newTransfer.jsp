@@ -26,13 +26,13 @@
     <p>Balance: <%=companyBankAccount.getBalance()%> <%=companyBankAccount.getBadgeByBadgeId().getName()%></p>
     <form action="/company/user/processTransfer" method="post">
         <label for="beneficiary">Name of recipient: </label>
-        <input id="beneficiary" type="text" name="beneficiary" maxlength="45" size="45"/>
+        <input id="beneficiary" type="text" name="beneficiary" maxlength="45" size="45" class="formElement" />
         <br/>
         <label for="iban">IBAN of recipient: </label>
-        <input id="iban" type="text" name="iban" maxlength="34" size="34"/>
+        <input id="iban" type="text" name="iban" maxlength="34" size="34" class="formElement" />
         <br/>
         <label for="amount">Amount: </label>
-        <input id="amount" type="text" name="amount" maxlength="10" size="10">
+        <input id="amount" type="text" name="amount" maxlength="10" size="10" class="formElement" />
         <br/>
         <button class="prettyButton" type="submit" >Make transaction</button>
 
