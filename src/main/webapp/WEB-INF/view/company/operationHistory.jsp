@@ -1,5 +1,6 @@
 <%@ page import="com.taw.polybank.entity.TransactionEntity" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.entity.CurrencyExchangeEntity" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
@@ -75,9 +76,10 @@
         <td><%=t.getClientByClientId().getDni()%></td>
         <td><%=t.getPaymentByPaymentId().getAmount()%></td>
         <%
+            CurrencyExchangeEntity currencyExchange = t.getCurrencyExchangeByCurrencyExchangeId();
             String currency = t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getBadge();
-            if (t.getCurrencyExchangeByCurrencyExchangeId() != null) {
-                currency = t.getCurrencyExchangeByCurrencyExchangeId().getBadgeByInitialBadgeId().getName();
+            if (currencyExchange!= null) {
+                currency = currencyExchange.getBadgeByInitialBadgeId().getName();
             }
         %>
         <th><%=currency%></th>
@@ -86,15 +88,23 @@
         <td><%=t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getIban()%></td>
         <%
             Double receivedAmount = null;
-            if(t.getCurrencyExchangeByCurrencyExchangeId() != null){
-                receivedAmount = t.getCurrencyExchangeByCurrencyExchangeId().getFinalAmount();
+            if(currencyExchange != null){
+                receivedAmount = currencyExchange.getFinalAmount();
             }else{
                 receivedAmount = t.getPaymentByPaymentId().getAmount();
             }
 
         %>
         <td><%=receivedAmount%></td>
-        <td><%=t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getBadge()%></td>
+        <%
+            String finalBadge = "";
+            if(currencyExchange != null){
+                finalBadge = currencyExchange.getBadgeByFinalBadgeId().getName();
+            }else {
+                finalBadge = t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getBadge();
+            }
+        %>
+        <td><%=finalBadge%></td>
 
     </tr>
 

@@ -11,4 +11,3 @@ public interface CurrencyExchangeRepository extends JpaRepository<CurrencyExchan
 
     List<CurrencyExchangeEntity> findCurrencyExchangeEntitiesByBadgeByFinalBadgeIdId(Integer id);
 }
-s
