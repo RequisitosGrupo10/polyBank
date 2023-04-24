@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.EmployeeDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -131,5 +132,14 @@ public class EmployeeEntity {
 
     public void setRequestsById(Collection<RequestEntity> requestsById) {
         this.requestsById = requestsById;
+    }
+
+    public EmployeeDTO toDTO() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setId(getId());
+        employeeDTO.setDni(getDni());
+        employeeDTO.setName(getName());
+        employeeDTO.setType(getType());
+        return employeeDTO;
     }
 }

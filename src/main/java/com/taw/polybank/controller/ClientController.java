@@ -2,10 +2,14 @@ package com.taw.polybank.controller;
 
 import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.entity.ClientEntity;
+import com.taw.polybank.entity.EmployeeEntity;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/client")
@@ -42,5 +46,18 @@ public class ClientController {
     public String doBorrar (@RequestParam("id") Integer clientID) {
         this.clientRepository.deleteById(clientID);
         return "redirect:/client/list";
+    }
+
+    @PostMapping("/login")
+    public String postLogin(@RequestParam("dni") String dni, @RequestParam("password") String password,
+                            HttpSession session)
+    {
+        ClientEntity client = clientRepository.findByDNI(dni);
+        if (client != null) {
+            // It should be validated : BCrypt.checkpw(password + employee.getSalt(), employee.getPassword())
+            session.setAttribute("clientID", client.getId());
+            return "redirect:/client/assistence/";
+        }
+        return ("redirect:/login");
     }
 }

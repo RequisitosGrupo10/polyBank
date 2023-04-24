@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.SuspiciousAccountDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -47,5 +48,12 @@ public class SuspiciousAccountEntity {
         int result = id;
         result = 31 * result + (iban != null ? iban.hashCode() : 0);
         return result;
+    }
+
+    public SuspiciousAccountDTO toDTO(){
+        SuspiciousAccountDTO suspiciousAccountDTO = new SuspiciousAccountDTO();
+        suspiciousAccountDTO.setIban(getIban());
+        suspiciousAccountDTO.setId(getId());
+        return suspiciousAccountDTO;
     }
 }

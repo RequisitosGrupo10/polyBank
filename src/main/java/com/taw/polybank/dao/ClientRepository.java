@@ -11,6 +11,12 @@ import java.util.List;
 
 @Repository
 public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
+    @Query("select c from ClientEntity c where c.dni = :user and c.password = :password")
+    ClientEntity autenticar(@Param("user") String user, @Param("password") String password);
+
+    @Query("select c from ClientEntity c where c.name like concat('%',:name ,'%') or c.surname like concat('%',:name ,'%')")
+    List<ClientEntity> findByNameOrSurname(String name);
+
 
     @Query("select c from ClientEntity c where c.dni = :dni")
     ClientEntity findByDNI(@Param("dni") String dni);
@@ -58,6 +64,7 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
     List<ClientEntity> findAllRepresentativesOfACompanyThatWasRegisteredBetweenDates(@Param("companyId") Integer id,
                                                                                      @Param("registeredBefore") Timestamp registeredBefore,
                                                                                      @Param("registeredAfter") Timestamp registeredAfter);
-
     ClientEntity findClientEntityByBankAccountsByIdAndName(Integer id, String name);
+
+
 }

@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.RequestDTO;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -134,5 +135,18 @@ public class RequestEntity {
 
     public void setEmployeeByEmployeeId(EmployeeEntity employeeByEmployeeId) {
         this.employeeByEmployeeId = employeeByEmployeeId;
+    }
+
+    public RequestDTO toDTO(){
+        RequestDTO requestDTO = new RequestDTO();
+        requestDTO.setId(getId());
+        requestDTO.setType(getType());
+        requestDTO.setClientByClientId(getClientByClientId().toDTO());
+        requestDTO.setDescription(getDescription());
+        requestDTO.setTimestamp(getTimestamp());
+        requestDTO.setApproved(getApproved() != 0);
+        requestDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
+        requestDTO.setSolved(getSolved() != 0);
+        return requestDTO;
     }
 }

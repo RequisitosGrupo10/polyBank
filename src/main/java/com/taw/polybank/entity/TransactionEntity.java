@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.TransactionDTO;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -93,5 +94,15 @@ public class TransactionEntity {
 
     public void setPaymentByPaymentId(PaymentEntity paymentByPaymentId) {
         this.paymentByPaymentId = paymentByPaymentId;
+    }
+
+    public TransactionDTO toDTO(){
+        TransactionDTO transactionDTO = new TransactionDTO();
+        transactionDTO.setId(getId());
+        transactionDTO.setTimestamp(getTimestamp());
+        transactionDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
+        transactionDTO.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeByCurrencyExchangeId.toDTO());
+        transactionDTO.setPaymentByPaymentId(getPaymentByPaymentId().toDTO());
+        return transactionDTO;
     }
 }

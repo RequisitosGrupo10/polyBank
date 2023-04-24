@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.BadgeDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -95,5 +96,13 @@ public class BadgeEntity {
 
     public void setCurrencyExchangesById_0(Collection<CurrencyExchangeEntity> currencyExchangesById_0) {
         this.currencyExchangesById_0 = currencyExchangesById_0;
+    }
+
+    public BadgeDTO toDTO(){
+        BadgeDTO badgeDTO = new BadgeDTO();
+        badgeDTO.setId(getId());
+        badgeDTO.setName(getName());
+        badgeDTO.setValue(getValue());
+        return badgeDTO;
     }
 }

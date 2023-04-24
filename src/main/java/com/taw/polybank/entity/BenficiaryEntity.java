@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.BenficiaryDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -98,5 +99,15 @@ public class BenficiaryEntity {
 
     public void setPaymentsById(Collection<PaymentEntity> paymentsById) {
         this.paymentsById = paymentsById;
+    }
+
+    public BenficiaryDTO toDTO() {
+        BenficiaryDTO benficiaryDTO = new BenficiaryDTO();
+        benficiaryDTO.setBadge(getBadge());
+        benficiaryDTO.setIban(getIban());
+        benficiaryDTO.setName(getName());
+        benficiaryDTO.setSwift(getSwift());
+        benficiaryDTO.setId(getId());
+        return benficiaryDTO;
     }
 }

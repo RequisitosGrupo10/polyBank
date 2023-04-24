@@ -18,6 +18,7 @@ To change this template use File | Settings | File Templates.
 <h1>Polybank</h1>
 <h2>Your trusted polygonal bank</h2>
 <a class="prettyButton" href="login">Sign-in</a>
+<a class="prettyButton" href="employee">I'm an employee</a>
 <a class="prettyButton"  href="/company/registerCompany">Create corporate account</a>
 </body>
 </html>

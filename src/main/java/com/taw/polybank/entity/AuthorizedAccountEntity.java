@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.AuthorizedAccountDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -69,5 +70,14 @@ public class AuthorizedAccountEntity {
 
     public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
         this.bankAccountByBankAccountId = bankAccountByBankAccountId;
+    }
+
+    public AuthorizedAccountDTO toDto(){
+        AuthorizedAccountDTO authorizedAccountDTO = new AuthorizedAccountDTO();
+        authorizedAccountDTO.setAuthorizedAccountId(this.authorizedAccountId);
+        authorizedAccountDTO.setBlocked(this.blocked != 0);
+        authorizedAccountDTO.setClientByClientId(this.getClientByClientId().toDTO());
+        authorizedAccountDTO.setBankAccountByBankAccountId(this.getBankAccountByBankAccountId().toDTO());
+        return  authorizedAccountDTO;
     }
 }

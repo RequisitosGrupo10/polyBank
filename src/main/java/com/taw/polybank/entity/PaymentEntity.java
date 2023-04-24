@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.PaymentDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -84,5 +85,14 @@ public class PaymentEntity {
 
     public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
         this.transactionsById = transactionsById;
+    }
+
+    public PaymentDTO toDTO() {
+        PaymentDTO paymentDTO = new PaymentDTO();
+        paymentDTO.setId(getId());
+        paymentDTO.setAmount(getAmount());
+        paymentDTO.setBenficiaryByBenficiaryId(benficiaryByBenficiaryId.toDTO());
+        paymentDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
+        return paymentDTO;
     }
 }

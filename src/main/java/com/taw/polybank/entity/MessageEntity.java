@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.MessageDTO;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -21,10 +22,10 @@ public class MessageEntity {
     @JoinColumn(name = "Chat_id", referencedColumnName = "id", nullable = false)
     private ChatEntity chatByChatId;
     @ManyToOne
-    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = true)
     private EmployeeEntity employeeByEmployeeId;
     @ManyToOne
-    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = true)
     private ClientEntity clientByClientId;
 
     public int getId() {
@@ -95,5 +96,16 @@ public class MessageEntity {
 
     public void setClientByClientId(ClientEntity clientByClientId) {
         this.clientByClientId = clientByClientId;
+    }
+
+    public MessageDTO toDTO(){
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setId(getId());
+        messageDTO.setContent(getContent());
+        messageDTO.setTimestamp(getTimestamp());
+        messageDTO.setChat(getChatByChatId().toDTO());
+        messageDTO.setAssistant(getEmployeeByEmployeeId().toDTO());
+        messageDTO.setClient(getClientByClientId().toDTO());
+        return messageDTO;
     }
 }

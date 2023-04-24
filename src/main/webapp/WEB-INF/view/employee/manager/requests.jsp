@@ -17,28 +17,44 @@
 <%
     List<RequestEntity> requests = (List<RequestEntity>) request.getAttribute("requests");
 %>
+<div class="container">
 <h1>Solicitudes pendientes:</h1>
 <% if (requests != null) { %>
-    <table>
+    <table border="1">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Cuenta que solicita</th>
                 <th>Timestamp</th>
+                <th>Descripción</th>
+                <th>Aprobar/Denegar</th>
             </tr>
         </thead>
         <tbody>
             <% for (RequestEntity requestEntity : requests ) { %>
             <tr>
                 <td>
+                    <%= requestEntity.getId()%>
+                </td>
+                <td>
                     <%= requestEntity.getClientByClientId().getDni()%>
                 </td>
                 <td>
                     <%= requestEntity.getTimestamp()%>
+                </td>
+                <td>
+                    <%= requestEntity.getDescription()%>
+                </td>
+                <td>
+                    <a href="/employee/manager/approve/<%=requestEntity.getId()%>">Aprobar</a>
+                    </br>
+                    <a href="/employee/manager/deny/<%=requestEntity.getId()%>">Denegar</a>
                 </td>
             </tr>
             <% } %>
         </tbody>
     </table>
 <% } %>
+</div>
 </body>
 </html>

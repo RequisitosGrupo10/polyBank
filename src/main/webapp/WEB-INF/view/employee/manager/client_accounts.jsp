@@ -2,7 +2,8 @@
 <%@ page import="java.util.Collection" %>
 <%@ page import="com.taw.polybank.entity.ClientEntity" %>
 <%@ page import="com.taw.polybank.entity.CompanyEntity" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.ClientDTO" %><%--
   Created by IntelliJ IDEA.
   User: jmsan
   Date: 13/03/2023
@@ -17,34 +18,10 @@
 </head>
 <body>
 <%
-    List<CompanyEntity> companyEntityList = (List<CompanyEntity>) request.getAttribute("companies");
-    List<ClientEntity> clientEntityList = (List<ClientEntity>) request.getAttribute("clients");
-
+    List<ClientDTO> clientDTOList = (List<ClientDTO>) request.getAttribute("clients");
 %>
-<% if (companyEntityList != null) { %>
-<h1>Empresas:</h1>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% for (CompanyEntity companyEntity : companyEntityList ) { %>
-           <tr>
-                <td>
-                    <%= companyEntity.getId()%>
-                </td>
-                <td>
-                    <%= companyEntity.getName() %>
-                </td>
-            </tr>
-      <% } %>
-    </tbody>
-</table>
-<% } %>
-<% if (clientEntityList != null) { %>
+<div class="container">
+<% if (clientDTOList != null) { %>
 <h1>Clientes</h1>
 <table>
     <thead>
@@ -54,7 +31,7 @@
     </tr>
     </thead>
     <tbody>
-    <% for (ClientEntity client : clientEntityList ) { %>
+    <% for (ClientDTO client : clientDTOList) { %>
     <tr>
         <td>
             <%= client.getDni()%>
@@ -67,5 +44,6 @@
     </tbody>
 </table>
 <% } %>
+</div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.ClientDTO;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -176,5 +177,15 @@ public class ClientEntity {
 
     public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
         this.transactionsById = transactionsById;
+    }
+
+    public ClientDTO toDTO() {
+        ClientDTO clientDTO = new ClientDTO();
+        clientDTO.setDni(getDni());
+        clientDTO.setId(getId());
+        clientDTO.setName(getName());
+        clientDTO.setCreationDate(getCreationDate());
+        clientDTO.setSurname(getSurname());
+        return  clientDTO;
     }
 }

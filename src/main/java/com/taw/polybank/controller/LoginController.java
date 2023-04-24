@@ -36,5 +36,4 @@ public class LoginController {
         System.out.println(BCrypt.gensalt().length());
         return ("login");
     }
-
 }

@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.ChatDTO;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -81,5 +82,14 @@ public class ChatEntity {
 
     public void setMessagesById(Collection<MessageEntity> messagesById) {
         this.messagesById = messagesById;
+    }
+
+    public ChatDTO toDTO(){
+        ChatDTO chatDTO = new ChatDTO();
+        chatDTO.setId(getId());
+        chatDTO.setClient(getClientByClientId().toDTO());
+        chatDTO.setAssistant(getEmployeeByAssistantId().toDTO());
+        chatDTO.setClosed(getClosed() != 0);
+        return chatDTO;
     }
 }

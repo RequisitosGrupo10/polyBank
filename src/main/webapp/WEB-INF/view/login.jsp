@@ -35,7 +35,7 @@
 <script>
     form=document.getElementById("someForm");
     function asClient() {
-        form.action="/"; // TODO Insert your login link
+        form.action="/client/login"; // TODO Insert your login link
         form.submit();
     }
     function asRepresentative() {
