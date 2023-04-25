@@ -208,13 +208,17 @@ public class UserCompany {
     }
 
     @GetMapping("/blockRepresentative")
-    public String blockRepresentative(@RequestParam("id") Integer userId) {
+    public String blockRepresentative(@RequestParam("id") Integer userId,
+                                      HttpSession session) {
         ClientEntity client = clientRepository.findById(userId).orElse(null);
-        Collection<AuthorizedAccountEntity> allAuthorizedAccounts = client.getAuthorizedAccountsById(); //TODO more specific blocking algorithm
-        for (AuthorizedAccountEntity authorizedAccount : allAuthorizedAccounts) {
-            authorizedAccount.setBlocked((byte) 1);
-            authorizedAccountRepository.save(authorizedAccount);
-        }
+        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
+        AuthorizedAccountEntity authorizedAccount =
+                company.getBankAccountByBankAccountId().getAuthorizedAccountsById()
+                        .stream()
+                        .filter(authAcc -> authAcc.getClientByClientId().equals(client))
+                        .findFirst().orElse(null);
+        authorizedAccount.setBlocked((byte) 1);
+        authorizedAccountRepository.save(authorizedAccount);
         return "redirect:/company/user/listAllRepresentatives";
     }
 
@@ -229,7 +233,6 @@ public class UserCompany {
                                   @RequestParam("iban") String iban,
                                   @RequestParam("amount") Double amount,
                                   HttpSession session, Model model) {
-// TODO Refactor shitcode
         if (amount <= 0) {
             //fail message negative or zero amount
             model.addAttribute("message", "Money transfer was denied, invalid amount (amount = " + amount + ")");

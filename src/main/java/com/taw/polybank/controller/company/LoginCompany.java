@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -75,11 +76,10 @@ public class LoginCompany {
 
     private boolean isBlocked(Client client, CompanyEntity companyEntity) {
         boolean result = companyEntity.getBankAccountByBankAccountId().getAuthorizedAccountsById().stream()
-                .filter(authAcc -> authAcc.getClientByClientId().equals(client))
+                .filter(authAcc -> authAcc.getClientByClientId().equals(client.getClient()))
                 .findFirst()
                 .map(authAccount -> authAccount.getBlocked() == (byte) 1 ? true : false)
                 .orElse(false);
         return result;
     }
-
 }
