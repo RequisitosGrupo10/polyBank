@@ -45,6 +45,7 @@ public class LoginCompany {
                 if (company != null && company.size() > 0) {
                     if (company.size() == 1) {
                         session.setAttribute("company", company.get(0));
+                        session.setAttribute("bankAccount", company.get(0).getBankAccountByBankAccountId());
                         if (isBlocked(client, company.get(0))) {
                             return "redirect:/company/user/blockedUser";
                         } else {
@@ -66,6 +67,7 @@ public class LoginCompany {
                                 HttpSession session){
         CompanyEntity company = companyRepository.findById(companyId).orElse(null);
         session.setAttribute("company", company);
+        session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         Client client = (Client) session.getAttribute("client");
         if(isBlocked(client, company)){
             return "redirect:/company/user/blockedUser";

@@ -46,9 +46,13 @@ public class UserCompany {
     }
 
     @GetMapping("/blockedUser")
-    public String blockedUserMenu(Model model) {
-        model.addAttribute("message", "Your access have has been revoked. Submit your application to unblock.");
+    public String blockedUserMenu(Model model, HttpSession session) {
+        Client client = (Client) session.getAttribute("client");
+        model.addAttribute("message", "Your access have has been revoked.");
 
+        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
+        List<RequestEntity> requests = requestRepository.findUnsolvedUnblockRequestByUserId(client.getId(), bankAccount.getId());
+        model.addAttribute("requests", requests);
         return "/company/blockedUser";
     }
 
@@ -75,7 +79,7 @@ public class UserCompany {
 
         model.addAttribute("message", "Allegation successfully submitted. Wait patiently for its resolution.");
 
-        return "/company/blockedUser";
+        return "redirect:/company/user/blockedUser";
     }
 
     @GetMapping("/logout")
