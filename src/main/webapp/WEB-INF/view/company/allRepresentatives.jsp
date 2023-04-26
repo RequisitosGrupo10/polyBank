@@ -2,7 +2,8 @@
 <%@ page import="com.taw.polybank.entity.ClientEntity" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.taw.polybank.entity.MessageEntity" %>
-<%@ page import="com.taw.polybank.controller.company.Client" %><%--
+<%@ page import="com.taw.polybank.controller.company.Client" %>
+<%@ page import="com.taw.polybank.entity.CompanyEntity" %><%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
   Date: 06/04/2023
@@ -15,6 +16,7 @@
     <%
         List<ClientEntity> clientList = (List<ClientEntity>) request.getAttribute("clientList");
         Client active = (Client) session.getAttribute("client");
+        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
     %>
     <title>Representatives of ${company.name}</title>
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
@@ -61,7 +63,11 @@
         <td><%=c.getDni()%></td>
         <%
             String status = "ok";
-            if(c.getAuthorizedAccountsById().size() >= 1 && c.getAuthorizedAccountsById().stream().reduce((a,b) -> a).orElse(null).getBlocked() == (byte) 1){
+            if(company.getBankAccountByBankAccountId().getAuthorizedAccountsById().stream()
+                .filter(authAcc -> authAcc.getClientByClientId().equals(c))
+                .findFirst()
+                .map(authAccount -> authAccount.getBlocked() == (byte) 1 ? true : false)
+                .orElse(false)){
                 status = "blocked";
             }
         %>

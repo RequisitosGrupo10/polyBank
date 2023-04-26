@@ -105,29 +105,20 @@ public class ClientEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ClientEntity client = (ClientEntity) o;
+        ClientEntity that = (ClientEntity) o;
 
-        if (id != client.id) return false;
-        if (dni != null ? !dni.equals(client.dni) : client.dni != null) return false;
-        if (name != null ? !name.equals(client.name) : client.name != null) return false;
-        if (password != null ? !password.equals(client.password) : client.password != null) return false;
-        if (salt != null ? !salt.equals(client.salt) : client.salt != null) return false;
-        if (surname != null ? !surname.equals(client.surname) : client.surname != null) return false;
-        if (creationDate != null ? !creationDate.equals(client.creationDate) : client.creationDate != null)
-            return false;
-
-        return true;
+        if (id != that.id) return false;
+        if (!dni.equals(that.dni)) return false;
+        if (!name.equals(that.name)) return false;
+        return surname.equals(that.surname);
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (dni != null ? dni.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (salt != null ? salt.hashCode() : 0);
-        result = 31 * result + (surname != null ? surname.hashCode() : 0);
-        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        result = 31 * result + dni.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + surname.hashCode();
         return result;
     }
 

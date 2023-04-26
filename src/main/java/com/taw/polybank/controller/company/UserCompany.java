@@ -213,15 +213,16 @@ public class UserCompany {
     }
 
     @GetMapping("/blockRepresentative")
-    public String blockRepresentative(@RequestParam("id") Integer userId, // TODO FIX issue when try to block
+    public String blockRepresentative(@RequestParam("id") Integer userId, // TODO FIX issue when try to block only happens when new user is just created
                                       HttpSession session) {
         ClientEntity client = clientRepository.findById(userId).orElse(null);
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        AuthorizedAccountEntity authorizedAccount =
-                company.getBankAccountByBankAccountId().getAuthorizedAccountsById()
-                        .stream()
-                        .filter(authAcc -> authAcc.getClientByClientId().equals(client))
-                        .findFirst().orElse(null);
+
+        AuthorizedAccountEntity authorizedAccount = company.getBankAccountByBankAccountId().getAuthorizedAccountsById()
+                .stream()
+                .filter(authAcc -> authAcc.getClientByClientId().equals(client))
+                .findFirst().orElse(null);
+
         authorizedAccount.setBlocked((byte) 1);
         authorizedAccountRepository.save(authorizedAccount);
         return "redirect:/company/user/listAllRepresentatives";
