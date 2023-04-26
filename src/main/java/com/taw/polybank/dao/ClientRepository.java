@@ -66,5 +66,10 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
                                                                                      @Param("registeredAfter") Timestamp registeredAfter);
     ClientEntity findClientEntityByBankAccountsByIdAndName(Integer id, String name);
 
+    @Query("select c.salt from ClientEntity c where c.id = :clientId")
+    String findClientSaltByClientId(@Param("clientId") Integer id);
+
+    @Query("select c.password from ClientEntity c where c.id = :clientId")
+    String findClientPasswordByClientId(@Param("clientId") Integer id);
 
 }

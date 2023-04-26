@@ -39,7 +39,7 @@
         form.submit();
     }
     function asRepresentative() {
-        form.action="/company/login"; //TODO Add for your f#king employee another button DO NOT REMOVE COMPANY LOGIN!!!!!!!!!!!!
+        form.action="/company/login";
         form.submit();
     }
 

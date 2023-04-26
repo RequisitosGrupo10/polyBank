@@ -1,12 +1,12 @@
 package com.taw.polybank.controller.company;
 
-import com.taw.polybank.dao.ClientRepository;
-import com.taw.polybank.dao.CompanyRepository;
-import com.taw.polybank.entity.AuthorizedAccountEntity;
-import com.taw.polybank.entity.ClientEntity;
-import com.taw.polybank.entity.CompanyEntity;
+import com.taw.polybank.dto.AuthorizedAccountDTO;
+import com.taw.polybank.dto.ClientDTO;
+import com.taw.polybank.dto.CompanyDTO;
+import com.taw.polybank.service.AuthorizedAccountService;
+import com.taw.polybank.service.ClientService;
+import com.taw.polybank.service.CompanyService;
 import jakarta.servlet.http.HttpSession;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -25,34 +25,37 @@ import java.util.List;
 public class LoginCompany {
 
     @Autowired
-    protected ClientRepository clientRepository;
+    protected ClientService clientService;
 
     @Autowired
-    protected CompanyRepository companyRepository;
+    protected CompanyService companyService;
+
+    @Autowired
+    protected AuthorizedAccountService authorizedAccountService;
 
     @PostMapping("/login")
     public String doCompanyLogin(@RequestParam("dni") String dni,
                                  @RequestParam("password") String password,
                                  Model model,
                                  HttpSession session) {
-        ClientEntity clientEntity = clientRepository.findByDNI(dni);
-        if (clientEntity != null) {
-            PasswordManager passwordManager = new PasswordManager();
-            if (passwordManager.verifyPassword(clientEntity, password)) {
-                Client client = new Client(clientEntity, false);
+        ClientDTO client = clientService.findByDNI(dni);
+        if (client != null) {
+            PasswordManager passwordManager = new PasswordManager(clientService);
+            if (passwordManager.verifyPassword(client, password)) {
+                client.setIsNew(false);
                 session.setAttribute("client", client);
-                List<CompanyEntity> company = companyRepository.findCompanyRepresentedByClient(client.getId());
-                if (company != null && company.size() > 0) {
-                    if (company.size() == 1) {
-                        session.setAttribute("company", company.get(0));
-                        session.setAttribute("bankAccount", company.get(0).getBankAccountByBankAccountId());
-                        if (isBlocked(client, company.get(0))) {
+                List<CompanyDTO> companies = companyService.findCompanyRepresentedByClient(client.getId());
+                if (companies != null && companies.size() > 0) {
+                    if (companies.size() == 1) {
+                        session.setAttribute("company", companies.get(0));
+                        session.setAttribute("bankAccount", companies.get(0).getBankAccountByBankAccountId());
+                        if (isBlocked(client, companies.get(0))) {
                             return "redirect:/company/user/blockedUser";
                         } else {
                             return "redirect:/company/user/";
                         }
                     } else {
-                        model.addAttribute("companies", company);
+                        model.addAttribute("companies", companies);
                         return "/company/chooseCompany";
                     }
                 }
@@ -65,10 +68,10 @@ public class LoginCompany {
     @GetMapping("/chooseCompany")
     public String chooseCompany(@RequestParam("id") int companyId,
                                 HttpSession session){
-        CompanyEntity company = companyRepository.findById(companyId).orElse(null);
+        CompanyDTO company = companyService.findById(companyId).orElse(null);
         session.setAttribute("company", company);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
-        Client client = (Client) session.getAttribute("client");
+        ClientDTO client = (ClientDTO) session.getAttribute("client");
         if(isBlocked(client, company)){
             return "redirect:/company/user/blockedUser";
         } else {
@@ -76,11 +79,12 @@ public class LoginCompany {
         }
     }
 
-    private boolean isBlocked(Client client, CompanyEntity companyEntity) {
-        boolean result = companyEntity.getBankAccountByBankAccountId().getAuthorizedAccountsById().stream()
-                .filter(authAcc -> authAcc.getClientByClientId().equals(client.getClient()))
+    private boolean isBlocked(ClientDTO client, CompanyDTO company) {
+        List<AuthorizedAccountDTO> listOfAuthAccounts = authorizedAccountService.findAuthorizedAccountEntitiesOfGivenBankAccount(company.getBankAccountByBankAccountId().getId());
+        boolean result = listOfAuthAccounts.stream()
+                .filter(authAcc -> authAcc.getClientByClientId().equals(client))
                 .findFirst()
-                .map(authAccount -> authAccount.getBlocked() == (byte) 1 ? true : false)
+                .map(authAccount -> authAccount.isBlocked())
                 .orElse(false);
         return result;
     }

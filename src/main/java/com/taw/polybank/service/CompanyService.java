@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyService {
@@ -34,5 +35,9 @@ public class CompanyService {
         else
             companyDTOOptional = Optional.of(null);
         return companyDTOOptional;
+    }
+
+    public List<CompanyDTO> findCompanyRepresentedByClient(int id) {
+        return companyRepository.findCompanyRepresentedByClient(id).stream().map(company -> company.toDTO()).collect(Collectors.toList());
     }
 }

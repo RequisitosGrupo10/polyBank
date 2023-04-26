@@ -1,5 +1,5 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.taw.polybank.entity.CompanyEntity" %><%--
+<%@ page import="com.taw.polybank.dto.CompanyDTO" %><%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
   Date: 25/04/2023
@@ -12,7 +12,7 @@
     <title>Choose company</title>
 
     <%
-        List<CompanyEntity> companies = (List<CompanyEntity>) request.getAttribute("companies");
+        List<CompanyDTO> companies = (List<CompanyDTO>) request.getAttribute("companies");
     %>
 </head>
 <body>
@@ -26,7 +26,7 @@ You currently assigned to manage following companies:
         <th></th>
     </tr>
     <%
-        for(CompanyEntity c : companies){
+        for(CompanyDTO c : companies){
     %>
     <tr>
         <td><%=c.getName()%></td>

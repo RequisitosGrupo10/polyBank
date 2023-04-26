@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
 
     <%
-        List<RequestEntity> requests = (List<RequestEntity>) request.getAttribute("requests");
+        List<RequestEntity> requests = (List<RequestEntity>) request.getAttribute("requests"); // TODO Refactor blocked user view
         boolean alreadyRequested = requests.size() > 0;
     %>
 

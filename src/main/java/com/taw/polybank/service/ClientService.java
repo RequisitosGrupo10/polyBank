@@ -33,4 +33,30 @@ public class ClientService {
             clientDTOOptional = Optional.of(null);
         return clientDTOOptional;
     }
+
+    public ClientDTO findByDNI(String dni) {
+        ClientEntity client = clientRepository.findByDNI(dni);
+        return client == null ? null : client.toDTO();
+    }
+
+    public String getSalt(int id) {
+        return clientRepository.findClientSaltByClientId(id);
+    }
+
+    public String getPassword(int id) {
+        return clientRepository.findClientPasswordByClientId(id);
+    }
+
+    public void saveUserSaltAndPassword(int userId, String salt, String password) {
+        ClientEntity client = clientRepository.findById(userId).orElse(null);
+        client.setPassword(password);
+        client.setSalt(salt);
+        clientRepository.save(client);
+    }
+
+    public void updateUserPassword(int userId, String password) {
+        ClientEntity client = clientRepository.findById(userId).orElse(null);
+        client.setPassword(password);
+        clientRepository.save(client);
+    }
 }
