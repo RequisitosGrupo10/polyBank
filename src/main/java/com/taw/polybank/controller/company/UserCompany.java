@@ -213,7 +213,7 @@ public class UserCompany {
     }
 
     @GetMapping("/blockRepresentative")
-    public String blockRepresentative(@RequestParam("id") Integer userId,
+    public String blockRepresentative(@RequestParam("id") Integer userId, // TODO FIX issue when try to block
                                       HttpSession session) {
         ClientEntity client = clientRepository.findById(userId).orElse(null);
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");

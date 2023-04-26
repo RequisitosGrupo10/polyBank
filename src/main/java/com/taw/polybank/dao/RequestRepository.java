@@ -17,7 +17,7 @@ public interface RequestRepository extends JpaRepository<RequestEntity, Integer>
 
     List<RequestEntity> findByBankAccountByBankAccountIdAndSolved(BankAccountEntity bankAccount, boolean b);
 
-    @Query("select r from RequestEntity r where r.bankAccountByBankAccountId.id = :bankId and r.clientByClientId.id = :userId and r.solved = 0 and r.type = 'activation'")
+    @Query("select r from RequestEntity r where r.bankAccountByBankAccountId.id = :bankId and r.clientByClientId.id = :userId and r.solved = false and r.type = 'activation'")
     List<RequestEntity> findUnsolvedUnblockRequestByUserId(@Param("userId") int userId, @Param("bankId") int bankId);
 
 }
