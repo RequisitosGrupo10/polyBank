@@ -1,30 +1,30 @@
 package com.taw.polybank.ui;
 
 public class AssistantFilter {
-    private String dni;
-    private String client;
+    private String clientDni;
+    private String clientName;
     private Boolean recent;
 
     public AssistantFilter() {
-        this.dni = "";
-        this.client = "";
+        this.clientDni = "";
+        this.clientName = "";
         this.recent = false;
     }
 
-    public String getDni() {
-        return dni;
+    public String getClientDni() {
+        return clientDni;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setClientDni(String clientDni) {
+        this.clientDni = clientDni;
     }
 
-    public String getClient() {
-        return client;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setClient(String client) {
-        this.client = client;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     public Boolean getRecent() {

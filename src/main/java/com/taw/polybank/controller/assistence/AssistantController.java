@@ -32,44 +32,50 @@ public class AssistantController {
 
     @GetMapping("/")
     public String doListChats(Model model, HttpSession session) {
-        EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeID")).orElse(null);
-        List<ChatEntity> chatList = (List<ChatEntity>) employee.getChatsById();
-        model.addAttribute("chatList", chatList);
-
-        AssistantFilter filter = new AssistantFilter();
-        model.addAttribute("filter", filter);
-
-        return "assistence/assistantChatList";
+        return processFilter(model, session, null);
     }
 
     @PostMapping("/filter")
     public String doFilterChats(Model model, HttpSession session, @ModelAttribute("filter")AssistantFilter filter) {
-        model.addAttribute("filter", filter);
-        EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeID")).orElse(null);
-        List<ChatEntity> chatList;
+        return processFilter(model, session, filter);
+    }
 
-        if (filter.getDni() == "" && filter.getClient() == "" && filter.getRecent() == false) {
-            chatList = (List<ChatEntity>) employee.getChatsById();
+    protected String processFilter(Model model, HttpSession session, AssistantFilter filter) {
+        List<ChatEntity> chatList;
+        EmployeeEntity employee = this.employeeRepository.findById((Integer) session.getAttribute("employeeID")).orElse(null);
+
+        if (employee != null) {
+            if (filter == null || (filter.getClientDni() == "" && filter.getClientName() == "" && filter.getRecent() == false)) {
+                chatList = (List<ChatEntity>) employee.getChatsById();
+                filter = new AssistantFilter();
+            } else {
+                if (filter.getClientDni() != "") {
+                    if (filter.getClientName() == "" && filter.getRecent() == false) {
+                        chatList = this.chatRepository.findByEmployeeAndClientDni(employee, filter.getClientDni());
+                    } else if (filter.getClientName() != "" && filter.getRecent() == false) {
+                        chatList = this.chatRepository.findByEmployeeAndClientDniAndClientName(employee, filter.getClientDni(), filter.getClientName());
+                    } else if (filter.getClientName() == "" && filter.getRecent() == true) {
+                        chatList = this.chatRepository.findByEmployeeAndClientDniAndRecent(employee, filter.getClientName());
+                    } else {
+                        chatList = this.chatRepository.findByEmployeeAndClientDniAndClientNameAndRecent(employee, filter.getClientDni(), filter.getClientName());
+                    }
+                } else if (filter.getClientName() != "") {
+                    if (filter.getRecent() == false) {
+                        chatList = this.chatRepository.findByEmployeeAndClientName(employee, filter.getClientName());
+                    } else {
+                        chatList = this.chatRepository.findByEmployeeAndClientNameAndRecent(employee, filter.getClientName());
+                    }
+                } else {
+                    chatList = this.chatRepository.findByEmployeeAndRecent(employee);
+                }
+            }
             model.addAttribute("chatList", chatList);
-        } else if (filter.getDni() == "") {
-            if (filter.getClient() != "" && filter.getRecent() == false) {
-                chatList = this.chatRepository.findByEmployeeAndClientName(employee, filter.getClient());
-            } else if (filter.getClient() == "" && filter.getRecent() == true) {
-                chatList = this.chatRepository.findByEmployeeAndRecent(employee);
-            } else {
-                chatList = this.chatRepository.findByEmployeeAndClientNameAndRecent(employee, filter.getClient());
-            }
-        } else {
-            if (filter.getClient() != "" && filter.getRecent() == false) {
-                chatList = this.chatRepository.findByEmployeeAndClientDniAndClientName(employee, filter.getDni(), filter.getClient());
-            } else if (filter.getClient() == "" && filter.getRecent() == true) {
-                chatList = this.chatRepository.findByEmployeeAndClientDniAndRecent(employee, filter.getDni());
-            } else {
-                chatList = this.chatRepository.findByEmployeeAndClientDniAndClientNameAndRecent(employee, filter.getDni(), filter.getClient());
-            }
+            model.addAttribute("filter", filter);
+
+            return "assistence/assistantChatList";
         }
-        model.addAttribute("chatList", chatList);
-        return "assistence/assistantChatList";
+
+        return "error";
     }
 
     @GetMapping("/chat")
