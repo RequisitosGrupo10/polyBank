@@ -9,6 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ChatRepository extends JpaRepository<ChatEntity, Integer> {
+    @Query("select c from ChatEntity c where c.employeeByAssistantId = :employee and c.clientByClientId.dni like %:clientDni%")
+    List<ChatEntity> findByEmployeeAndClientDni(@Param("employee") EmployeeEntity employee, @Param("clientDni") String clientDni);
+
     @Query("select c from ChatEntity c where c.employeeByAssistantId = :employee and c.clientByClientId.name like %:clientName%")
     List<ChatEntity> findByEmployeeAndClientName(@Param("employee") EmployeeEntity employee, @Param("clientName") String clientName);
 

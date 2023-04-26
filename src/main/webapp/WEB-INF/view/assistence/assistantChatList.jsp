@@ -22,9 +22,9 @@
 <strong>Filter:</strong>
 <br>
 <form:form modelAttribute="filter" method="post" action="/employee/assistence/filter">
-    Client DNI: <form:input path="dni"></form:input>
+    Client DNI: <form:input path="clientDni"></form:input>
     <br>
-    Client Name: <form:input path="client"></form:input>
+    Client Name: <form:input path="clientName"></form:input>
    <br>
     Order By Most Recent Messages: <form:checkbox path="recent"></form:checkbox>
     <br>
