@@ -39,6 +39,7 @@ public class RegisterCompany {
     @GetMapping("/registerCompany")
     public String doRegister(Model model) {
         CompanyDTO company = new CompanyDTO();
+        company.setBankAccountByBankAccountId(new BankAccountDTO());
         model.addAttribute("company", company);
 
         List<BadgeDTO> badgeList = badgeService.findAll();
@@ -74,7 +75,6 @@ public class RegisterCompany {
 
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
-
         company.setBankAccountByBankAccountId(bankAccount);
 
         PasswordManager passwordManager = new PasswordManager(clientService);
@@ -84,21 +84,12 @@ public class RegisterCompany {
         defineActivationRequest(client, bankAccount, request);
 
         // saving Entities
-        clientService.save(client, bankAccount, request);
-
-
-        companyService.save(company);
-
-        bankAccountService.save(bankAccount, company, request);
-        // TODO save company to list of companies
-        bankAccount.setCompanyById(company);
-        // TODO save request to list of requests
-        bankAccount.setRequestsById(request);
-
-        requestRepository.save(request);
+        clientService.save(clientService.toEntidy(client), bankAccountService.toEntity(bankAccount), requestService.toEntity(request));
+        companyService.save(companyService.toEntity(company));
+        requestService.save(requestService.toEntity(request));
+        bankAccountService.save(bankAccount, companyService.toEntity(company), requestService.toEntity(request));
 
         session.invalidate();
-
         return "redirect:/";
     }
 

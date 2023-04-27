@@ -19,13 +19,6 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
-    @Autowired
-    protected BankAccountService bankAccountService;
-
-    @Autowired
-    protected RequestService requestService;
-
-
     public List<ClientDTO> findAll(){
         List <ClientEntity> clientEntityList= clientRepository.findAll();
         List<ClientDTO> clientDTOList = new ArrayList<>();
@@ -84,15 +77,12 @@ public class ClientService {
         return clientEntity;
     }
 
-    public void save(ClientDTO client, BankAccountDTO bankAccount, RequestDTO request) {
-        ClientEntity clientEntity = toEntidy(client);
-        BankAccountEntity bankAccountEntity = bankAccountService.toEntity(bankAccount);
-        RequestEntity requestEntity = requestService.toEntity(request);
+    public void save(ClientEntity client, BankAccountEntity bankAccount, RequestEntity request) {
 
-        clientEntity.getBankAccountsById().add(bankAccountEntity);
-        clientEntity.getRequestsById().add(requestEntity);
+        client.getBankAccountsById().add(bankAccount);
+        client.getRequestsById().add(request);
 
-        clientRepository.save(clientEntity);
+        clientRepository.save(client);
 
     }
 }

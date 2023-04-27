@@ -1,8 +1,10 @@
 package com.taw.polybank.controller.company;
 
 import com.taw.polybank.dao.*;
+import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.dto.CompanyDTO;
 import com.taw.polybank.entity.*;
+import com.taw.polybank.service.ClientService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -106,12 +108,13 @@ public class UserCompany {
     public String saveNewPassword(@ModelAttribute("client") Client client,
                                   HttpSession session,
                                   Model model) {
-        PasswordManager passwordManager = new PasswordManager();
+        // TODO FIX password manager
+        PasswordManager passwordManager = new PasswordManager(new ClientService()); // WRONG HERE
         if (client.getIsNew()) {
-            passwordManager.savePassword(client.getClient());
+            passwordManager.savePassword(new ClientDTO(), client.getPassword()); // wrong here
         } else {
             Client oldClient = (Client) session.getAttribute("client");
-            passwordManager.resetPassword(oldClient.getClient(), client.getPassword());
+            passwordManager.resetPassword(new ClientDTO(), client.getPassword()); // wrong here
         }
         updateUser(client, session, model);
         return "/company/userHomepage";

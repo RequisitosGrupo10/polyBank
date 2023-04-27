@@ -40,4 +40,8 @@ public class RequestService {
         requestEntity.setEmployeeByEmployeeId(employeeService.toEntity(request.getEmployeeByEmployeeId()));
         return requestEntity;
     }
+
+    public void save(RequestEntity request) {
+        requestRepository.save(request);
+    }
 }

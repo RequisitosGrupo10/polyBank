@@ -3,6 +3,8 @@ package com.taw.polybank.service;
 import com.taw.polybank.dao.BankAccountRepository;
 import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.BankAccountEntity;
+import com.taw.polybank.entity.CompanyEntity;
+import com.taw.polybank.entity.RequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +18,8 @@ import java.util.List;
 public class BankAccountService {
     @Autowired
     private BankAccountRepository bankAccountRepository;
-
     @Autowired
     protected ClientService clientService;
-
     @Autowired
     protected BadgeService badgeService;
 
@@ -66,8 +66,12 @@ public class BankAccountService {
         return bankAccountEntity;
     }
 
-    public void save(BankAccountDTO bankAccount, CompanyDTO company, RequestDTO request) {
+    public void save(BankAccountDTO bankAccount, CompanyEntity company, RequestEntity request) {
         BankAccountEntity bankAccountEntity = toEntity(bankAccount);
+        bankAccountEntity.getCompaniesById().add(company);
 
+        bankAccountEntity.getRequestsById().add(request);
+
+        bankAccountRepository.save(bankAccountEntity);
     }
 }

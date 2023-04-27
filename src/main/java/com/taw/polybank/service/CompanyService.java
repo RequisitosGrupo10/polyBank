@@ -56,8 +56,7 @@ public class CompanyService {
         return companyEntity;
     }
 
-    public void save(CompanyDTO company) {
-        CompanyEntity companyEntity = toEntity(company);
-        companyRepository.save(companyEntity);
+    public void save(CompanyEntity company) {
+        companyRepository.save(company);
     }
 }

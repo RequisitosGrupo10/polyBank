@@ -22,8 +22,8 @@ public class PasswordManager {
         this.secureRandom = new SecureRandom();
     }
 
-    public void savePassword(ClientDTO client, String plainPassword) {
-        if (clientService.getSalt(client.getId()) != null || clientService.getSalt(client.getId()).length() > 0) { // TODO Fix possible issues with salt and password of new user
+    public String[] savePassword(ClientDTO client, String plainPassword) {
+        if (clientService.findById(client.getId()).isPresent()) { // TODO Fix possible issues with salt and password of new user
             throw new RuntimeException("ERROR: can not reset password using this method.");
         }
         // generating new salt
@@ -33,12 +33,16 @@ public class PasswordManager {
         primeRandom(seed);
         initializeEncoder();
 
+        String[] saltAndPass = new String[2];
         //saving data
-        clientService.saveUserSaltAndPassword(client.getId(), new String(seed, StandardCharsets.ISO_8859_1), encoder.encode(plainPassword));
+        //clientService.saveUserSaltAndPassword(client.getId(), new String(seed, StandardCharsets.ISO_8859_1), encoder.encode(plainPassword));
         /*
         client.setSalt(new String(seed, StandardCharsets.ISO_8859_1));
         client.setPassword(encoder.encode(client.getPassword()));
         */
+        saltAndPass[0] = new String(seed, StandardCharsets.ISO_8859_1);
+        saltAndPass[1] = encoder.encode(plainPassword);
+        return saltAndPass;
     }
 
     public boolean verifyPassword(ClientDTO client, String password) {
