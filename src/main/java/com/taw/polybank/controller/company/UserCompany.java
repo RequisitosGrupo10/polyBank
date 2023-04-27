@@ -1,10 +1,9 @@
 package com.taw.polybank.controller.company;
 
 import com.taw.polybank.dao.*;
-import com.taw.polybank.dto.ClientDTO;
-import com.taw.polybank.dto.CompanyDTO;
+import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.*;
-import com.taw.polybank.service.ClientService;
+import com.taw.polybank.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,23 +12,29 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 @Controller
 @RequestMapping("/company/user")
 public class UserCompany {
     @Autowired
-    protected ClientRepository clientRepository;
+    protected ClientRepository clientRepository; // TODO REMOVE ALL REPOSITORIES
+    @Autowired
+    protected ClientService clientService;
     @Autowired
     protected AuthorizedAccountRepository authorizedAccountRepository;
     @Autowired
+    protected AuthorizedAccountService authorizedAccountService;
+    @Autowired
     protected BankAccountRepository bankAccountRepository;
+    @Autowired
+    protected BankAccountService bankAccountService;
     @Autowired
     protected CompanyRepository companyRepository;
     @Autowired
     protected BadgeRepository badgeRepository;
+    @Autowired
+    protected BadgeService badgeService;
     @Autowired
     protected BeneficiaryRepository beneficiaryRepository;
     @Autowired
@@ -39,9 +44,9 @@ public class UserCompany {
     @Autowired
     protected TransactionRepository transactionRepository;
     @Autowired
-    protected EmployeeRepository employeeRepository;
+    protected EmployeeService employeeService;
     @Autowired
-    protected RequestRepository requestRepository;
+    protected RequestService requestService;
 
     @GetMapping("/")
     public String showUserHomepage() {
@@ -53,8 +58,8 @@ public class UserCompany {
         ClientDTO client = (ClientDTO) session.getAttribute("client");
         model.addAttribute("message", "Your access have has been revoked.");
 
-        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
-        List<RequestEntity> requests = requestRepository.findUnsolvedUnblockRequestByUserId(client.getId(), bankAccount.getId());
+        BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
+        List<RequestDTO> requests = requestService.findUnsolvedUnblockRequestByUserId(client.getId(), bankAccount.getId());
         model.addAttribute("requests", requests);
         return "/company/blockedUser";
     }
@@ -62,11 +67,11 @@ public class UserCompany {
     @PostMapping("/allegation")
     public String allegation(@RequestParam("msg") String message, HttpSession session, Model model) {
 
-        Client client = (Client) session.getAttribute("client");
-        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
+        ClientDTO client = (ClientDTO) session.getAttribute("client");
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        BankAccountDTO bankAccount = company.getBankAccountByBankAccountId();
 
-        RequestEntity request = new RequestEntity();
+        RequestDTO request = new RequestDTO();
 
         request.setSolved(false);
         request.setTimestamp(Timestamp.from(Instant.now()));
@@ -74,11 +79,12 @@ public class UserCompany {
         request.setDescription(message);
         request.setApproved(false);
         request.setBankAccountByBankAccountId(bankAccount);
-        List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
-        request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));
-        request.setClientByClientId(client.getClient());
+        EmployeeDTO manager = employeeService.findManager();
 
-        requestRepository.save(request);
+        request.setEmployeeByEmployeeId(manager);
+        request.setClientByClientId(client);
+
+        requestService.save(request, clientService, bankAccountService, employeeService, badgeService);
 
         model.addAttribute("message", "Allegation successfully submitted. Wait patiently for its resolution.");
 
@@ -93,71 +99,70 @@ public class UserCompany {
 
     @GetMapping("/addRepresentative")
     public String addRepresentative(Model model) {
-        model.addAttribute("client", new Client(new ClientEntity(), true));
+        ClientDTO client = new ClientDTO();
+        client.setIsNew(true);
+        model.addAttribute("client", client);
         return "/company/newRepresentative";
     }
 
     @PostMapping("/setUpPassword")
-    public String setUpPassword(@ModelAttribute("client") Client client,
+    public String setUpPassword(@ModelAttribute("client") ClientDTO client,
                                 Model model) {
         model.addAttribute("client", client);
         return "/company/setUpPassword";
     }
 
     @PostMapping("/saveNewPassword")
-    public String saveNewPassword(@ModelAttribute("client") Client client,
+    public String saveNewPassword(@ModelAttribute("client") ClientDTO client,
+                                  @RequestParam("password") String password,
                                   HttpSession session,
                                   Model model) {
-        // TODO FIX password manager
-        PasswordManager passwordManager = new PasswordManager(new ClientService()); // WRONG HERE
         if (client.getIsNew()) {
-            passwordManager.savePassword(new ClientDTO(), client.getPassword()); // wrong here
+            updateUser(client, password, session, model);
         } else {
-            Client oldClient = (Client) session.getAttribute("client");
-            passwordManager.resetPassword(new ClientDTO(), client.getPassword()); // wrong here
+            ClientDTO oldClient = (ClientDTO) session.getAttribute("client");
+            PasswordManager passwordManager = new PasswordManager(clientService);
+            passwordManager.resetPassword(oldClient, password);
+            clientService.save(clientService.toEntidy(client)); // TODO Update client fields
         }
-        updateUser(client, session, model);
+
         return "/company/userHomepage";
     }
 
     @PostMapping("/saveRepresentative")
-    public String save(@ModelAttribute("client") Client client,
+    public String save(@ModelAttribute("client") ClientDTO client,
                        HttpSession session,
                        Model model) {
-        updateUser(client, session, model);
+        ClientDTO oldClient = (ClientDTO) session.getAttribute("client");
+        clientService.save(clientService.toEntidy(client)); // TODO Update client fields
         return "/company/userHomepage";
     }
 
-    private void updateUser(Client client, HttpSession session, Model model) {
+    private void updateUser(ClientDTO client, String password, HttpSession session, Model model) {
+
         model.addAttribute("message", "User " + client.getName() +
                 " " + client.getSurname() + " is successfully saved");
 
-        if (client.getIsNew()) {
-            CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-            BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
-            AuthorizedAccountEntity authorizedAccount = new AuthorizedAccountEntity();
-            authorizedAccount.setClientByClientId(client.getClient());
-            authorizedAccount.setBankAccountByBankAccountId(bankAccount);
-            authorizedAccount.setBlocked((byte) 0);
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        BankAccountDTO bankAccount = company.getBankAccountByBankAccountId();
+        AuthorizedAccountDTO authorizedAccount = new AuthorizedAccountDTO();
+        authorizedAccount.setClientByClientId(client);
+        authorizedAccount.setBankAccountByBankAccountId(bankAccount);
+        authorizedAccount.setBlocked(false);
 
-            List<AuthorizedAccountEntity> authAccountList = authorizedAccountRepository.findAuthorizedAccountEntitiesOfGivenBankAccount(bankAccount.getId());
+        client.setCreationDate(Timestamp.from(Instant.now()));
 
-            authAccountList.add(authorizedAccount);
-            bankAccount.setAuthorizedAccountsById(authAccountList);
+        authorizedAccountService.save(authorizedAccount, clientService, bankAccountService, badgeService);
+        bankAccountService.addAuthorizedAccount(bankAccount, authorizedAccount);
 
-            client.setCreationDate(Timestamp.from(Instant.now()));
-            client.setAuthorizedAccountsById(List.of(authorizedAccount));
+        clientService.addAuthorizedAccount(client, authorizedAccount);
 
-            clientRepository.save(client.getClient());
-            authorizedAccountRepository.save(authorizedAccount);
-            bankAccountRepository.save(bankAccount);
-        } else {
-            Client oldClient = (Client) session.getAttribute("client");
-            oldClient.setName(client.getName());
-            oldClient.setSurname(client.getSurname());
-            oldClient.setDni(client.getDni());
-            clientRepository.save(oldClient.getClient());
-        }
+        // TODO password save
+        PasswordManager passwordManager = new PasswordManager(clientService);
+        String[] saltAndPass = passwordManager.savePassword(client, password);
+        clientService.save(client);
+        bankAccountRepository.save(bankAccount);
+
     }
 
     @GetMapping("/editMyData")
@@ -226,7 +231,7 @@ public class UserCompany {
                 .filter(authAcc -> authAcc.getClientByClientId().equals(client))
                 .findFirst().orElse(null);
 
-        authorizedAccount.setBlocked((byte) 1);
+        authorizedAccount.setBlocked(true);
         authorizedAccountRepository.save(authorizedAccount);
         return "redirect:/company/user/listAllRepresentatives";
     }

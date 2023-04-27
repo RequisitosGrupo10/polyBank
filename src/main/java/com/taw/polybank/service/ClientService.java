@@ -1,7 +1,12 @@
 package com.taw.polybank.service;
 
+import com.taw.polybank.dao.AuthorizedAccountRepository;
 import com.taw.polybank.dao.ClientRepository;
+import com.taw.polybank.dto.AuthorizedAccountDTO;
+import com.taw.polybank.dto.BankAccountDTO;
 import com.taw.polybank.dto.ClientDTO;
+import com.taw.polybank.dto.RequestDTO;
+import com.taw.polybank.entity.AuthorizedAccountEntity;
 import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.RequestEntity;
@@ -16,6 +21,9 @@ import java.util.Optional;
 public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    protected AuthorizedAccountRepository authorizedAccountRepository;
 
     public List<ClientDTO> findAll(){
         List <ClientEntity> clientEntityList= clientRepository.findAll();
@@ -63,10 +71,7 @@ public class ClientService {
     }
 
     public ClientEntity toEntidy(ClientDTO client){
-        ClientEntity clientEntity = clientRepository.findById(client.getId()).orElse(null);
-        if(clientEntity == null){
-            clientEntity = new ClientEntity();
-        }
+        ClientEntity clientEntity = clientRepository.findById(client.getId()).orElse(new ClientEntity());
         clientEntity.setId(client.getId());
         clientEntity.setDni(client.getDni());
         clientEntity.setName(client.getName());
@@ -75,7 +80,25 @@ public class ClientService {
         return clientEntity;
     }
 
-    public void save(ClientEntity client, BankAccountEntity bankAccount, RequestEntity request, String[] saltAndPass) {
+
+    public int getClientId(ClientDTO client) {
+        ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
+        return clientEntity.getId();
+    }
+
+    public void save(ClientEntity client) {
+        clientRepository.save(client);
+    }
+
+    public void save(ClientDTO clientDTO,
+                     BankAccountDTO bankAccountDTO, BankAccountService bankAccountService,
+                     RequestDTO requestDTO, RequestService requestService,
+                     BadgeService badgeService, String[] saltAndPass) {
+
+        ClientEntity client = this.toEntidy(clientDTO);
+        BankAccountEntity bankAccount = bankAccountService.toEntity(bankAccountDTO, this, badgeService);
+        RequestEntity request = requestService.toEntity(requestDTO);
+
         client.setSalt(saltAndPass[0]);
         client.setPassword(saltAndPass[1]);
 
@@ -92,11 +115,13 @@ public class ClientService {
         }
 
         clientRepository.save(client);
-
+        clientDTO.setId(client.getId());
     }
 
-    public int getClientId(ClientDTO client) {
-        ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
-        return clientEntity.getId();
+    public void addAuthorizedAccount(ClientDTO client, AuthorizedAccountDTO authorizedAccount) {
+        ClientEntity clientEntity = clientRepository.findById(client.getId()).orElse(null);
+        AuthorizedAccountEntity authorizedAccountEntity = authorizedAccountRepository.findById(authorizedAccount.getAuthorizedAccountId()).orElse(null);
+        clientEntity.getAuthorizedAccountsById().add(authorizedAccountEntity);
+        clientRepository.save(clientEntity);
     }
 }

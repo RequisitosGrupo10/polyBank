@@ -89,16 +89,16 @@ public class RegisterCompany {
         defineActivationRequest(client, bankAccount, request);
 
         // saving Entities
-        clientService.save(clientService.toEntidy(client), bankAccountService.toEntity(bankAccount), requestService.toEntity(request), saltAndPass);
-        client.setId(clientService.getClientId(client));
+        clientService.save(client, bankAccount, bankAccountService, request, requestService, badgeService, saltAndPass);
+        //client.setId(clientService.getClientId(client));
 
-        companyService.save(companyService.toEntity(company));
-        company.setId(companyService.getCompanyId(company));
+        companyService.save(company, bankAccountService, clientService, badgeService);
+        //company.setId(companyService.getCompanyId(company));
 
         bankAccount.setId(bankAccountService.getBankAccountId(bankAccount));
-        requestService.save(requestService.toEntity(request));
+        requestService.save(request, clientService, bankAccountService, employeeService, badgeService);
 
-       //bankAccountService.save(bankAccount, companyService.toEntity(company), requestService.toEntity(request));
+        //bankAccountService.save(bankAccount, company, companyService, request, requestService, clientService, badgeService);
         session.invalidate();
         return "redirect:/";
     }

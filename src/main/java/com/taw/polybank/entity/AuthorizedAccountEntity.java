@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class AuthorizedAccountEntity {
     @Basic
     @Column(name = "blocked", nullable = false)
-    private byte blocked;
+    private boolean blocked;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "AuthorizedAccount_id", nullable = false)
@@ -20,11 +20,11 @@ public class AuthorizedAccountEntity {
     @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
     private BankAccountEntity bankAccountByBankAccountId;
 
-    public byte getBlocked() {
+    public boolean getBlocked() {
         return blocked;
     }
 
-    public void setBlocked(byte blocked) {
+    public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
 
@@ -51,7 +51,7 @@ public class AuthorizedAccountEntity {
 
     @Override
     public int hashCode() {
-        int result = (int) blocked;
+        int result = Boolean.hashCode(blocked);
         result = 31 * result + authorizedAccountId;
         return result;
     }
@@ -75,7 +75,7 @@ public class AuthorizedAccountEntity {
     public AuthorizedAccountDTO toDto(){
         AuthorizedAccountDTO authorizedAccountDTO = new AuthorizedAccountDTO();
         authorizedAccountDTO.setAuthorizedAccountId(this.authorizedAccountId);
-        authorizedAccountDTO.setBlocked(this.blocked != 0);
+        authorizedAccountDTO.setBlocked(this.blocked);
         authorizedAccountDTO.setClientByClientId(this.getClientByClientId().toDTO());
         authorizedAccountDTO.setBankAccountByBankAccountId(this.getBankAccountByBankAccountId().toDTO());
         return  authorizedAccountDTO;

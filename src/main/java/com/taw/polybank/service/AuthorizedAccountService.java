@@ -21,4 +21,20 @@ public class AuthorizedAccountService {
                 .map(authAcc -> authAcc.toDto())
                 .collect(Collectors.toList());
     }
+
+    public AuthorizedAccountEntity toEntity(AuthorizedAccountDTO authorizedAccount) {
+        AuthorizedAccountEntity accountEntity = authorizedAccountRepository.findById(authorizedAccount.getAuthorizedAccountId()).orElse(new AuthorizedAccountEntity());
+        accountEntity.setAuthorizedAccountId(authorizedAccount.getAuthorizedAccountId());
+        accountEntity.setBlocked(authorizedAccount.isBlocked());
+        return accountEntity;
+    }
+
+    public void save(AuthorizedAccountDTO authorizedAccount, ClientService clientService, BankAccountService bankAccountService, BadgeService badgeService) {
+        AuthorizedAccountEntity accountEntity = this.toEntity(authorizedAccount);
+        accountEntity.setClientByClientId(clientService.toEntidy(authorizedAccount.getClientByClientId()));
+        accountEntity.setBankAccountByBankAccountId(bankAccountService.toEntity(authorizedAccount.getBankAccountByBankAccountId(), clientService, badgeService));
+
+        authorizedAccountRepository.save(accountEntity);
+        authorizedAccount.setAuthorizedAccountId(accountEntity.getAuthorizedAccountId());
+    }
 }

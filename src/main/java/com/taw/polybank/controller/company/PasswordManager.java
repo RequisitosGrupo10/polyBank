@@ -66,7 +66,6 @@ public class PasswordManager {
         initializeEncoder();
 
         clientService.updateUserPassword(client.getId(), encoder.encode(newPassword));
-
     }
 
     private void initializeEncoder() {
