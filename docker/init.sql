@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `polyBank`.`Company` (
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Enterprise_BankAccount1_idx` (`BankAccount_id` ASC) VISIBLE,
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
   CONSTRAINT `fk_Enterprise_BankAccount1`
     FOREIGN KEY (`BankAccount_id`)
     REFERENCES `polyBank`.`BankAccount` (`id`)

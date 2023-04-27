@@ -20,6 +20,7 @@ public class PasswordManager {
 
     public PasswordManager(ClientService clientService) {
         this.secureRandom = new SecureRandom();
+        this.clientService = clientService;
     }
 
     public String[] savePassword(ClientDTO client, String plainPassword) {

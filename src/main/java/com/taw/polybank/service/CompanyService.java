@@ -1,8 +1,6 @@
 package com.taw.polybank.service;
 
 import com.taw.polybank.dao.CompanyRepository;
-import com.taw.polybank.dto.BankAccountDTO;
-import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.dto.CompanyDTO;
 import com.taw.polybank.entity.CompanyEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +56,10 @@ public class CompanyService {
 
     public void save(CompanyEntity company) {
         companyRepository.save(company);
+    }
+
+    public int getCompanyId(CompanyDTO company) {
+        CompanyEntity companyEntity = companyRepository.findCompanyEntityByName(company.getName());
+        return companyEntity.getId();
     }
 }

@@ -1,9 +1,7 @@
 package com.taw.polybank.service;
 
 import com.taw.polybank.dao.ClientRepository;
-import com.taw.polybank.dto.BankAccountDTO;
 import com.taw.polybank.dto.ClientDTO;
-import com.taw.polybank.dto.RequestDTO;
 import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.RequestEntity;
@@ -34,7 +32,7 @@ public class ClientService {
         if (clientEntityOptional.isPresent())
             clientDTOOptional = Optional.of(clientEntityOptional.get().toDTO());
         else
-            clientDTOOptional = Optional.of(null);
+            clientDTOOptional = Optional.ofNullable(null);
         return clientDTOOptional;
     }
 
@@ -77,12 +75,28 @@ public class ClientService {
         return clientEntity;
     }
 
-    public void save(ClientEntity client, BankAccountEntity bankAccount, RequestEntity request) {
+    public void save(ClientEntity client, BankAccountEntity bankAccount, RequestEntity request, String[] saltAndPass) {
+        client.setSalt(saltAndPass[0]);
+        client.setPassword(saltAndPass[1]);
 
-        client.getBankAccountsById().add(bankAccount);
-        client.getRequestsById().add(request);
+        if(client.getBankAccountsById() == null){
+            client.setBankAccountsById(List.of(bankAccount));
+        }else {
+            client.getBankAccountsById().add(bankAccount);
+        }
+
+        if(client.getRequestsById() == null){
+            client.setRequestsById(List.of(request));
+        }else {
+            client.getRequestsById().add(request);
+        }
 
         clientRepository.save(client);
 
+    }
+
+    public int getClientId(ClientDTO client) {
+        ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
+        return clientEntity.getId();
     }
 }

@@ -16,4 +16,6 @@ public interface CompanyRepository extends JpaRepository<CompanyEntity, Integer>
             "UNION " +
             "select co from CompanyEntity co join co.bankAccountByBankAccountId bc join bc.authorizedAccountsById auth join auth.clientByClientId cli where cli.id = :id")
     List<CompanyEntity> findCompanyRepresentedByClient(@Param("id") int id);
+
+    CompanyEntity findCompanyEntityByName(String name);
 }

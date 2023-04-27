@@ -38,10 +38,6 @@ public class RegisterCompany {
 
     @GetMapping("/registerCompany")
     public String doRegister(Model model) {
-        CompanyDTO company = new CompanyDTO();
-        company.setBankAccountByBankAccountId(new BankAccountDTO());
-        model.addAttribute("company", company);
-
         List<BadgeDTO> badgeList = badgeService.findAll();
         model.addAttribute("badgeList", badgeList);
 
@@ -50,11 +46,20 @@ public class RegisterCompany {
 
 
     @PostMapping("/registerCompanyOwner")
-    public String doRegisterCompanyOwner(@ModelAttribute("company") CompanyDTO company,
+    public String doRegisterCompanyOwner(@RequestParam("name") String companyName,
+                                         @RequestParam("badge") Integer badgeId,
                                          Model model,
                                          HttpSession session) {
         ClientDTO client = new ClientDTO();
         model.addAttribute("client", client);
+
+        CompanyDTO company = new CompanyDTO();
+        company.setName(companyName);
+
+        BadgeDTO badge = badgeService.findById(badgeId);
+        BankAccountDTO bankAccount = new BankAccountDTO();
+        bankAccount.setBadgeByBadgeId(badge);
+        company.setBankAccountByBankAccountId(bankAccount);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         session.setAttribute("company", company);
         return "/company/registerOwner";
@@ -75,20 +80,25 @@ public class RegisterCompany {
 
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
-        company.setBankAccountByBankAccountId(bankAccount);
+        //company.setBankAccountByBankAccountId(bankAccount);
 
         PasswordManager passwordManager = new PasswordManager(clientService);
-        passwordManager.savePassword(client, password);
+        String[] saltAndPass = passwordManager.savePassword(client, password);
 
         // creating activation request
         defineActivationRequest(client, bankAccount, request);
 
         // saving Entities
-        clientService.save(clientService.toEntidy(client), bankAccountService.toEntity(bankAccount), requestService.toEntity(request));
-        companyService.save(companyService.toEntity(company));
-        requestService.save(requestService.toEntity(request));
-        bankAccountService.save(bankAccount, companyService.toEntity(company), requestService.toEntity(request));
+        clientService.save(clientService.toEntidy(client), bankAccountService.toEntity(bankAccount), requestService.toEntity(request), saltAndPass);
+        client.setId(clientService.getClientId(client));
 
+        companyService.save(companyService.toEntity(company));
+        company.setId(companyService.getCompanyId(company));
+
+        bankAccount.setId(bankAccountService.getBankAccountId(bankAccount));
+        requestService.save(requestService.toEntity(request));
+
+       //bankAccountService.save(bankAccount, companyService.toEntity(company), requestService.toEntity(request));
         session.invalidate();
         return "redirect:/";
     }

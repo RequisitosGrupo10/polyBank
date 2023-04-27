@@ -22,4 +22,8 @@ public class BadgeService {
         BadgeEntity badgeEntity = badgeRepository.findById(badge.getId()).orElse(null);
         return badgeEntity;
     }
+
+    public BadgeDTO findById(Integer badgeId) {
+        return badgeRepository.findById(badgeId).orElse(null).toDTO();
+    }
 }

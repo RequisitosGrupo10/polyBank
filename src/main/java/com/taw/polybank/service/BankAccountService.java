@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -68,10 +69,24 @@ public class BankAccountService {
 
     public void save(BankAccountDTO bankAccount, CompanyEntity company, RequestEntity request) {
         BankAccountEntity bankAccountEntity = toEntity(bankAccount);
-        bankAccountEntity.getCompaniesById().add(company);
 
-        bankAccountEntity.getRequestsById().add(request);
+        if (bankAccountEntity.getCompaniesById() == null) {
+            bankAccountEntity.setCompanyById(List.of(company));
+        } else {
+            bankAccountEntity.getCompaniesById().add(company);
+        }
+
+        if (bankAccountEntity.getRequestsById() == null) {
+            bankAccountEntity.setRequestsById(List.of(request));
+        } else{
+            bankAccountEntity.getRequestsById().add(request);
+        }
 
         bankAccountRepository.save(bankAccountEntity);
+    }
+
+    public int getBankAccountId(BankAccountDTO bankAccount) {
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findBankAccountEntityByIban(bankAccount.getIban());
+        return bankAccountEntity.getId();
     }
 }

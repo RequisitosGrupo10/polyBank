@@ -1,3 +1,5 @@
+<%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.BadgeDTO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
@@ -17,24 +19,24 @@
 
 <h1>Create your company account</h1>
 
-<form:form method="post" modelAttribute="company" action="/company/registerCompanyOwner">
-    <form:hidden path="id"/>
-    <form:hidden path="bankAccountByBankAccountId.id" class="formElement" />
-
-    <form:label path="name">Company name:</form:label>
-    <form:input path="name" size="45" maxlength="45" class="formElement" />
+<form method="post" action="/company/registerCompanyOwner">
+    <label id="name">Company name:</label>
+    <input type="text" id="name" name="name" size="45" maxlength="45" class="formElement" />
     <br/>
-    <form:label path="bankAccountByBankAccountId.badgeByBadgeId">Currency:</form:label>
-    <form:select path="bankAccountByBankAccountId.badgeByBadgeId"
-                 items="${badgeList}"
-                 itemValue="id"
-                 itemLabel="name"
-                 multiple="false"/>
+    <label id="badge">Currency:</label>
+    <select name="badge" id="badge">
+        <%
+            List<BadgeDTO> badgeList = (List<BadgeDTO>) request.getAttribute("badgeList");
+            for(BadgeDTO b : badgeList){
+        %>
+            <option value="<%=b.getId()%>" label="<%=b.getName()%>"></option>
+        <% } %>
+    </select>
     <br/>
-
     As a part of registration process you required to associate at least one manager to your bank account
-    <form:button class="prettyButton" name="Register">Add a manager</form:button>
-</form:form>
+    <br/>
+    <input type="submit" class="prettyButton" name="Register" value="Add a manager">
+</form>
 
 </body>
 </html>
