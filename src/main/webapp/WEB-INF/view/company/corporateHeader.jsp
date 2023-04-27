@@ -1,6 +1,4 @@
-<%@ page import="com.taw.polybank.entity.ClientEntity" %>
-<%@ page import="com.taw.polybank.entity.CompanyEntity" %>
-<%@ page import="com.taw.polybank.controller.company.Client" %>
+<%@ page import="com.taw.polybank.dto.ClientDTO" %>
 <%@ page import="com.taw.polybank.dto.CompanyDTO" %>
 
 <%--
@@ -13,13 +11,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Client client = (Client) session.getAttribute("client");
+    ClientDTO client = (ClientDTO) session.getAttribute("client");
     if(client == null){
 %>
 <jsp:forward page="../login.jsp"/>
 <%
     }
-    CompanyEntity company = (CompanyEntity) session.getAttribute("company");
+    CompanyDTO company = (CompanyDTO) session.getAttribute("company");
 %>
 
 

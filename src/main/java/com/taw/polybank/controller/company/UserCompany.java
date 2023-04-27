@@ -50,7 +50,7 @@ public class UserCompany {
 
     @GetMapping("/blockedUser")
     public String blockedUserMenu(Model model, HttpSession session) {
-        Client client = (Client) session.getAttribute("client");
+        ClientDTO client = (ClientDTO) session.getAttribute("client");
         model.addAttribute("message", "Your access have has been revoked.");
 
         BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
