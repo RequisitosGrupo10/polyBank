@@ -1,5 +1,7 @@
 package com.taw.polybank.dto;
 
+import com.taw.polybank.entity.BankAccountEntity;
+
 public class BankAccountDTO {
     private int id;
     private String iban;

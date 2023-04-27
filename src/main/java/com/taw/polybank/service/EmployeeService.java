@@ -9,9 +9,11 @@ import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.EmployeeEntity;
 import com.taw.polybank.entity.RequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,5 +80,24 @@ public class EmployeeService {
         ArrayList employeeList = new ArrayList<EmployeeDTO>();
         employeeEntityList.forEach((final EmployeeEntity employeeEntity) -> employeeList.add(employeeEntity.toDTO()));
         return employeeList;
+    }
+
+    public EmployeeDTO findManager() {
+        EmployeeEntity manager = employeeRepository.findAllManagers().stream()
+                .min(Comparator.comparingInt(mgr -> mgr.getRequestsById().size()))
+                .orElse(null);
+        return manager == null ? null : manager.toDTO();
+    }
+
+    public EmployeeEntity toEntity(EmployeeDTO employee) {
+        EmployeeEntity employeeEntity = employeeRepository.findById(employee.getId()).orElse(null);
+        if(employeeEntity == null){
+            employeeEntity = new EmployeeEntity();
+        }
+        employeeEntity.setId(employee.getId());
+        employeeEntity.setDni(employee.getDni());
+        employeeEntity.setName(employee.getName());
+        employeeEntity.setType(employee.getType());
+        return employeeEntity;
     }
 }

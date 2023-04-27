@@ -80,4 +80,6 @@ public class ClientDTO {
         result = 31 * result + surname.hashCode();
         return result;
     }
+
+
 }

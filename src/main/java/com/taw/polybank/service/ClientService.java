@@ -1,8 +1,12 @@
 package com.taw.polybank.service;
 
 import com.taw.polybank.dao.ClientRepository;
+import com.taw.polybank.dto.BankAccountDTO;
 import com.taw.polybank.dto.ClientDTO;
+import com.taw.polybank.dto.RequestDTO;
+import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.ClientEntity;
+import com.taw.polybank.entity.RequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +18,13 @@ import java.util.Optional;
 public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    protected BankAccountService bankAccountService;
+
+    @Autowired
+    protected RequestService requestService;
+
 
     public List<ClientDTO> findAll(){
         List <ClientEntity> clientEntityList= clientRepository.findAll();
@@ -58,5 +69,30 @@ public class ClientService {
         ClientEntity client = clientRepository.findById(userId).orElse(null);
         client.setPassword(password);
         clientRepository.save(client);
+    }
+
+    public ClientEntity toEntidy(ClientDTO client){
+        ClientEntity clientEntity = clientRepository.findById(client.getId()).orElse(null);
+        if(clientEntity == null){
+            clientEntity = new ClientEntity();
+        }
+        clientEntity.setId(client.getId());
+        clientEntity.setDni(client.getDni());
+        clientEntity.setName(client.getName());
+        clientEntity.setSurname(client.getSurname());
+        clientEntity.setCreationDate(client.getCreationDate());
+        return clientEntity;
+    }
+
+    public void save(ClientDTO client, BankAccountDTO bankAccount, RequestDTO request) {
+        ClientEntity clientEntity = toEntidy(client);
+        BankAccountEntity bankAccountEntity = bankAccountService.toEntity(bankAccount);
+        RequestEntity requestEntity = requestService.toEntity(request);
+
+        clientEntity.getBankAccountsById().add(bankAccountEntity);
+        clientEntity.getRequestsById().add(requestEntity);
+
+        clientRepository.save(clientEntity);
+
     }
 }

@@ -1,7 +1,7 @@
 package com.taw.polybank.service;
 
 import com.taw.polybank.dao.BankAccountRepository;
-import com.taw.polybank.dto.BankAccountDTO;
+import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.BankAccountEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,12 @@ import java.util.List;
 public class BankAccountService {
     @Autowired
     private BankAccountRepository bankAccountRepository;
+
+    @Autowired
+    protected ClientService clientService;
+
+    @Autowired
+    protected BadgeService badgeService;
 
     public List<BankAccountDTO> findAll(){
         List <BankAccountEntity> bankAccountEntityList = bankAccountRepository.findAll();
@@ -43,5 +49,25 @@ public class BankAccountService {
             bankAccountDTOS.add(bankAccountEntity.toDTO());
         }
         return bankAccountDTOS;
+    }
+
+    public BankAccountEntity toEntity(BankAccountDTO bankAccount) {
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.getId()).orElse(null);
+        if(bankAccountEntity == null){
+            bankAccountEntity = new BankAccountEntity();
+        }
+        bankAccountEntity.setId(bankAccount.getId());
+        bankAccountEntity.setIban(bankAccount.getIban());
+        bankAccountEntity.setActive(bankAccount.isActive());
+        bankAccountEntity.setBalance(bankAccount.getBalance());
+        bankAccountEntity.setClientByClientId(clientService.toEntidy(bankAccount.getClientByClientId()));
+        bankAccountEntity.setBadgeByBadgeId(badgeService.toEntity(bankAccount.getBadgeByBadgeId()));
+
+        return bankAccountEntity;
+    }
+
+    public void save(BankAccountDTO bankAccount, CompanyDTO company, RequestDTO request) {
+        BankAccountEntity bankAccountEntity = toEntity(bankAccount);
+
     }
 }

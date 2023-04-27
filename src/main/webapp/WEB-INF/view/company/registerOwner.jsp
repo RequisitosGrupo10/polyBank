@@ -27,8 +27,8 @@
     <form:label path="dni">Representative's ID:</form:label>
     <form:input path="dni" size="45" maxlength="45" class="formElement" />
     <br/>
-    <form:label path="password">Representative's password:</form:label>
-    <form:password path="password" size="20" maxlength="64" class="formElement" />
+    <label for="password">Representative's password:</label>
+    <input type="password" id="password" name="password" size="20" maxlength="64" class="formElement" />
     <br/>
     <form:button class="prettyButton" name="Add representative">Add representative</form:button>
 

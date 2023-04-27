@@ -1,21 +1,16 @@
 package com.taw.polybank.controller.company;
 
-import com.taw.polybank.dao.*;
-import com.taw.polybank.entity.*;
+import com.taw.polybank.dto.*;
+import com.taw.polybank.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -24,29 +19,29 @@ import java.util.Random;
 public class RegisterCompany {
 
     @Autowired
-    protected BadgeRepository badgeRepository;
+    protected BadgeService badgeService;
 
     @Autowired
-    protected BankAccountRepository bankAccountRepository;
+    protected BankAccountService bankAccountService;
 
     @Autowired
-    protected ClientRepository clientRepository;
+    protected ClientService clientService;
 
     @Autowired
-    protected CompanyRepository companyRepository;
+    protected CompanyService companyService;
 
     @Autowired
-    protected RequestRepository requestRepository;
+    protected RequestService requestService;
 
     @Autowired
-    protected EmployeeRepository employeeRepository;
+    protected EmployeeService employeeService;
 
     @GetMapping("/registerCompany")
     public String doRegister(Model model) {
-        CompanyEntity company = new CompanyEntity();
+        CompanyDTO company = new CompanyDTO();
         model.addAttribute("company", company);
 
-        List<BadgeEntity> badgeList = badgeRepository.findAll();
+        List<BadgeDTO> badgeList = badgeService.findAll();
         model.addAttribute("badgeList", badgeList);
 
         return "/company/registerCompany";
@@ -54,11 +49,10 @@ public class RegisterCompany {
 
 
     @PostMapping("/registerCompanyOwner")
-    public String doRegisterCompanyOwner(@ModelAttribute("company") CompanyEntity company,
+    public String doRegisterCompanyOwner(@ModelAttribute("company") CompanyDTO company,
                                          Model model,
                                          HttpSession session) {
-        updateBankAccount(company);
-        ClientEntity client = new ClientEntity();
+        ClientDTO client = new ClientDTO();
         model.addAttribute("client", client);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         session.setAttribute("company", company);
@@ -66,43 +60,41 @@ public class RegisterCompany {
     }
 
     @PostMapping("/saveNewCompany")
-    public String doSaveNewCompany(@ModelAttribute("client") ClientEntity client,
+    public String doSaveNewCompany(@ModelAttribute("client") ClientDTO client,
+                                   @RequestParam("password") String password,
                                    Model model,
                                    HttpSession session) {
-        BankAccountEntity bankAccount = (BankAccountEntity) session.getAttribute("bankAccount");
-        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        RequestEntity request = new RequestEntity();
-
+        BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        RequestDTO request = new RequestDTO();
+        updateBankAccount(bankAccount);
         // filling up bank account fields
         bankAccount.setClientByClientId(client);
-        ArrayList<RequestEntity> bank_requestEntities = new ArrayList<>(1);
-        bank_requestEntities.add(request);
-        bankAccount.setRequestsById(bank_requestEntities);
-        ArrayList<CompanyEntity> companyEntities = new ArrayList<>(1);
-        companyEntities.add(company);
-        bankAccount.setCompanyById(companyEntities);
+
 
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
-        ArrayList<BankAccountEntity> bankAccountEntities = new ArrayList<>(1);
-        bankAccountEntities.add(bankAccount);
-        client.setBankAccountsById(bankAccountEntities);
-        ArrayList<RequestEntity> client_requestEntities = new ArrayList<>(1);
-        client_requestEntities.add(request);
-        client.setRequestsById(client_requestEntities);
 
         company.setBankAccountByBankAccountId(bankAccount);
 
-        PasswordManager passwordManager = new PasswordManager();
-        passwordManager.savePassword(client);
+        PasswordManager passwordManager = new PasswordManager(clientService);
+        passwordManager.savePassword(client, password);
 
         // creating activation request
         defineActivationRequest(client, bankAccount, request);
 
         // saving Entities
-        clientRepository.save(client);
-        companyRepository.save(company);
-        bankAccountRepository.save(bankAccount);
+        clientService.save(client, bankAccount, request);
+
+
+        companyService.save(company);
+
+        bankAccountService.save(bankAccount, company, request);
+        // TODO save company to list of companies
+        bankAccount.setCompanyById(company);
+        // TODO save request to list of requests
+        bankAccount.setRequestsById(request);
+
         requestRepository.save(request);
 
         session.invalidate();
@@ -110,9 +102,7 @@ public class RegisterCompany {
         return "redirect:/";
     }
 
-    private void updateBankAccount(CompanyEntity company) {
-        company.getBankAccountByBankAccountId().setCompanyById(List.of(company));
-        BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
+    private void updateBankAccount(BankAccountDTO bankAccount) {
         bankAccount.setActive(false);
         Random random = new Random();
         StringBuilder iban = new StringBuilder();
@@ -124,15 +114,16 @@ public class RegisterCompany {
         bankAccount.setIban(iban.toString());
     }
 
-    private void defineActivationRequest(ClientEntity client, BankAccountEntity bankAccount, RequestEntity request) {
+    private void defineActivationRequest(ClientDTO client, BankAccountDTO bankAccount, RequestDTO request) {
         request.setSolved(false);
         request.setTimestamp(Timestamp.from(Instant.now()));
         request.setType("activation");
         request.setDescription("Activate company bank Account");
         request.setApproved(false);
         request.setBankAccountByBankAccountId(bankAccount);
-        List<EmployeeEntity> allManagers = employeeRepository.findAllManagers();
-        request.setEmployeeByEmployeeId(allManagers.get(new Random().nextInt(allManagers.size())));
+
+        EmployeeDTO manager = employeeService.findManager();
+        request.setEmployeeByEmployeeId(manager);
         request.setClientByClientId(client);
     }
 }
