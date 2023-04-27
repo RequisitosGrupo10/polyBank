@@ -150,11 +150,12 @@ public class BankAccountEntity {
 
     public BankAccountDTO toDTO() {
         BankAccountDTO bankAccountDTO = new BankAccountDTO();
-        bankAccountDTO.setActive(isActive());
         bankAccountDTO.setId(getId());
-        bankAccountDTO.setBalance(getBalance());
         bankAccountDTO.setIban(getIban());
+        bankAccountDTO.setActive(isActive());
+        bankAccountDTO.setBalance(getBalance());
         bankAccountDTO.setClientByClientId(getClientByClientId().toDTO());
+        bankAccountDTO.setBadgeByBadgeId(getBadgeByBadgeId().toDTO());
         return bankAccountDTO;
     }
 }

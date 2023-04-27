@@ -177,6 +177,6 @@ public class ClientEntity {
         clientDTO.setName(getName());
         clientDTO.setCreationDate(getCreationDate());
         clientDTO.setSurname(getSurname());
-        return  clientDTO;
+        return clientDTO;
     }
 }
