@@ -14,4 +14,12 @@ public interface AuthorizedAccountRepository extends JpaRepository<AuthorizedAcc
 
     @Query("select c.authorizedAccountsById from BankAccountEntity c where c.id = :bankAccountId")
     List<AuthorizedAccountEntity> findAuthorizedAccountEntitiesOfGivenBankAccount(@Param("bankAccountId") Integer id);
+
+    @Query("select auth " +
+            "from AuthorizedAccountEntity auth " +
+            "join auth.clientByClientId client " +
+            "join auth.bankAccountByBankAccountId bank " +
+            "join bank.companiesById comp " +
+            "where client.id = :clientId and comp.id = :companyId")
+    AuthorizedAccountEntity findAuthAccOfGivenClientAndCompany(@Param("clientId") Integer clientId, @Param("companyId") Integer companyId);
 }

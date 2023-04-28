@@ -231,16 +231,8 @@ public class UserCompany {
     @GetMapping("/blockRepresentative")
     public String blockRepresentative(@RequestParam("id") Integer userId,
                                       HttpSession session) {
-        ClientEntity client = clientRepository.findById(userId).orElse(null);
-        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-
-        AuthorizedAccountEntity authorizedAccount = company.getBankAccountByBankAccountId().getAuthorizedAccountsById()
-                .stream()
-                .filter(authAcc -> authAcc.getClientByClientId().equals(client))
-                .findFirst().orElse(null);
-
-        authorizedAccount.setBlocked(true);
-        authorizedAccountRepository.save(authorizedAccount);
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        authorizedAccountService.findAndBlockAuthAccOfGivenClientAndCompany(userId, company.getId());
         return "redirect:/company/user/listAllRepresentatives";
     }
 

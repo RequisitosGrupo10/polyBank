@@ -2,6 +2,8 @@ package com.taw.polybank.service;
 
 import com.taw.polybank.dao.AuthorizedAccountRepository;
 import com.taw.polybank.dto.AuthorizedAccountDTO;
+import com.taw.polybank.dto.ClientDTO;
+import com.taw.polybank.dto.CompanyDTO;
 import com.taw.polybank.entity.AuthorizedAccountEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,5 +38,11 @@ public class AuthorizedAccountService {
 
         authorizedAccountRepository.save(accountEntity);
         authorizedAccount.setAuthorizedAccountId(accountEntity.getAuthorizedAccountId());
+    }
+
+    public void findAndBlockAuthAccOfGivenClientAndCompany(Integer clientId, Integer companyId) {
+        AuthorizedAccountEntity authorizedAccount = authorizedAccountRepository.findAuthAccOfGivenClientAndCompany(clientId, companyId);
+        authorizedAccount.setBlocked(true);
+        authorizedAccountRepository.save(authorizedAccount);
     }
 }
