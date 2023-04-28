@@ -18,6 +18,7 @@
 <%
     List<RequestDTO> requests = (List<RequestDTO>) request.getAttribute("requests");
 %>
+<jsp:include page="../components/navbar.jsp"></jsp:include>
 <div class="container">
 <h1>Pending requests:</h1>
 <% if (requests != null) { %>
@@ -26,6 +27,7 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Cuenta que solicita</th>
+                <th scope="col">IBAN</th>
                 <th scope="col">Timestamp</th>
                 <th scope="col">Descripción</th>
                 <th scope="col">Aprobar/Denegar</th>
@@ -35,7 +37,8 @@
             <% for (RequestDTO requestDTO : requests ) { %>
             <tr>
                 <td><%= requestDTO.getId()%></td>
-                <td><%= requestDTO.getClientByClientId().getDni()%></td>
+                <td><%= requestDTO.getClientByClientId().getName()%></td>
+                <td><%= requestDTO.getBankAccountByBankAccountId().getIban()%></td>
                 <td><%= requestDTO.getTimestamp()%></td>
                 <td><%= requestDTO.getDescription()%></td>
                 <td>

@@ -95,8 +95,8 @@ public class PaymentEntity {
         paymentDTO.setId(getId());
         paymentDTO.setAmount(getAmount());
         paymentDTO.setBenficiaryByBenficiaryId(benficiaryByBenficiaryId.toDTO());
-        CurrencyExchangeDTO currencyExchangeDTO = getCurrencyExchangeByCurrencyExchangeId() == null ? null : getCurrencyExchangeByCurrencyExchangeId().toDTO();
-        paymentDTO.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeDTO);
+        if (getCurrencyExchangeByCurrencyExchangeId() != null)
+            paymentDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
         return paymentDTO;
     }
 }

@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BankAccountService {
@@ -38,7 +39,7 @@ public class BankAccountService {
     public List<BankAccountDTO> findInactive() {
         Timestamp timestamp = Timestamp.from(Instant.now());
         LocalDateTime dateTime = LocalDateTime.now().minusMonths(1);
-        List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findInactiveAccountsFrom(dateTime);
+        List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findInactiveAccountsFrom(Timestamp.valueOf(dateTime));
         List<BankAccountDTO> bankAccountDTOS = getDtoList(bankAccountEntityList);
         return bankAccountDTOS;
     }
@@ -116,5 +117,15 @@ public class BankAccountService {
         } else {
             return bankAccount.toDTO();
         }
+    }
+
+    public void blockAccountById(Integer id) {
+        Optional<BankAccountEntity> bankAccountEntity = bankAccountRepository.findById(id);
+        if (bankAccountEntity.isEmpty())
+            return;
+        BankAccountEntity bankAccount = bankAccountEntity.get();
+        bankAccount.setActive(false);
+        bankAccountRepository.save(bankAccount);
+
     }
 }

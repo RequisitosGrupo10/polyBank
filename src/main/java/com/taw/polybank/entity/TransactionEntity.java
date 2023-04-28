@@ -104,10 +104,10 @@ public class TransactionEntity {
         transactionDTO.setId(getId());
         transactionDTO.setTimestamp(getTimestamp());
         transactionDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
-        CurrencyExchangeDTO currencyExchangeDTO = getCurrencyExchangeByCurrencyExchangeId() == null ? null : getCurrencyExchangeByCurrencyExchangeId().toDTO();
-        transactionDTO.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeDTO);
-        transactionDTO.setPaymentByPaymentId(getPaymentByPaymentId().toDTO());
-        transactionDTO.setClientByClientId(getClientByClientId().toDTO());
+        if (getCurrencyExchangeByCurrencyExchangeId() != null)
+            transactionDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
+        if (getPaymentByPaymentId() != null)
+            transactionDTO.setPaymentByPaymentId(getPaymentByPaymentId().toDTO());
         return transactionDTO;
     }
 }

@@ -6,9 +6,11 @@ import com.taw.polybank.entity.EmployeeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ChatRepository extends JpaRepository<ChatEntity, Integer> {
     @Query("select c from ChatEntity c where c.clientByClientId = :client")
     List<ChatEntity> findByClient(@Param("client") ClientEntity client);

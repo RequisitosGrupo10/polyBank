@@ -21,8 +21,9 @@
 </head>
 <body>
 <%
-    List<BankAccountDTO> bankAccountDTOS = (List<BankAccountDTO>) request.getAttribute("inactiveAccounts");
+    List<BankAccountDTO> bankAccountDTOS = (List<BankAccountDTO>) request.getAttribute("inactive");
 %>
+<jsp:include page="../components/navbar.jsp"></jsp:include>
 <div class="container">
     <h1>Inactive Bank Accounts</h1>
     <table class="table">
