@@ -63,4 +63,10 @@ public class CompanyService {
         CompanyEntity companyEntity = companyRepository.findCompanyEntityByName(company.getName());
         return companyEntity.getId();
     }
+
+    public void save(CompanyDTO companyDTO) {
+        CompanyEntity company = companyRepository.findById(companyDTO.getId()).orElse(null);
+        company.setName(companyDTO.getName());
+        companyRepository.save(company);
+    }
 }

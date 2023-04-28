@@ -1,4 +1,4 @@
-package com.taw.polybank.controller.company;
+package com.taw.polybank.controller;
 
 import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.service.ClientService;
@@ -24,7 +24,7 @@ public class PasswordManager {
     }
 
     public String[] savePassword(ClientDTO client, String plainPassword) {
-        if (clientService.findById(client.getId()).isPresent()) { // TODO Fix possible issues with salt and password of new user
+        if (clientService.findById(client.getId()).isPresent()) {
             throw new RuntimeException("ERROR: can not reset password using this method.");
         }
         // generating new salt

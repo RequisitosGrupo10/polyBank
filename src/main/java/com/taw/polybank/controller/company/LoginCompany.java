@@ -1,5 +1,6 @@
 package com.taw.polybank.controller.company;
 
+import com.taw.polybank.controller.PasswordManager;
 import com.taw.polybank.dto.AuthorizedAccountDTO;
 import com.taw.polybank.dto.ClientDTO;
 import com.taw.polybank.dto.CompanyDTO;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collection;
 import java.util.List;
 
 

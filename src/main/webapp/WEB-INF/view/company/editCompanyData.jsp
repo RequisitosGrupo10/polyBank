@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.taw.polybank.controller.company.Client" %><%--
+<%@ page import="com.taw.polybank.controller.company.Client" %>
+<%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
   Date: 06/04/2023

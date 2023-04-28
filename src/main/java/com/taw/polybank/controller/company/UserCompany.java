@@ -1,5 +1,6 @@
 package com.taw.polybank.controller.company;
 
+import com.taw.polybank.controller.PasswordManager;
 import com.taw.polybank.dao.*;
 import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.*;
@@ -22,6 +23,10 @@ public class UserCompany {
     @Autowired
     protected ClientService clientService;
     @Autowired
+    protected CompanyRepository companyRepository;
+    @Autowired
+    protected CompanyService companyService;
+    @Autowired
     protected AuthorizedAccountRepository authorizedAccountRepository;
     @Autowired
     protected AuthorizedAccountService authorizedAccountService;
@@ -29,8 +34,6 @@ public class UserCompany {
     protected BankAccountRepository bankAccountRepository;
     @Autowired
     protected BankAccountService bankAccountService;
-    @Autowired
-    protected CompanyRepository companyRepository;
     @Autowired
     protected BadgeRepository badgeRepository;
     @Autowired
@@ -163,7 +166,7 @@ public class UserCompany {
         //bankAccountService.save(bankAccount, clientService, badgeService);
 
         bankAccountService.addAuthorizedAccount(bankAccount, authorizedAccount);
-//      clientService.addAuthorizedAccount(client, authorizedAccount);
+//      clientService.addAuthorizedAccount(client, authorizedAccount); // TODO make sure i really don't need to rewrite it
     }
 
     @GetMapping("/editMyData")
@@ -176,15 +179,15 @@ public class UserCompany {
 
     @GetMapping("/editCompanyData")
     public String editCompanyData(HttpSession session, Model model) {
-        model.addAttribute("company", (CompanyEntity) session.getAttribute("company"));
+        model.addAttribute("company", (CompanyDTO) session.getAttribute("company"));
         return "/company/editCompanyData";
     }
 
     @PostMapping("/updateCompanyData")
-    public String updateCompanyData(@ModelAttribute("company") CompanyEntity company, HttpSession session, Model model) {
-        CompanyEntity oldCompany = (CompanyEntity) session.getAttribute("company");
+    public String updateCompanyData(@ModelAttribute("company") CompanyDTO company, HttpSession session, Model model) {
+        CompanyDTO oldCompany = (CompanyDTO) session.getAttribute("company");
         oldCompany.setName(company.getName());
-        companyRepository.save(oldCompany);
+        companyService.save(oldCompany);
         model.addAttribute("message", "Company name was successfully changed to " + company.getName());
         return "/company/userHomepage";
     }
