@@ -2,8 +2,10 @@ package com.taw.polybank.service;
 
 import com.taw.polybank.dao.BankAccountRepository;
 import com.taw.polybank.dao.ClientRepository;
+import com.taw.polybank.dao.TransactionRepository;
 import com.taw.polybank.dto.BankAccountDTO;
 import com.taw.polybank.dto.ClientDTO;
+import com.taw.polybank.dto.TransactionDTO;
 import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.ClientEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ public class BankAccountService {
     public List<BankAccountDTO> findInactive() {
         Timestamp timestamp = Timestamp.from(Instant.now());
         LocalDateTime dateTime = LocalDateTime.now().minusMonths(1);
-        List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findInactiveAccountsFrom(dateTime);
+        List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findInactiveAccountsFrom(Timestamp.valueOf(dateTime));
         List<BankAccountDTO> bankAccountDTOS = getDtoList(bankAccountEntityList);
         return bankAccountDTOS;
     }
@@ -48,5 +50,15 @@ public class BankAccountService {
             bankAccountDTOS.add(bankAccountEntity.toDTO());
         }
         return bankAccountDTOS;
+    }
+
+    public void blockAccountById(Integer id) {
+        Optional<BankAccountEntity> bankAccountEntity = bankAccountRepository.findById(id);
+        if (bankAccountEntity.isEmpty())
+            return;
+        BankAccountEntity bankAccount = bankAccountEntity.get();
+        bankAccount.setActive(false);
+        bankAccountRepository.save(bankAccount);
+
     }
 }

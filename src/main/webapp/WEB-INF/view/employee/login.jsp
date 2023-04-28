@@ -24,12 +24,6 @@
                     </div>
                     <input type="text" id="username" name="dni" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"/><br>
                 </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon2">Contraseña</span>
-                    </div>
-                    <input type="text" id="password" name="password" placeholder="Contraseña" aria-label="Username" aria-describedby="basic-addon1"/><br>
-                </div>
                 <input type="submit">
             </form>
         </div>

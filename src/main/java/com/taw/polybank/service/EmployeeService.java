@@ -43,7 +43,8 @@ public class EmployeeService {
         requestEntity.setApproved(approved);
         requestEntity.setSolved(true);
         BankAccountEntity bankAccountEntity = requestEntity.getBankAccountByBankAccountId();
-        bankAccountEntity.setActive(true);
+        if (approved)
+            bankAccountEntity.setActive(true);
         requestRepository.save(requestEntity);
         bankAccountRepository.save(bankAccountEntity);
     }

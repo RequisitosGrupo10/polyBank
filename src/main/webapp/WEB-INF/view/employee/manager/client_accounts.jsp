@@ -17,16 +17,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 <body>
+<jsp:include page="../components/navbar.jsp"></jsp:include>
+<div class="container">
 <%
     List<ClientDTO> clientDTOList = (List<ClientDTO>) request.getAttribute("clients");
+    if (clientDTOList != null) {
 %>
-<div class="container">
-<% if (clientDTOList != null) { %>
 <h1>Clientes</h1>
+    <jsp:include page="../components/client_filter.jsp"></jsp:include>
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">DNI</th>
+                <th scope="col">Name</th>
                 <th scope="col">Timestamp</th>
                 <th scope="col">Link</th>
             </tr>
@@ -35,8 +38,9 @@
     <% for (ClientDTO client : clientDTOList) { %>
     <tr>
         <td><%= client.getDni()%></td>
+        <td><%= client.getName()%> <%= client.getSurname()%></td>
         <td><%= client.getCreationDate() %></td>
-        <td><a href="/employee/manager/accounts/client/<%= client.getId()%>">Ver cuenta</a></td>
+        <td><a href="/employee/manager/account/client/<%= client.getId()%>">Ver cuenta</a></td>
     </tr>
     <% } %>
     </tbody>

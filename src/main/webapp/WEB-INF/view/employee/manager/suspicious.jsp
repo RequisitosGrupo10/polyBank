@@ -18,7 +18,9 @@
 <%
     List<BankAccountDTO> bankAccountDTOS = (List<BankAccountDTO>) request.getAttribute("suspicious");
 %>
+<jsp:include page="../components/navbar.jsp"></jsp:include>
 <div class="container">
+    <h1>Suspicious Accounts</h1>
     <table class="table">
         <thead>
         <th scope="col">ID</th>

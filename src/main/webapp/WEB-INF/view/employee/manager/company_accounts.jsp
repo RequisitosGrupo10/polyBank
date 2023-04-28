@@ -20,13 +20,15 @@
 <%
     List<CompanyDTO> companyDTOList = (List<CompanyDTO>) request.getAttribute("companies");
 %>
+<jsp:include page="../components/navbar.jsp"></jsp:include>
 <div class="container">
-<% if (companyDTOList != null) { %>
 <h1>Empresas:</h1>
+    <jsp:include page="../components/company_filter.jsp"></jsp:include>
+    <% if (companyDTOList != null) { %>
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">DNI</th>
+            <th scope="col">ID</th>
             <th scope="col">Nombre</th>
             <th scope="col">Link</th>
         </tr>
