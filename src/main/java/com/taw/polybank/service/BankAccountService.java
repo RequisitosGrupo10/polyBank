@@ -108,4 +108,13 @@ public class BankAccountService {
         bankAccountRepository.save(bankAccount);
         bankAccountDTO.setId(bankAccount.getId());
     }
+
+    public BankAccountDTO findBankAccountEntityByIban(String iban) {
+        BankAccountEntity bankAccount = bankAccountRepository.findBankAccountEntityByIban(iban);
+        if(bankAccount == null){
+            return null;
+        }else {
+            return bankAccount.toDTO();
+        }
+    }
 }

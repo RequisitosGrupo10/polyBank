@@ -69,4 +69,9 @@ public class CompanyService {
         company.setName(companyDTO.getName());
         companyRepository.save(company);
     }
+
+    public CompanyDTO findCompanyByName(String beneficiaryName) {
+        CompanyEntity company = companyRepository.findCompanyEntityByName(beneficiaryName);
+        return company == null ? null : company.toDTO();
+    }
 }
