@@ -1,9 +1,9 @@
 package com.taw.polybank.service;
 
 import com.taw.polybank.dao.PaymentRepository;
-import com.taw.polybank.dto.BenficiaryDTO;
 import com.taw.polybank.dto.CurrencyExchangeDTO;
 import com.taw.polybank.dto.PaymentDTO;
+import com.taw.polybank.entity.CurrencyExchangeEntity;
 import com.taw.polybank.entity.PaymentEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,8 @@ public class PaymentService {
         payment.setId(paymentDTO.getId());
         payment.setAmount(paymentDTO.getAmount());
         payment.setBenficiaryByBenficiaryId(beneficiaryService.toEntity(paymentDTO.getBenficiaryByBenficiaryId()));
-        payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeService.toEntity(paymentDTO.getCurrencyExchangeByCurrencyExchangeId(), badgeService));
+        CurrencyExchangeEntity currencyExchangeEntity = paymentDTO.getCurrencyExchangeByCurrencyExchangeId() == null ? null : currencyExchangeService.toEntity(paymentDTO.getCurrencyExchangeByCurrencyExchangeId(), badgeService);
+        payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeEntity);
         return payment;
     }
 }

@@ -437,7 +437,7 @@ public class UserCompany {
         currencyExchange.setFinalAmount(amountAfterExchange);
         payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
         transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchange);
-        updateBadges(originBadge, recipientBadge, currencyExchange);
+       // updateBadges(originBadge, recipientBadge, currencyExchange);
         currencyExchangeService.save(currencyExchange, badgeService);
         return currencyExchange;
     }

@@ -17,7 +17,7 @@ public class BeneficiaryService {
         return beneficiary == null ? null : beneficiary.toDTO();
     }
 
-    public BenficiaryEntity toEntity(BenficiaryDTO benficiaryDTO){
+    public BenficiaryEntity toEntity(BenficiaryDTO benficiaryDTO) {
         BenficiaryEntity benficiary = beneficiaryRepository.findById(benficiaryDTO.getId()).orElse(new BenficiaryEntity());
         benficiary.setId(benficiaryDTO.getId());
         benficiary.setName(benficiaryDTO.getName());

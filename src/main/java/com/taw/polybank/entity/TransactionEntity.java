@@ -1,5 +1,6 @@
 package com.taw.polybank.entity;
 
+import com.taw.polybank.dto.CurrencyExchangeDTO;
 import com.taw.polybank.dto.TransactionDTO;
 import jakarta.persistence.*;
 
@@ -103,7 +104,8 @@ public class TransactionEntity {
         transactionDTO.setId(getId());
         transactionDTO.setTimestamp(getTimestamp());
         transactionDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
-        transactionDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
+        CurrencyExchangeDTO currencyExchangeDTO = getCurrencyExchangeByCurrencyExchangeId() == null ? null : getCurrencyExchangeByCurrencyExchangeId().toDTO();
+        transactionDTO.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeDTO);
         transactionDTO.setPaymentByPaymentId(getPaymentByPaymentId().toDTO());
         transactionDTO.setClientByClientId(getClientByClientId().toDTO());
         return transactionDTO;

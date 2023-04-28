@@ -15,6 +15,7 @@ public class BadgeService {
 
     @Autowired
     protected BadgeRepository badgeRepository;
+
     public List<BadgeDTO> findAll() {
         return badgeRepository.findAll().stream().map(badge -> badge.toDTO()).collect(Collectors.toList());
     }

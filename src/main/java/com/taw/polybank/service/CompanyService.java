@@ -22,7 +22,7 @@ public class CompanyService {
     public List<CompanyDTO> findAll() {
         List<CompanyEntity> companyEntities = companyRepository.findAll();
         List<com.taw.polybank.dto.CompanyDTO> companyDTOS = new ArrayList<>();
-        for (CompanyEntity companyEntity: companyEntities) {
+        for (CompanyEntity companyEntity : companyEntities) {
             companyDTOS.add(companyEntity.toDTO());
         }
         return companyDTOS;
@@ -42,7 +42,7 @@ public class CompanyService {
         return companyRepository.findCompanyRepresentedByClient(id).stream().map(company -> company.toDTO()).collect(Collectors.toList());
     }
 
-    public CompanyEntity toEntity(CompanyDTO company){
+    public CompanyEntity toEntity(CompanyDTO company) {
         CompanyEntity companyEntity = companyRepository.findById(company.getId()).orElse(new CompanyEntity());
         companyEntity.setId(company.getId());
         companyEntity.setName(company.getName());

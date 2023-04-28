@@ -2,6 +2,7 @@ package com.taw.polybank.service;
 
 import com.taw.polybank.dao.TransactionRepository;
 import com.taw.polybank.dto.*;
+import com.taw.polybank.entity.CurrencyExchangeEntity;
 import com.taw.polybank.entity.TransactionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class TransactionService {
                      ClientService clientService, BankAccountService bankAccountService,
                      CurrencyExchangeService currencyExchangeService, PaymentService paymentService,
                      BadgeService badgeService, BeneficiaryService beneficiaryService) {
-        TransactionEntity transaction = this.toEntity(transactionDTO, clientService, bankAccountService, currencyExchangeService, paymentService,badgeService, beneficiaryService);
+        TransactionEntity transaction = this.toEntity(transactionDTO, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
         transactionRepository.save(transaction);
         transactionDTO.setId(transaction.getId());
     }
@@ -34,7 +35,8 @@ public class TransactionService {
         transaction.setTimestamp(transactionDTO.getTimestamp());
         transaction.setClientByClientId(clientService.toEntidy(transactionDTO.getClientByClientId()));
         transaction.setBankAccountByBankAccountId(bankAccountService.toEntity(transactionDTO.getBankAccountByBankAccountId(), clientService, badgeService));
-        transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeService.toEntity(transactionDTO.getCurrencyExchangeByCurrencyExchangeId(), badgeService));
+        CurrencyExchangeEntity currencyExchangeEntity = transactionDTO.getCurrencyExchangeByCurrencyExchangeId() == null ? null : currencyExchangeService.toEntity(transactionDTO.getCurrencyExchangeByCurrencyExchangeId(), badgeService);
+        transaction.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeEntity);
         transaction.setPaymentByPaymentId(paymentService.toEntity(transactionDTO.getPaymentByPaymentId(), beneficiaryService, currencyExchangeService, badgeService));
         return transaction;
     }
@@ -48,7 +50,7 @@ public class TransactionService {
 
     public List<TransactionDTO> findAllTransactionsByBankAccountAndDatesAndSendAmountInRange(int bankId, Timestamp dateAfter, Timestamp dateBefore, double minAmount, double maxAmount) {
         return transactionRepository.findAllTransactionsByBankAccountAndDatesAndSendAmountInRange(
-                bankId, dateAfter, dateBefore, minAmount, maxAmount)
+                        bankId, dateAfter, dateBefore, minAmount, maxAmount)
                 .stream()
                 .map(transaction -> transaction.toDTO())
                 .collect(Collectors.toList());
@@ -56,7 +58,7 @@ public class TransactionService {
 
     public List<TransactionDTO> findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDni(int bankId, Timestamp dateAfter, Timestamp dateBefore, double minAmount, double maxAmount, String senderId) {
         return transactionRepository.findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDni(
-                bankId, dateAfter, dateBefore, minAmount, maxAmount,senderId)
+                        bankId, dateAfter, dateBefore, minAmount, maxAmount, senderId)
                 .stream()
                 .map(transaction -> transaction.toDTO())
                 .collect(Collectors.toList());
@@ -64,7 +66,7 @@ public class TransactionService {
 
     public List<TransactionDTO> findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenRecipientName(int bankId, Timestamp dateAfter, Timestamp dateBefore, double minAmount, double maxAmount, String recipientName) {
         return transactionRepository.findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenRecipientName(
-                bankId, dateAfter, dateBefore, minAmount, maxAmount,recipientName)
+                        bankId, dateAfter, dateBefore, minAmount, maxAmount, recipientName)
                 .stream()
                 .map(transaction -> transaction.toDTO())
                 .collect(Collectors.toList());
@@ -72,7 +74,7 @@ public class TransactionService {
 
     public List<TransactionDTO> findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDniAndRecipientName(int bankId, Timestamp dateAfter, Timestamp dateBefore, double minAmount, double maxAmount, String senderId, String recipientName) {
         return transactionRepository.findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDniAndRecipientName(
-                bankId, dateAfter, dateBefore, minAmount, maxAmount, senderId, recipientName)
+                        bankId, dateAfter, dateBefore, minAmount, maxAmount, senderId, recipientName)
                 .stream()
                 .map(transaction -> transaction.toDTO())
                 .collect(Collectors.toList());

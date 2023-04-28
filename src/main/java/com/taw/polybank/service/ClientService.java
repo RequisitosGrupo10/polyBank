@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,10 +21,10 @@ public class ClientService {
     @Autowired
     protected AuthorizedAccountRepository authorizedAccountRepository;
 
-    public List<ClientDTO> findAll(){
-        List <ClientEntity> clientEntityList= clientRepository.findAll();
+    public List<ClientDTO> findAll() {
+        List<ClientEntity> clientEntityList = clientRepository.findAll();
         List<ClientDTO> clientDTOList = new ArrayList<>();
-        for (ClientEntity client: clientEntityList) {
+        for (ClientEntity client : clientEntityList) {
             clientDTOList.add(client.toDTO());
         }
         return clientDTOList;
@@ -60,7 +59,7 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    public ClientEntity toEntidy(ClientDTO client){
+    public ClientEntity toEntidy(ClientDTO client) {
         ClientEntity clientEntity = clientRepository.findById(client.getId()).orElse(new ClientEntity());
         clientEntity.setId(client.getId());
         clientEntity.setDni(client.getDni());
@@ -116,7 +115,7 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
-    public boolean isBlocked(ClientDTO client, CompanyDTO company, AuthorizedAccountService authorizedAccountService){
+    public boolean isBlocked(ClientDTO client, CompanyDTO company, AuthorizedAccountService authorizedAccountService) {
         List<AuthorizedAccountDTO> listOfAuthAccounts = authorizedAccountService.findAuthorizedAccountEntitiesOfGivenBankAccount(company.getBankAccountByBankAccountId().getId());
         boolean result = listOfAuthAccounts.stream()
                 .filter(authAcc -> authAcc.getClientByClientId().equals(client))

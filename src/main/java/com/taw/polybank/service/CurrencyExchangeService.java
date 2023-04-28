@@ -16,9 +16,6 @@ public class CurrencyExchangeService {
         CurrencyExchangeEntity currencyExchange = this.toEntity(currencyExchangeDTO, badgeService);
         currencyExchangeRepository.save(currencyExchange);
         currencyExchangeDTO.setId(currencyExchange.getId());
-
-        // TODO add transaction to currency exchange
-        // TODO add payment to currency exchange
     }
 
     public CurrencyExchangeEntity toEntity(CurrencyExchangeDTO currencyExchangeDTO, BadgeService badgeService) {

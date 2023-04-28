@@ -23,14 +23,14 @@ public class BankAccountService {
     @Autowired
     protected AuthorizedAccountRepository authorizedAccountRepository;
 
-    public List<BankAccountDTO> findAll(){
-        List <BankAccountEntity> bankAccountEntityList = bankAccountRepository.findAll();
+    public List<BankAccountDTO> findAll() {
+        List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findAll();
         List<BankAccountDTO> bankAccountDTOS = getDtoList(bankAccountEntityList);
         return bankAccountDTOS;
     }
 
-    public List<BankAccountDTO> findSuspicious(){
-        List <BankAccountEntity> bankAccountEntityList = bankAccountRepository.findSuspiciousTransactionAccount();
+    public List<BankAccountDTO> findSuspicious() {
+        List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findSuspiciousTransactionAccount();
         List<BankAccountDTO> bankAccountDTOS = getDtoList(bankAccountEntityList);
         return bankAccountDTOS;
     }
@@ -45,7 +45,7 @@ public class BankAccountService {
 
     private static List<BankAccountDTO> getDtoList(List<BankAccountEntity> bankAccountEntityList) {
         List<BankAccountDTO> bankAccountDTOS = new ArrayList<>();
-        for (BankAccountEntity bankAccountEntity: bankAccountEntityList) {
+        for (BankAccountEntity bankAccountEntity : bankAccountEntityList) {
             bankAccountDTOS.add(bankAccountEntity.toDTO());
         }
         return bankAccountDTOS;
@@ -79,7 +79,7 @@ public class BankAccountService {
 
         if (bankAccount.getRequestsById() == null) {
             bankAccount.setRequestsById(List.of(request));
-        } else{
+        } else {
             bankAccount.getRequestsById().add(request);
         }
 
@@ -95,9 +95,9 @@ public class BankAccountService {
     public void addAuthorizedAccount(BankAccountDTO bankAccount, AuthorizedAccountDTO authorizedAccount) {
         BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.getId()).orElse(null);
         AuthorizedAccountEntity authorizedAccountEntity = authorizedAccountRepository.findById(authorizedAccount.getAuthorizedAccountId()).orElse(null);
-        if(bankAccountEntity.getAuthorizedAccountsById() == null){
+        if (bankAccountEntity.getAuthorizedAccountsById() == null) {
             bankAccountEntity.setAuthorizedAccountsById(List.of(authorizedAccountEntity));
-        }else {
+        } else {
             bankAccountEntity.getAuthorizedAccountsById().add(authorizedAccountEntity);
         }
         bankAccountRepository.save(bankAccountEntity);
@@ -111,9 +111,9 @@ public class BankAccountService {
 
     public BankAccountDTO findBankAccountEntityByIban(String iban) {
         BankAccountEntity bankAccount = bankAccountRepository.findBankAccountEntityByIban(iban);
-        if(bankAccount == null){
+        if (bankAccount == null) {
             return null;
-        }else {
+        } else {
             return bankAccount.toDTO();
         }
     }
