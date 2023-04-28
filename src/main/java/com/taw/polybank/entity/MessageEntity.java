@@ -104,8 +104,16 @@ public class MessageEntity {
         messageDTO.setContent(getContent());
         messageDTO.setTimestamp(getTimestamp());
         messageDTO.setChat(getChatByChatId().toDTO());
-        messageDTO.setAssistant(getEmployeeByEmployeeId().toDTO());
-        messageDTO.setClient(getClientByClientId().toDTO());
+        if (getEmployeeByEmployeeId() == null) {
+            messageDTO.setAssistant(null);
+        } else {
+            messageDTO.setAssistant(getEmployeeByEmployeeId().toDTO());
+        }
+        if (getClientByClientId() == null) {
+            messageDTO.setClient(null);
+        } else {
+            messageDTO.setClient(getClientByClientId().toDTO());
+        }
         return messageDTO;
     }
 }

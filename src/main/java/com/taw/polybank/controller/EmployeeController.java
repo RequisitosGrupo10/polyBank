@@ -62,7 +62,7 @@ public class EmployeeController {
             EmployeeEntity employee = employee_opt.get();
             session.setAttribute("employee", employee);
             if (employee.getType().toString().equals("assistant"))
-                return ("redirect:/employee/assitence");
+                return ("redirect:/employee/assistance");
             else if (employee.getType().toString().equals("manager") )
                 return ("redirect:/employee/manager");
             session.setAttribute("employee", employee);

@@ -21,7 +21,7 @@
 <h1>Chats List</h1>
 <strong>Filter:</strong>
 <br>
-<form:form modelAttribute="filter" method="post" action="/employee/assistence/filter">
+<form:form modelAttribute="filter" method="post" action="/employee/assistance/filter">
     Client DNI: <form:input path="clientDni"></form:input>
     <br>
     Client Name: <form:input path="clientName"></form:input>
@@ -45,7 +45,7 @@
         <td><%= chat.getClient().getDni() %></td>
         <td><%= chat.getClient().getName() %></td>
         <td><%= chat.isClosedToString() %></td>
-        <td><a href="/employee/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
+        <td><a href="/employee/assistance/chat?id=<%= chat.getId() %>">Open</a></td>
     </tr>
     <%
         }

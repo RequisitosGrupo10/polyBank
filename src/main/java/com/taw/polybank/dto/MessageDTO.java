@@ -57,7 +57,7 @@ public class MessageDTO {
         return client;
     }
 
-    public void setClient(ClientDTO clientByClientId) {
+    public void setClient(ClientDTO client) {
         this.client = client;
     }
 

@@ -77,7 +77,9 @@ public class EmployeeService {
 
     protected List<EmployeeDTO> listToDTO(List<EmployeeEntity> employeeEntityList) {
         ArrayList employeeList = new ArrayList<EmployeeDTO>();
-        employeeEntityList.forEach((final EmployeeEntity employeeEntity) -> employeeList.add(employeeEntity.toDTO()));
+        for (EmployeeEntity employeeEntity: employeeEntityList) {
+            employeeList.add(employeeEntity.toDTO());
+        }
         return employeeList;
     }
 }

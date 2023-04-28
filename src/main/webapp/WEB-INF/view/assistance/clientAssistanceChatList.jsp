@@ -30,13 +30,13 @@
     %>
     <tr>
         <td><%= chat.getAssistant().getName() %></td>
-        <td><%= chat.isClosed() %></td>
-        <td><a href="/client/assistence/chat?id=<%= chat.getId() %>">Open</a></td>
+        <td><%= chat.isClosedToString() %></td>
+        <td><a href="/client/assistance/chat?id=<%= chat.getId() %>">Open</a></td>
         <%
             if (!chat.isClosed()) {
         %>
         <td>
-            <form action="/client/assistence/close" method="post">
+            <form action="/client/assistance/close" method="post">
                 <input hidden="true" name="chatId" value="<%= chat.getId() %>">
                 <button>Close</button>
             </form>
@@ -54,7 +54,7 @@
     %>
 </table>
 <br>
-<form action="/client/assistence/newChat" method="post">
+<form action="/client/assistance/newChat" method="post">
     <button>New Chat</button>
 </form>
 </body>

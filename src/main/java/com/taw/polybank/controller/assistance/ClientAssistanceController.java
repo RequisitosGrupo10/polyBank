@@ -1,4 +1,4 @@
-package com.taw.polybank.controller.assistence;
+package com.taw.polybank.controller.assistance;
 
 import com.taw.polybank.dto.ChatDTO;
 import com.taw.polybank.dto.ClientDTO;
@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("client/assistence")
-public class ClientAssistenceController {
+@RequestMapping("client/assistance")
+public class ClientAssistanceController {
 
     @Autowired
     protected ClientService clientService;
@@ -41,7 +40,7 @@ public class ClientAssistenceController {
         if (client.isPresent()) {
             List<ChatDTO> chatList = chatService.findByClient(client.get());
             model.addAttribute("chatList", chatList);
-            return "assistence/clientChatList";
+            return "assistance/clientAssistanceChatList";
         }
         return "error";
     }
@@ -54,7 +53,7 @@ public class ClientAssistenceController {
             model.addAttribute("chat", chat);
             model.addAttribute("messageList", messageService.findByChat(chat));
 
-            return "assistence/clientChat";
+            return "assistance/clientAssistanceChat";
         }
 
         return "error";
@@ -68,9 +67,10 @@ public class ClientAssistenceController {
             chat.setClient(client.get());
             chat.setAssistant(employeeService.findEmployeeWithMinimumChats().get(0));
             chat.setClosed(false);
-            model.addAttribute("chat", chat);
             this.chatService.save(chat);
-            return "assistence/clientChat";
+            model.addAttribute("chat", chatService.findByMaxId());
+            model.addAttribute("messageList", messageService.findByChat(chat));
+            return "assistance/clientAssistanceChat";
         }
 
         return "error";
@@ -90,7 +90,7 @@ public class ClientAssistenceController {
 
             this.messageService.save(message);
 
-            return "redirect:/client/assistence/chat?id=" + chatId;
+            return "redirect:/client/assistance/chat?id=" + chatId;
         }
 
         return "error";
@@ -105,7 +105,7 @@ public class ClientAssistenceController {
 
             this.chatService.close(chat);
 
-            return "redirect:/client/assistence/";
+            return "redirect:/client/assistance/";
         }
 
         return "error";
