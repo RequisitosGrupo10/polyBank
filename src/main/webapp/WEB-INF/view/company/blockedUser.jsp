@@ -1,5 +1,5 @@
-<%@ page import="com.taw.polybank.entity.RequestEntity" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.taw.polybank.dto.RequestDTO" %>
 
 <%--
   Created by IntelliJ IDEA.
@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
 
     <%
-        List<RequestEntity> requests = (List<RequestEntity>) request.getAttribute("requests"); // TODO Refactor blocked user view
+        List<RequestDTO> requests = (List<RequestDTO>) request.getAttribute("requests"); // TODO Refactor blocked user view
         boolean alreadyRequested = requests.size() > 0;
     %>
 
@@ -49,7 +49,7 @@
             <th>Employee</th>
         </tr>
         <%
-            for(RequestEntity r : requests){
+            for(RequestDTO r : requests){
         %>
         <tr>
             <td><%=r.getTimestamp()%></td>
