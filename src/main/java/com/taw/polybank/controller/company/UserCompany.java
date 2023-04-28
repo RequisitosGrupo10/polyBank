@@ -334,50 +334,47 @@ public class UserCompany {
 
     @GetMapping("/moneyExchange")
     public String moneyExchange(Model model) {
-        BadgeEntity badge = new BadgeEntity();
-        List<BadgeEntity> badgeList = badgeRepository.findAll();
+        BadgeDTO badge = new BadgeDTO();
+        List<BadgeDTO> badgeList = badgeService.findAll();
 
         model.addAttribute("badge", badge);
         model.addAttribute("badgeList", badgeList);
         return "/company/moneyExchange";
     }
 
-//    @PostMapping("/makeExchange")
-//    public String makeExchange(@ModelAttribute BadgeEntity targetBadge, HttpSession session, Model model) {
-//
-//        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-//        Client client = (Client) session.getAttribute("client");
-//        BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
-//        BadgeEntity currentBadge = bankAccount.getBadgeByBadgeId();
-//        targetBadge = badgeRepository.findById(targetBadge.getId()).get();
-//        TransactionEntity transaction = defineTransaction(client, bankAccount);
-//
-//        BenficiaryEntity beneficiary = beneficiaryRepository.findBenficiaryEntityByNameAndIban(company.getName(), bankAccount.getIban());
-//        PaymentEntity payment = definePayment(bankAccount.getBalance(), beneficiary, transaction);
-//
-//        if (beneficiary == null) {
-//            beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targetBadge, payment);
-//        } else {
-//            beneficiary.getPaymentsById().add(payment);
-//        }
-//        payment.setBenficiaryByBenficiaryId(beneficiary);
-//
-//        if (currentBadge.getId() != targetBadge.getId()) {
-//            CurrencyExchangeEntity currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, bankAccount.getBalance(), transaction, payment);
-//            transaction.setPaymentByPaymentId(payment);
-//            bankAccount.setBalance(currencyExchange.getFinalAmount());
-//            bankAccount.setBadgeByBadgeId(targetBadge);
-//            beneficiaryRepository.save(beneficiary);
-//            paymentRepository.save(payment);
-//            transactionRepository.save(transaction);
-//            clientRepository.save(client.getClient());
-//            bankAccountRepository.save(bankAccount);
-//            model.addAttribute("message", currencyExchange.getInitialAmount() + " " + currentBadge.getName() + " was successfully exchanged to " + currencyExchange.getFinalAmount() + " " + targetBadge.getName());
-//        } else {
-//            model.addAttribute("message", "No exchange was made, chosen currency is actual currency of your bank account.");
-//        }
-//        return "/company/userHomepage";
-//    }
+    @PostMapping("/makeExchange")
+    public String makeExchange(@ModelAttribute BadgeDTO targetBadge, HttpSession session, Model model) {
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        ClientDTO client = (ClientDTO) session.getAttribute("client");
+        BankAccountDTO bankAccount = company.getBankAccountByBankAccountId();
+        BadgeDTO currentBadge = bankAccount.getBadgeByBadgeId();
+        targetBadge = badgeService.findById(targetBadge.getId());
+        TransactionDTO transaction = defineTransaction(client, bankAccount);
+
+        BenficiaryDTO beneficiary = beneficiaryService.findBenficiaryByNameAndIban(company.getName(), bankAccount.getIban());
+        PaymentDTO payment = definePayment(bankAccount.getBalance(), beneficiary);
+
+        if (beneficiary == null) {
+            beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targetBadge);
+        }
+        payment.setBenficiaryByBenficiaryId(beneficiary);
+
+        if (currentBadge.getId() != targetBadge.getId()) {
+            CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, bankAccount.getBalance(), transaction, payment);
+            transaction.setPaymentByPaymentId(payment);
+            bankAccount.setBalance(currencyExchange.getFinalAmount());
+            bankAccount.setBadgeByBadgeId(targetBadge);
+            beneficiaryService.save(beneficiary);
+            paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
+            transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
+
+            bankAccountService.save(bankAccount, clientService, badgeService);
+            model.addAttribute("message", currencyExchange.getInitialAmount() + " " + currentBadge.getName() + " was successfully exchanged to " + currencyExchange.getFinalAmount() + " " + targetBadge.getName());
+        } else {
+            model.addAttribute("message", "No exchange was made, chosen currency is actual currency of your bank account.");
+        }
+        return "/company/userHomepage";
+    }
 
     private PaymentDTO definePayment(Double amount, BenficiaryDTO beneficiary) {
         PaymentDTO payment = new PaymentDTO();
