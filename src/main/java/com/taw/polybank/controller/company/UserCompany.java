@@ -203,24 +203,26 @@ public class UserCompany {
     }
 
     private String applyFilters(ClientFilter clientFilter, Model model, HttpSession session) {
-        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        List<ClientEntity> clientList;
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        List<ClientDTO> clientList;
         if (clientFilter == null) {
             model.addAttribute("clientFilter", new ClientFilter());
-            clientList = clientRepository.findAllRepresentativesOfGivenCompany(company.getId());
+            clientList = clientService.findAllRepresentativesOfGivenCompany(company.getId());
         } else {
             model.addAttribute("clientFilter", clientFilter);
             Timestamp registeredAfter = new Timestamp(clientFilter.getRegisteredAfter().getTime());
             Timestamp registeredBefore = new Timestamp(clientFilter.getRegisteredBefore().getTime());
             if (clientFilter.getNameOrSurname().isBlank()) {
-                clientList = clientRepository.findAllRepresentativesOfACompanyThatWasRegisteredBetweenDates(company.getId(),
+                clientList = clientService.findAllRepresentativesOfACompanyThatWasRegisteredBetweenDates(company.getId(),
                         registeredBefore, registeredAfter);
             } else {
-                clientList = clientRepository.findAllRepresentativesOfACompanyThatHasANameOrSurnameAndWasRegisteredBetweenDates(company.getId(),
+                clientList = clientService.findAllRepresentativesOfACompanyThatHasANameOrSurnameAndWasRegisteredBetweenDates(company.getId(),
                         clientFilter.getNameOrSurname(), registeredBefore, registeredAfter);
             }
         }
         model.addAttribute("clientList", clientList);
+        model.addAttribute("clientService", clientService);
+        model.addAttribute("authorizedAccountService", authorizedAccountService);
         return "/company/allRepresentatives";
     }
 

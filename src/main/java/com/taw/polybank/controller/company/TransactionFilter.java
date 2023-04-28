@@ -8,8 +8,8 @@ public class TransactionFilter {
     private Date transactionBefore;
     private String senderId;
     private String recipientName;
-    private double minAmount;
-    private double maxAmount;
+    private double minAmount; // TODO change to Double
+    private double maxAmount; // TODO change to Double
 
     public TransactionFilter() {
         this.transactionAfter = Date.valueOf(LocalDate.now());

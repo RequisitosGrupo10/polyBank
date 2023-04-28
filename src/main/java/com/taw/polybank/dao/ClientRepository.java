@@ -72,4 +72,6 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
     @Query("select c.password from ClientEntity c where c.id = :clientId")
     String findClientPasswordByClientId(@Param("clientId") Integer id);
 
+    @Query("select count(auth) from ClientEntity c join c.authorizedAccountsById auth where c.id = :clientID")
+    Integer getNumberAuthorizedAccounts(@Param("clientID") int clientId);
 }

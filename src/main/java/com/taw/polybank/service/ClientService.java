@@ -2,20 +2,17 @@ package com.taw.polybank.service;
 
 import com.taw.polybank.dao.AuthorizedAccountRepository;
 import com.taw.polybank.dao.ClientRepository;
-import com.taw.polybank.dto.AuthorizedAccountDTO;
-import com.taw.polybank.dto.BankAccountDTO;
-import com.taw.polybank.dto.ClientDTO;
-import com.taw.polybank.dto.RequestDTO;
-import com.taw.polybank.entity.AuthorizedAccountEntity;
-import com.taw.polybank.entity.BankAccountEntity;
-import com.taw.polybank.entity.ClientEntity;
-import com.taw.polybank.entity.RequestEntity;
+import com.taw.polybank.dto.*;
+import com.taw.polybank.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
@@ -138,5 +135,52 @@ public class ClientService {
         client.setPassword(saltAndPass[1]);
         clientRepository.save(client);
         clientDTO.setId(client.getId());
+    }
+
+    public List<ClientDTO> findAllRepresentativesOfGivenCompany(int companyId) {
+        return clientRepository.findAllRepresentativesOfGivenCompany(companyId)
+                .stream()
+                .map(client -> client.toDTO())
+                .collect(Collectors.toList());
+    }
+
+    public List<ClientDTO> findAllRepresentativesOfACompanyThatWasRegisteredBetweenDates(
+            int companyId, Timestamp registeredBefore, Timestamp registeredAfter) {
+        return clientRepository
+                .findAllRepresentativesOfACompanyThatWasRegisteredBetweenDates(
+                        companyId, registeredBefore, registeredAfter)
+                .stream()
+                .map(client -> client.toDTO())
+                .collect(Collectors.toList());
+    }
+
+    public List<ClientDTO> findAllRepresentativesOfACompanyThatHasANameOrSurnameAndWasRegisteredBetweenDates(
+            int companyId, String nameOrSurname, Timestamp registeredBefore, Timestamp registeredAfter) {
+        return clientRepository
+                .findAllRepresentativesOfACompanyThatHasANameOrSurnameAndWasRegisteredBetweenDates(
+                        companyId, nameOrSurname, registeredBefore, registeredAfter)
+                .stream()
+                .map(client -> client.toDTO())
+                .collect(Collectors.toList());
+    }
+
+    public boolean isBlocked(ClientDTO client, CompanyDTO company, AuthorizedAccountService authorizedAccountService){
+        List<AuthorizedAccountDTO> listOfAuthAccounts = authorizedAccountService.findAuthorizedAccountEntitiesOfGivenBankAccount(company.getBankAccountByBankAccountId().getId());
+        boolean result = listOfAuthAccounts.stream()
+                .filter(authAcc -> authAcc.getClientByClientId().equals(client))
+                .findFirst()
+                .map(authAccount -> authAccount.isBlocked())
+                .orElse(false);
+        return result;
+    }
+
+
+    public int getNumberAuthorizedAccounts(int clientId) {
+        return clientRepository.getNumberAuthorizedAccounts(clientId);
+    }
+
+    public String getLastMessage(ClientDTO clientDTO) {
+        ClientEntity clientEntity = clientRepository.findById(clientDTO.getId()).orElse(null);
+        return clientEntity.getMessagesById().stream().reduce((a, b) -> b).map(MessageEntity::getContent).orElse("");
     }
 }

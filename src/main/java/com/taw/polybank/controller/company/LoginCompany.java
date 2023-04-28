@@ -49,7 +49,7 @@ public class LoginCompany {
                     if (companies.size() == 1) {
                         session.setAttribute("company", companies.get(0));
                         session.setAttribute("bankAccount", companies.get(0).getBankAccountByBankAccountId());
-                        if (isBlocked(client, companies.get(0))) {
+                        if (clientService.isBlocked(client, companies.get(0), authorizedAccountService)) {
                             return "redirect:/company/user/blockedUser";
                         } else {
                             return "redirect:/company/user/";
@@ -72,20 +72,10 @@ public class LoginCompany {
         session.setAttribute("company", company);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         ClientDTO client = (ClientDTO) session.getAttribute("client");
-        if(isBlocked(client, company)){
+        if(clientService.isBlocked(client, company, authorizedAccountService)){
             return "redirect:/company/user/blockedUser";
         } else {
             return "redirect:/company/user/";
         }
-    }
-
-    private boolean isBlocked(ClientDTO client, CompanyDTO company) {
-        List<AuthorizedAccountDTO> listOfAuthAccounts = authorizedAccountService.findAuthorizedAccountEntitiesOfGivenBankAccount(company.getBankAccountByBankAccountId().getId());
-        boolean result = listOfAuthAccounts.stream()
-                .filter(authAcc -> authAcc.getClientByClientId().equals(client))
-                .findFirst()
-                .map(authAccount -> authAccount.isBlocked())
-                .orElse(false);
-        return result;
     }
 }
