@@ -66,6 +66,7 @@ public class BankAccountService {
                      CompanyDTO companyDTO, CompanyService companyService,
                      RequestDTO requestDTO, RequestService requestService,
                      ClientService clientService, BadgeService badgeService) {
+
         BankAccountEntity bankAccount = toEntity(bankAccountDTO, clientService, badgeService);
         CompanyEntity company = companyService.toEntity(companyDTO);
         RequestEntity request = requestService.toEntity(requestDTO);
@@ -94,7 +95,17 @@ public class BankAccountService {
     public void addAuthorizedAccount(BankAccountDTO bankAccount, AuthorizedAccountDTO authorizedAccount) {
         BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.getId()).orElse(null);
         AuthorizedAccountEntity authorizedAccountEntity = authorizedAccountRepository.findById(authorizedAccount.getAuthorizedAccountId()).orElse(null);
-        bankAccountEntity.getAuthorizedAccountsById().add(authorizedAccountEntity);
+        if(bankAccountEntity.getAuthorizedAccountsById() == null){
+            bankAccountEntity.setAuthorizedAccountsById(List.of(authorizedAccountEntity));
+        }else {
+            bankAccountEntity.getAuthorizedAccountsById().add(authorizedAccountEntity);
+        }
         bankAccountRepository.save(bankAccountEntity);
+    }
+
+    public void save(BankAccountDTO bankAccountDTO, ClientService clientService, BadgeService badgeService) {
+        BankAccountEntity bankAccount = this.toEntity(bankAccountDTO, clientService, badgeService);
+        bankAccountRepository.save(bankAccount);
+        bankAccountDTO.setId(bankAccount.getId());
     }
 }

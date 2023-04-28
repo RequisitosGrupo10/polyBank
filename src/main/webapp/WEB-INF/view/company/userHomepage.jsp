@@ -1,9 +1,5 @@
 <%@ page import="com.taw.polybank.dto.ClientDTO" %>
-<%@ page import="com.taw.polybank.entity.BankAccountEntity" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Collection" %>
-<%@ page import="com.taw.polybank.entity.CompanyEntity" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
   Date: 04/04/2023

@@ -12,7 +12,7 @@ import static org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.B
 public class PasswordManager {
 
     private final BCryptPasswordEncoder.BCryptVersion ENCODER_VERSION = $2B;
-    private final int ITERATIONS = 15;
+    private final int ITERATIONS = 5;
     private final int SALT_SIZE = 32;
     private SecureRandom secureRandom;
     private BCryptPasswordEncoder encoder;

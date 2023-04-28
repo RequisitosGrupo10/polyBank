@@ -1,5 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="com.taw.polybank.controller.company.Client" %><%--
+<%@ page import="com.taw.polybank.dto.ClientDTO" %><%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
   Date: 05/04/2023
@@ -10,7 +10,7 @@
 <html>
 <head>
     <%
-        Client client = (Client) request.getAttribute("client");
+        ClientDTO client = (ClientDTO) request.getAttribute("client");
     %>
     <title>New password for <%=client.getName()%></title>
     <link rel="stylesheet" type="text/css" href="../../../commonStyle.css">
@@ -26,10 +26,9 @@
     <form:hidden path="name"/>
     <form:hidden path="surname"/>
     <form:hidden path="dni"/>
-    <form:hidden path="creationDate"/>
 
     <label for="password">Password: </label>
-    <input id="password" type="password" size="25" maxlength="64" class="formElement"/>
+    <input id="password" type="password" name="password" size="25" maxlength="64" class="formElement"/>
     <br/>
     <label for="passwordRep">Repeat password: </label>
     <input id="passwordRep" type="password" size="25" maxlength="64" class="formElement" />

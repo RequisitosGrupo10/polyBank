@@ -86,8 +86,10 @@ public class ClientService {
         return clientEntity.getId();
     }
 
-    public void save(ClientEntity client) {
+    public void save(ClientDTO clientDTO) {
+        ClientEntity client = this.toEntidy(clientDTO);
         clientRepository.save(client);
+        clientDTO.setId(client.getId());
     }
 
     public void save(ClientDTO clientDTO,
@@ -121,7 +123,20 @@ public class ClientService {
     public void addAuthorizedAccount(ClientDTO client, AuthorizedAccountDTO authorizedAccount) {
         ClientEntity clientEntity = clientRepository.findById(client.getId()).orElse(null);
         AuthorizedAccountEntity authorizedAccountEntity = authorizedAccountRepository.findById(authorizedAccount.getAuthorizedAccountId()).orElse(null);
-        clientEntity.getAuthorizedAccountsById().add(authorizedAccountEntity);
+
+        if(clientEntity.getAuthorizedAccountsById() == null){
+            clientEntity.setAuthorizedAccountsById(List.of(authorizedAccountEntity));
+        }else{
+            clientEntity.getAuthorizedAccountsById().add(authorizedAccountEntity);
+        }
         clientRepository.save(clientEntity);
+    }
+
+    public void save(ClientDTO clientDTO, String[] saltAndPass) {
+        ClientEntity client = this.toEntidy(clientDTO);
+        client.setSalt(saltAndPass[0]);
+        client.setPassword(saltAndPass[1]);
+        clientRepository.save(client);
+        clientDTO.setId(client.getId());
     }
 }

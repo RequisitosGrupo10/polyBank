@@ -121,20 +121,21 @@ public class UserCompany {
             updateUser(client, password, session, model);
         } else {
             ClientDTO oldClient = (ClientDTO) session.getAttribute("client");
+            client.setCreationDate(oldClient.getCreationDate());
             PasswordManager passwordManager = new PasswordManager(clientService);
-            passwordManager.resetPassword(oldClient, password);
-            clientService.save(clientService.toEntidy(client)); // TODO Update client fields
+            passwordManager.resetPassword(client, password);
+            clientService.save(client);
         }
 
         return "/company/userHomepage";
     }
 
     @PostMapping("/saveRepresentative")
-    public String save(@ModelAttribute("client") ClientDTO client,
-                       HttpSession session,
-                       Model model) {
+    public String save(@ModelAttribute("client") ClientDTO client, HttpSession session) {
         ClientDTO oldClient = (ClientDTO) session.getAttribute("client");
-        clientService.save(clientService.toEntidy(client)); // TODO Update client fields
+        client.setCreationDate(oldClient.getCreationDate());
+        session.setAttribute("client", client);
+        clientService.save(client);
         return "/company/userHomepage";
     }
 
@@ -152,23 +153,23 @@ public class UserCompany {
 
         client.setCreationDate(Timestamp.from(Instant.now()));
 
-        authorizedAccountService.save(authorizedAccount, clientService, bankAccountService, badgeService);
-        bankAccountService.addAuthorizedAccount(bankAccount, authorizedAccount);
 
-        clientService.addAuthorizedAccount(client, authorizedAccount);
-
-        // TODO password save
         PasswordManager passwordManager = new PasswordManager(clientService);
         String[] saltAndPass = passwordManager.savePassword(client, password);
-        clientService.save(client);
-        bankAccountRepository.save(bankAccount);
+        clientService.save(client, saltAndPass);
+        //clientService.saveUserSaltAndPassword(client.getId(), saltAndPass[0], saltAndPass[2]);
+        client.setIsNew(false);
+        authorizedAccountService.save(authorizedAccount, clientService, bankAccountService, badgeService);
+        //bankAccountService.save(bankAccount, clientService, badgeService);
 
+        bankAccountService.addAuthorizedAccount(bankAccount, authorizedAccount);
+//      clientService.addAuthorizedAccount(client, authorizedAccount);
     }
 
     @GetMapping("/editMyData")
     public String editMyData(HttpSession session,
                              Model model) {
-        Client client = (Client) session.getAttribute("client");
+        ClientDTO client = (ClientDTO) session.getAttribute("client");
         model.addAttribute("client", client);
         return "/company/newRepresentative";
     }
@@ -221,7 +222,7 @@ public class UserCompany {
     }
 
     @GetMapping("/blockRepresentative")
-    public String blockRepresentative(@RequestParam("id") Integer userId, // TODO FIX issue when try to block only happens when new user is just created
+    public String blockRepresentative(@RequestParam("id") Integer userId,
                                       HttpSession session) {
         ClientEntity client = clientRepository.findById(userId).orElse(null);
         CompanyEntity company = (CompanyEntity) session.getAttribute("company");
