@@ -72,7 +72,7 @@ public class EmployeeController {
             // It should be validated : BCrypt.checkpw(password + employee.getSalt(), employee.getPassword())
             session.setAttribute("employee", employee);
             if (employee.getType().toString().equals("assistant"))
-                return ("redirect:/employee/assitence");
+                return ("redirect:/employee/assistance");
             else if (employee.getType().toString().equals("manager") )
                 return ("redirect:/employee/manager");
             session.setAttribute("employee", employee);

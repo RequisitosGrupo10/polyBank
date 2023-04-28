@@ -1,8 +1,9 @@
-package com.taw.polybank.controller.assistence;
+package com.taw.polybank.controller.assistance;
 
 import com.taw.polybank.dto.ChatDTO;
 import com.taw.polybank.dto.EmployeeDTO;
 import com.taw.polybank.dto.MessageDTO;
+import com.taw.polybank.entity.EmployeeEntity;
 import com.taw.polybank.service.ChatService;
 import com.taw.polybank.service.EmployeeService;
 import com.taw.polybank.service.MessageService;
@@ -18,7 +19,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Controller
-@RequestMapping("employee/assistence")
+@RequestMapping("employee/assistance")
 public class AssistantController {
 
     @Autowired
@@ -42,11 +43,11 @@ public class AssistantController {
 
     protected String processFilter(Model model, HttpSession session, AssistantFilter filter) {
         List<ChatDTO> chatList;
-        EmployeeDTO employee = this.employeeService.findById((Integer) session.getAttribute("employeeID"));
+        EmployeeDTO employee = this.employeeService.findById(((EmployeeEntity) session.getAttribute("employee")).getId());
 
         if (employee != null) {
             if (filter == null || (filter.getClientDni() == "" && filter.getClientName() == "" && filter.getRecent() == false)) {
-                chatList = chatService.findByEmployee(employee);
+                chatList = this.chatService.findByEmployee(employee);
                 filter = new AssistantFilter();
             } else {
                 if (filter.getClientDni() != "") {
@@ -72,7 +73,7 @@ public class AssistantController {
             model.addAttribute("chatList", chatList);
             model.addAttribute("filter", filter);
 
-            return "assistence/assistantChatList";
+            return "assistance/assistantChatList";
         }
 
         return "error";
@@ -85,7 +86,7 @@ public class AssistantController {
             model.addAttribute("chat", chat);
             model.addAttribute("messageList", messageService.findByChat(chat));
 
-            return "assistence/assistantChat";
+            return "assistance/assistantChat";
         }
 
         return "error";
@@ -105,7 +106,7 @@ public class AssistantController {
 
             this.messageService.save(message);
 
-            return "redirect:/employee/assistence/chat?id=" + chatId;
+            return "redirect:/employee/assistance/chat?id=" + chatId;
         }
 
         return "error";

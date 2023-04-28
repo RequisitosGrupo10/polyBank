@@ -56,7 +56,7 @@ public class ClientController {
         if (client != null) {
             // It should be validated : BCrypt.checkpw(password + employee.getSalt(), employee.getPassword())
             session.setAttribute("clientID", client.getId());
-            return "redirect:/client/assistence/";
+            return "redirect:/client/assistance/";
         }
         return ("redirect:/login");
     }

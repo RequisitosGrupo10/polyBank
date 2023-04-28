@@ -8,6 +8,7 @@ import com.taw.polybank.service.AuthorizedAccountService;
 import com.taw.polybank.service.ClientService;
 import com.taw.polybank.service.CompanyService;
 import jakarta.servlet.http.HttpSession;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
