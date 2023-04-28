@@ -1,19 +1,26 @@
-package com.taw.polybank.ui;
+package com.taw.polybank.ui.companyFilters;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Calendar;
 
 public class TransactionFilter {
     private Date transactionAfter;
     private Date transactionBefore;
     private String senderId;
     private String recipientName;
-    private double minAmount; // TODO change to Double
-    private double maxAmount; // TODO change to Double
-
+    private double minAmount;
+    private double maxAmount;
     public TransactionFilter() {
-        this.transactionAfter = Date.valueOf(LocalDate.now());
-        this.transactionBefore = Date.valueOf(LocalDate.now());
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -1);
+        transactionAfter = new Date(cal.getTimeInMillis());
+
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        transactionBefore = new Date(cal.getTimeInMillis());
+
         this.maxAmount = Double.MAX_VALUE;
     }
 

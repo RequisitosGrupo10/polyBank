@@ -46,6 +46,8 @@
     <form:button class="prettyButton" type="submit" value="filter" name="filter">Filter</form:button>
 </form:form>
 
+<a href="/company/user/operationHistory" class="prettyButton">Reset</a><br/>
+
 <table border="1">
     <tr>
         <th rowspan="2">Time</th>
@@ -114,7 +116,6 @@
         }
     %>
 </table>
-
 
 </body>
 </html>

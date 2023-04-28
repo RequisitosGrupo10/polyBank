@@ -1,8 +1,9 @@
-package com.taw.polybank.ui;
+package com.taw.polybank.ui.companyFilters;
 
 
 import java.sql.Date;
-import java.time.LocalDate;
+import java.util.Calendar;
+
 
 public class ClientFilter {
     private String nameOrSurname;
@@ -11,8 +12,13 @@ public class ClientFilter {
 
     public ClientFilter() {
         nameOrSurname = "";
-        registeredAfter = Date.valueOf(LocalDate.now());
-        registeredBefore = Date.valueOf(LocalDate.now());
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -1);
+        registeredAfter = new Date(cal.getTimeInMillis());
+
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        registeredBefore = new Date(cal.getTimeInMillis());
     }
 
     public String getNameOrSurname() {

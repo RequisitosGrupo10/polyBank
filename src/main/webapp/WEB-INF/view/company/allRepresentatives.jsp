@@ -41,6 +41,8 @@
     <form:button class="prettyButton" name="Submit">Filter</form:button>
 </form:form>
 
+<a href="/company/user/listAllRepresentatives" class="prettyButton">Reset</a><br/>
+
 <table border="1">
     <tr>
         <th>Block Representative</th>
