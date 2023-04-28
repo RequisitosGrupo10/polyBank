@@ -5,6 +5,8 @@ import com.taw.polybank.dao.*;
 import com.taw.polybank.dto.*;
 import com.taw.polybank.entity.*;
 import com.taw.polybank.service.*;
+import com.taw.polybank.ui.ClientFilter;
+import com.taw.polybank.ui.TransactionFilter;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

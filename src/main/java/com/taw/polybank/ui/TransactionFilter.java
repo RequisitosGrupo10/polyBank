@@ -1,4 +1,4 @@
-package com.taw.polybank.controller.company;
+package com.taw.polybank.ui;
 
 import java.sql.Date;
 import java.time.LocalDate;
