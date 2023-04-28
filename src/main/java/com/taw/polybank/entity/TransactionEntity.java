@@ -108,6 +108,7 @@ public class TransactionEntity {
             transactionDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
         if (getPaymentByPaymentId() != null)
             transactionDTO.setPaymentByPaymentId(getPaymentByPaymentId().toDTO());
+        transactionDTO.setClientByClientId(getClientByClientId().toDTO());
         return transactionDTO;
     }
 }
