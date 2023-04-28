@@ -78,10 +78,8 @@ public class RegisterCompany {
         // filling up bank account fields
         bankAccount.setClientByClientId(client);
 
-
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
-        //company.setBankAccountByBankAccountId(bankAccount);
 
         PasswordManager passwordManager = new PasswordManager(clientService);
         String[] saltAndPass = passwordManager.savePassword(client, password);
@@ -89,17 +87,12 @@ public class RegisterCompany {
         // creating activation request
         defineActivationRequest(client, bankAccount, request);
 
-        // saving Entities
-        clientService.save(client, bankAccount, bankAccountService, request, requestService, badgeService, saltAndPass);
-        //client.setId(clientService.getClientId(client));
-
+        // saving DTOs
+        clientService.save(client, saltAndPass);
         companyService.save(company, bankAccountService, clientService, badgeService);
-        //company.setId(companyService.getCompanyId(company));
-
         bankAccount.setId(bankAccountService.getBankAccountId(bankAccount));
         requestService.save(request, clientService, bankAccountService, employeeService, badgeService);
 
-        //bankAccountService.save(bankAccount, company, companyService, request, requestService, clientService, badgeService);
         session.invalidate();
         return "redirect:/";
     }

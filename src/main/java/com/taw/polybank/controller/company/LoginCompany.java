@@ -67,12 +67,12 @@ public class LoginCompany {
 
     @GetMapping("/chooseCompany")
     public String chooseCompany(@RequestParam("id") int companyId,
-                                HttpSession session){
+                                HttpSession session) {
         CompanyDTO company = companyService.findById(companyId).orElse(null);
         session.setAttribute("company", company);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         ClientDTO client = (ClientDTO) session.getAttribute("client");
-        if(clientService.isBlocked(client, company, authorizedAccountService)){
+        if (clientService.isBlocked(client, company, authorizedAccountService)) {
             return "redirect:/company/user/blockedUser";
         } else {
             return "redirect:/company/user/";

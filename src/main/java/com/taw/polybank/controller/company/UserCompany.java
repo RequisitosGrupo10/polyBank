@@ -1,9 +1,7 @@
 package com.taw.polybank.controller.company;
 
 import com.taw.polybank.controller.PasswordManager;
-import com.taw.polybank.dao.*;
 import com.taw.polybank.dto.*;
-import com.taw.polybank.entity.*;
 import com.taw.polybank.service.*;
 import com.taw.polybank.ui.ClientFilter;
 import com.taw.polybank.ui.TransactionFilter;
@@ -21,45 +19,27 @@ import java.util.List;
 @RequestMapping("/company/user")
 public class UserCompany {
     @Autowired
-    protected AuthorizedAccountRepository authorizedAccountRepository;
-    @Autowired
     protected AuthorizedAccountService authorizedAccountService;
-    @Autowired
-    protected BadgeRepository badgeRepository;
     @Autowired
     protected BadgeService badgeService;
     @Autowired
-    protected BankAccountRepository bankAccountRepository;
-    @Autowired
     protected BankAccountService bankAccountService;
-    @Autowired
-    protected BeneficiaryRepository beneficiaryRepository;
     @Autowired
     protected BeneficiaryService beneficiaryService;
     @Autowired
-    protected ClientRepository clientRepository; // TODO REMOVE ALL REPOSITORIES
-    @Autowired
     protected ClientService clientService;
     @Autowired
-    protected CompanyRepository companyRepository;
-    @Autowired
     protected CompanyService companyService;
-    @Autowired
-    protected CurrencyExchangeRepository currencyExchangeRepository;
     @Autowired
     protected CurrencyExchangeService currencyExchangeService;
     @Autowired
     protected EmployeeService employeeService;
-    @Autowired
-    protected PaymentRepository paymentRepository;
     @Autowired
     protected PaymentService paymentService;
     @Autowired
     protected RequestService requestService;
     @Autowired
     protected TransactionService transactionService;
-    @Autowired
-    protected TransactionRepository transactionRepository;
 
     @GetMapping("/")
     public String showUserHomepage() {
@@ -166,17 +146,13 @@ public class UserCompany {
 
         client.setCreationDate(Timestamp.from(Instant.now()));
 
-
         PasswordManager passwordManager = new PasswordManager(clientService);
         String[] saltAndPass = passwordManager.savePassword(client, password);
         clientService.save(client, saltAndPass);
-        //clientService.saveUserSaltAndPassword(client.getId(), saltAndPass[0], saltAndPass[2]);
         client.setIsNew(false);
         authorizedAccountService.save(authorizedAccount, clientService, bankAccountService, badgeService);
-        //bankAccountService.save(bankAccount, clientService, badgeService);
 
         bankAccountService.addAuthorizedAccount(bankAccount, authorizedAccount);
-//      clientService.addAuthorizedAccount(client, authorizedAccount); // TODO make sure i really don't need to rewrite it
     }
 
     @GetMapping("/editMyData")
@@ -367,7 +343,6 @@ public class UserCompany {
             beneficiaryService.save(beneficiary);
             paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
             transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
-
             bankAccountService.save(bankAccount, clientService, badgeService);
             model.addAttribute("message", currencyExchange.getInitialAmount() + " " + currentBadge.getName() + " was successfully exchanged to " + currencyExchange.getFinalAmount() + " " + targetBadge.getName());
         } else {
@@ -392,7 +367,6 @@ public class UserCompany {
     public String operationHistory(@ModelAttribute("transactionFilter") TransactionFilter transactionFilter, HttpSession session, Model model) {
         return operationHistoryFilters(transactionFilter, session, model);
     }
-
 
     private String operationHistoryFilters(TransactionFilter transactionFilter, HttpSession session, Model model) {
         List<TransactionDTO> transactionList;
@@ -453,8 +427,8 @@ public class UserCompany {
     }
 
     private CurrencyExchangeDTO defineCurrencyExchange(BadgeDTO originBadge, BadgeDTO recipientBadge,
-                                                          Double amount, TransactionDTO transaction,
-                                                          PaymentDTO payment) {
+                                                       Double amount, TransactionDTO transaction,
+                                                       PaymentDTO payment) {
         CurrencyExchangeDTO currencyExchange = new CurrencyExchangeDTO();
         currencyExchange.setBadgeByInitialBadgeId(originBadge);
         currencyExchange.setBadgeByFinalBadgeId(recipientBadge);
