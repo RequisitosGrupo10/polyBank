@@ -395,56 +395,43 @@ public class UserCompany {
 
 
     private String operationHistoryFilters(TransactionFilter transactionFilter, HttpSession session, Model model) {
-        List<TransactionEntity> transactionList;
-        CompanyEntity company = (CompanyEntity) session.getAttribute("company");
-        BankAccountEntity bankAccount = company.getBankAccountByBankAccountId();
+        List<TransactionDTO> transactionList;
+        CompanyDTO company = (CompanyDTO) session.getAttribute("company");
+        BankAccountDTO bankAccount = company.getBankAccountByBankAccountId();
 
         if (transactionFilter == null) {
-            transactionList = transactionRepository.findTransactionEntitiesByBankAccountByBankAccountIdId(bankAccount.getId());
+            transactionList = transactionService.findTransactionsByBankAccountByBankAccountIdId(bankAccount.getId());
             transactionFilter = new TransactionFilter();
 
         } else {
             Timestamp dateAfter = new Timestamp(transactionFilter.getTransactionAfter().getTime());
             Timestamp dateBefore = new Timestamp(transactionFilter.getTransactionBefore().getTime());
             if (transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
-                transactionList = transactionRepository.
+                transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRange(
-                                bankAccount.getId(),
-                                dateAfter,
-                                dateBefore,
-                                transactionFilter.getMinAmount(),
-                                transactionFilter.getMaxAmount());
+                                bankAccount.getId(), dateAfter, dateBefore,
+                                transactionFilter.getMinAmount(), transactionFilter.getMaxAmount());
 
             } else if (!transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
-                transactionList = transactionRepository.
+                transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDni(
-                                bankAccount.getId(),
-                                dateAfter,
-                                dateBefore,
-                                transactionFilter.getMinAmount(),
-                                transactionFilter.getMaxAmount(),
+                                bankAccount.getId(), dateAfter, dateBefore,
+                                transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
                                 transactionFilter.getSenderId());
 
             } else if (transactionFilter.getSenderId().isBlank() && !transactionFilter.getRecipientName().isBlank()) {
-                transactionList = transactionRepository.
+                transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenRecipientName(
-                                bankAccount.getId(),
-                                dateAfter,
-                                dateBefore,
-                                transactionFilter.getMinAmount(),
-                                transactionFilter.getMaxAmount(),
+                                bankAccount.getId(), dateAfter, dateBefore,
+                                transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
                                 transactionFilter.getRecipientName());
 
             } else {
-                transactionList = transactionRepository.
+                transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDniAndRecipientName(
-                                bankAccount.getId(),
-                                dateAfter,
-                                dateBefore,
-                                transactionFilter.getMinAmount(),
-                                transactionFilter.getMaxAmount(),
-                                transactionFilter.getSenderId(),
-                                transactionFilter.getRecipientName());
+                                bankAccount.getId(), dateAfter, dateBefore,
+                                transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
+                                transactionFilter.getSenderId(), transactionFilter.getRecipientName());
             }
         }
         model.addAttribute("transactionFilter", transactionFilter);

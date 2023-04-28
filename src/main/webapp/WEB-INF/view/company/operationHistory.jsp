@@ -1,7 +1,9 @@
-<%@ page import="com.taw.polybank.entity.TransactionEntity" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.taw.polybank.entity.CurrencyExchangeEntity" %>
+<%@ page import="com.taw.polybank.dto.TransactionDTO" %>
+<%@ page import="com.taw.polybank.dto.CurrencyExchangeDTO" %>
+<%@ page import="com.taw.polybank.dto.ClientDTO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <%--
   Created by IntelliJ IDEA.
   User: Illya Rozumovskyy
@@ -13,7 +15,7 @@
 <html>
 <head>
     <%
-        List<TransactionEntity> transactionList = (List<TransactionEntity>) request.getAttribute("transactionList");
+        List<TransactionDTO> transactionList = (List<TransactionDTO>) request.getAttribute("transactionList");
     %>
 
     <title>Operation history of ${client.name}</title>
@@ -65,7 +67,7 @@
     </tr>
 
     <%
-        for (TransactionEntity t : transactionList) {
+        for (TransactionDTO t : transactionList) {
     %>
 
     <tr>
@@ -76,7 +78,7 @@
         <td><%=t.getClientByClientId().getDni()%></td>
         <td><%=t.getPaymentByPaymentId().getAmount()%></td>
         <%
-            CurrencyExchangeEntity currencyExchange = t.getCurrencyExchangeByCurrencyExchangeId();
+            CurrencyExchangeDTO currencyExchange = t.getCurrencyExchangeByCurrencyExchangeId();
             String currency = t.getPaymentByPaymentId().getBenficiaryByBenficiaryId().getBadge();
             if (currencyExchange!= null) {
                 currency = currencyExchange.getBadgeByInitialBadgeId().getName();
