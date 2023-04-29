@@ -327,12 +327,9 @@ public class UserCompany {
         targetBadge = badgeService.findById(targetBadge.getId());
         TransactionDTO transaction = defineTransaction(client, bankAccount);
 
-        BenficiaryDTO beneficiary = beneficiaryService.findBenficiaryByNameAndIban(company.getName(), bankAccount.getIban());
+        BenficiaryDTO beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targetBadge);
         PaymentDTO payment = definePayment(bankAccount.getBalance(), beneficiary);
 
-        if (beneficiary == null) {
-            beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targetBadge);
-        }
         payment.setBenficiaryByBenficiaryId(beneficiary);
 
         if (currentBadge.getId() != targetBadge.getId()) {
