@@ -146,13 +146,19 @@ public class TransactionService {
             //Es una transferencia, se actualiza el dinero de ambas partes
             BankAccountEntity bankAccountReceptor = bankAccountRepository.findByIban(ibanReceptor).orElse(null);
             if (bankAccountReceptor != null) {
-                bankAccountReceptor.setBalance(bankAccountReceptor.getBalance() + finalAmount);
+                double updateReceptor = bankAccountReceptor.getBalance() + finalAmount;
+                updateReceptor = Math.round(updateReceptor * 100.0)/100.0;
+                bankAccountReceptor.setBalance(updateReceptor);
                 bankAccountRepository.save(bankAccountReceptor);
             }
-            bankAccountEmisor.setBalance(bankAccountEmisor.getBalance() - amount);
+            double updateEmisor = bankAccountEmisor.getBalance() - amount;
+            updateEmisor = Math.round(updateEmisor * 100.0)/100.0;
+            bankAccountEmisor.setBalance(updateEmisor);
         } else {
             //Está sacando dinero (ya sea de la misma o distinta moneda), por lo que hay que sacar el dinero final de la cuenta bancaria.
-            bankAccountEmisor.setBalance(bankAccountEmisor.getBalance() - (amount * finalBadge.getValue() / emisorBadge.getValue()));
+            double updateEmisor = bankAccountEmisor.getBalance() - (amount * finalBadge.getValue() / emisorBadge.getValue());
+            updateEmisor = Math.round(updateEmisor * 100.0)/100.0;
+            bankAccountEmisor.setBalance(updateEmisor);
         }
         bankAccountRepository.save(bankAccountEmisor);
     }
