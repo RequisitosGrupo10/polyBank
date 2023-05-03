@@ -4,7 +4,7 @@
     <form:form modelAttribute="filtro">
         <form:label path="DNI">DNI:</form:label>
         <form:input path="DNI"></form:input>
-        <form:label path="name">Nombre:</form:label>
+        <form:label path="name">Name:</form:label>
         <form:input path="name"></form:input>
         <form:button>Submit</form:button>
     </form:form>

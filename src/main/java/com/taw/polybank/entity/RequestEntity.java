@@ -142,12 +142,11 @@ public class RequestEntity {
         requestDTO.setId(getId());
         requestDTO.setSolved(isSolved());
         requestDTO.setTimestamp(getTimestamp());
-        requestDTO.setType(getType());
-        requestDTO.setDescription(getDescription());
         requestDTO.setApproved(isApproved());
         requestDTO.setClientByClientId(getClientByClientId().toDTO());
         requestDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
         requestDTO.setEmployeeByEmployeeId(getEmployeeByEmployeeId().toDTO());
+        requestDTO.setDescription(getDescription());
         return requestDTO;
     }
 }

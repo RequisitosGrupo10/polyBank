@@ -4,7 +4,7 @@ import com.taw.polybank.controller.PasswordManager;
 import com.taw.polybank.dto.*;
 import com.taw.polybank.service.*;
 import com.taw.polybank.ui.companyFilters.ClientFilter;
-import com.taw.polybank.ui.companyFilters.TransactionFilter;
+import com.taw.polybank.ui.companyFilters.TransactionFilterIllya;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -361,18 +361,18 @@ public class UserCompany {
     }
 
     @PostMapping("/operationHistory")
-    public String operationHistory(@ModelAttribute("transactionFilter") TransactionFilter transactionFilter, HttpSession session, Model model) {
+    public String operationHistory(@ModelAttribute("transactionFilter") TransactionFilterIllya transactionFilter, HttpSession session, Model model) {
         return operationHistoryFilters(transactionFilter, session, model);
     }
 
-    private String operationHistoryFilters(TransactionFilter transactionFilter, HttpSession session, Model model) {
+    private String operationHistoryFilters(TransactionFilterIllya transactionFilter, HttpSession session, Model model) {
         List<TransactionDTO> transactionList;
         CompanyDTO company = (CompanyDTO) session.getAttribute("company");
         BankAccountDTO bankAccount = company.getBankAccountByBankAccountId();
 
         if (transactionFilter == null) {
             transactionList = transactionService.findTransactionsByBankAccountByBankAccountIdId(bankAccount.getId());
-            transactionFilter = new TransactionFilter();
+            transactionFilter = new TransactionFilterIllya();
 
         } else {
             Timestamp dateAfter = new Timestamp(transactionFilter.getTransactionAfter().getTime());

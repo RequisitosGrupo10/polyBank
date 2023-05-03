@@ -26,11 +26,11 @@
         <thead>
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Cuenta que solicita</th>
+                <th scope="col">Account</th>
                 <th scope="col">IBAN</th>
                 <th scope="col">Timestamp</th>
-                <th scope="col">Descripción</th>
-                <th scope="col">Aprobar/Denegar</th>
+                <th scope="col">Description</th>
+                <th scope="col">Approve/Deny</th>
             </tr>
         </thead>
         <tbody>
@@ -42,9 +42,9 @@
                 <td><%= requestDTO.getTimestamp()%></td>
                 <td><%= requestDTO.getDescription()%></td>
                 <td>
-                    <a href="/employee/manager/approve/<%=requestDTO.getId()%>">Aprobar</a>
+                    <a href="/employee/manager/approve/<%=requestDTO.getId()%>">Approve</a>
                     </br>
-                    <a href="/employee/manager/deny/<%=requestDTO.getId()%>">Denegar</a>
+                    <a href="/employee/manager/deny/<%=requestDTO.getId()%>">Deny</a>
                 </td>
             </tr>
             <% } %>

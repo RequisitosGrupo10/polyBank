@@ -37,6 +37,34 @@ public class ClientService {
         return clientDTOList;
     }
 
+    public ClientDTO autenticar(String user, String password) {
+        ClientEntity clientEntity = clientRepository.autenticar(user, password);
+        return clientEntity == null ? null : clientEntity.toDTO();
+    }
+
+    public void guardarCliente(ClientDTO client, String password) {
+        ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
+        clientEntity.setName(client.getName());
+        clientEntity.setSurname(client.getSurname());
+        if(!password.isBlank()){
+            clientEntity.setPassword(password);
+        }
+        clientRepository.save(clientEntity);
+    }
+
+    public List<ClientDTO> findByNameOrSurname(String transactionOwner) {
+        List<ClientEntity> clientEntityList = clientRepository.findByNameOrSurname(transactionOwner);
+        return entityListToDTOList(clientEntityList);
+    }
+
+    public List<ClientDTO> entityListToDTOList (List<ClientEntity> clientEntityList) {
+        List<ClientDTO> clientDTOList = new ArrayList<>();
+        for (ClientEntity clientEntity : clientEntityList) {
+            clientDTOList.add(clientEntity.toDTO());
+        }
+        return clientDTOList;
+    }
+
     public Optional<ClientDTO> findById(Integer id) {
         Optional<ClientEntity> clientEntityOptional = clientRepository.findById(id);
         Optional<ClientDTO> clientDTOOptional;

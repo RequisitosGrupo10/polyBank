@@ -1,27 +1,18 @@
 package com.taw.polybank.controller;
 
-import com.taw.polybank.dao.ClientRepository;
-import com.taw.polybank.dao.CompanyRepository;
 import com.taw.polybank.dao.EmployeeRepository;
-import com.taw.polybank.dao.RequestRepository;
 import com.taw.polybank.dto.*;
-import com.taw.polybank.entity.ClientEntity;
 import com.taw.polybank.entity.EmployeeEntity;
-import com.taw.polybank.entity.TransactionEntity;
 import com.taw.polybank.service.*;
 import com.taw.polybank.ui.client.ClientFilter;
 import com.taw.polybank.ui.company.CompanyFilter;
-import com.taw.polybank.ui.transaction.TransactionFilter;
+import com.taw.polybank.ui.transaction.TransactionFilterJose;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 @Controller
@@ -136,14 +127,14 @@ public class EmployeeController {
         if (clientDTOOptional.isEmpty())
             return ("redirect:/employee/manager/accounts/clients");
         model.addAttribute("client", clientDTOOptional.get());
-        model.addAttribute("filtro", new TransactionFilter());
+        model.addAttribute("filtro", new TransactionFilterJose());
         model.addAttribute("transactions", transactionService.findByClientId(id));
         return ("employee/manager/see_client_account");
     }
 
     @PostMapping("manager/account/client/{id}")
     public String postClientAccount(@PathVariable("id") Integer id,
-                                   @ModelAttribute("filtro") TransactionFilter filter,
+                                   @ModelAttribute("filtro") TransactionFilterJose filter,
                                    Model model) {
         Optional<ClientDTO> clientDTOOptional = clientService.findById(id);
         if (clientDTOOptional.isEmpty())
@@ -160,14 +151,14 @@ public class EmployeeController {
         if (companyDTOOptional.isEmpty())
             return ("redirect:/employee/manager/accounts/companies");
         model.addAttribute("company", companyDTOOptional.get());
-        model.addAttribute("filtro", new TransactionFilter());
+        model.addAttribute("filtro", new TransactionFilterJose());
         model.addAttribute("transactions", transactionService.findByBankId(companyDTOOptional.get().getBankAccountByBankAccountId().getId()));
         return ("employee/manager/see_company_account");
     }
 
     @PostMapping("manager/account/company/{id}")
     public String postCompanyAccount(@PathVariable("id") Integer id,
-                                     @ModelAttribute("filtro") TransactionFilter filter,
+                                     @ModelAttribute("filtro") TransactionFilterJose filter,
                                      Model model) {
         Optional<CompanyDTO> companyDTOOptional = companyService.findById(id);
         if (companyDTOOptional.isEmpty())

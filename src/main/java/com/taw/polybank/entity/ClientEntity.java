@@ -179,4 +179,14 @@ public class ClientEntity {
         clientDTO.setSurname(getSurname());
         return clientDTO;
     }
+
+    public static ClientEntity toEntity(ClientDTO clientDTO) {
+        ClientEntity clientEntity = new ClientEntity();
+        clientEntity.setDni(clientDTO.getDni());
+        clientEntity.setId(clientDTO.getId());
+        clientEntity.setName(clientDTO.getName());
+        clientEntity.setCreationDate(clientDTO.getCreationDate());
+        clientEntity.setSurname(clientDTO.getSurname());
+        return  clientEntity;
+    }
 }

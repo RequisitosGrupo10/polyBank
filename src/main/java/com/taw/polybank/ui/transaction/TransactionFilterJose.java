@@ -1,12 +1,6 @@
 package com.taw.polybank.ui.transaction;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-
-public class TransactionFilter {
+public class TransactionFilterJose {
     private double amount;
     private String sorting;
 

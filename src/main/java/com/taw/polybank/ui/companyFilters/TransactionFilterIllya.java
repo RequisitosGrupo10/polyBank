@@ -1,17 +1,16 @@
 package com.taw.polybank.ui.companyFilters;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.Calendar;
 
-public class TransactionFilter {
+public class TransactionFilterIllya {
     private Date transactionAfter;
     private Date transactionBefore;
     private String senderId;
     private String recipientName;
     private double minAmount;
     private double maxAmount;
-    public TransactionFilter() {
+    public TransactionFilterIllya() {
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, -1);

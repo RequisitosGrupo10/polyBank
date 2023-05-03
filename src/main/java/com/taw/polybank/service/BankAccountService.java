@@ -2,11 +2,9 @@ package com.taw.polybank.service;
 
 import com.taw.polybank.dao.AuthorizedAccountRepository;
 import com.taw.polybank.dao.BankAccountRepository;
+import com.taw.polybank.dao.ClientRepository;
 import com.taw.polybank.dto.*;
-import com.taw.polybank.entity.AuthorizedAccountEntity;
-import com.taw.polybank.entity.BankAccountEntity;
-import com.taw.polybank.entity.CompanyEntity;
-import com.taw.polybank.entity.RequestEntity;
+import com.taw.polybank.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +17,39 @@ import java.util.Optional;
 
 @Service
 public class BankAccountService {
+
     @Autowired
     private BankAccountRepository bankAccountRepository;
+
     @Autowired
-    protected AuthorizedAccountRepository authorizedAccountRepository;
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private AuthorizedAccountRepository authorizedAccountRepository;
+
+    public List<BankAccountDTO> findByClient(ClientDTO client) {
+        ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
+        List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findByClientByClientId(clientEntity);
+        return bankAccountEntityListToDTO(bankAccountEntityList);
+    }
+
+    private List<BankAccountDTO> bankAccountEntityListToDTO (List<BankAccountEntity> bankAccountEntityList){
+        List<BankAccountDTO> bankAccountDTOList = new ArrayList<>();
+        for (BankAccountEntity bankAccountEntity : bankAccountEntityList){
+            bankAccountDTOList.add(bankAccountEntity.toDTO());
+        }
+        return bankAccountDTOList;
+    }
+
+    public BankAccountDTO findById(Integer bankAccountId) {
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccountId).orElse(null);
+        return bankAccountEntity == null ? null : bankAccountEntity.toDTO();
+    }
+
+    public BankAccountDTO findByIban(String bankAccountIBAN) {
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccountIBAN).orElse(null);
+        return bankAccountEntity == null ? null : bankAccountEntity.toDTO();
+    }
 
     public List<BankAccountDTO> findAll() {
         List<BankAccountEntity> bankAccountEntityList = bankAccountRepository.findAll();
