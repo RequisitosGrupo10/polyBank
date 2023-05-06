@@ -28,10 +28,12 @@
     <h1>Inactive Bank Accounts</h1>
     <table class="table">
         <thead>
-            <th scope="col">ID</th>
-            <th scope="col">IBAN</th>
-            <th scope="col">Balance</th>
-            <th scope="col">Link</th>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">IBAN</th>
+                <th scope="col">Balance</th>
+                <th scope="col">Link</th>
+            </tr>
         </thead>
         <tbody>
         <% if (bankAccountDTOS != null) { %>

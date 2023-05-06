@@ -1,5 +1,7 @@
 package com.taw.polybank.dto;
 
+import com.taw.polybank.entity.ClientEntity;
+
 import java.sql.Timestamp;
 
 public class ClientDTO {
@@ -10,8 +12,17 @@ public class ClientDTO {
     private String name;
     private String surname;
     private Timestamp creationDate;
-
     private boolean isNew;
+    
+    public ClientDTO(){}
+    
+    public ClientDTO(ClientEntity client){
+        this.id = client.getId();
+        this.dni = client.getDni();
+        this.name = client.getName();
+        this.surname = client.getSurname();
+        this.creationDate = client.getCreationDate();
+    }
 
     public int getId() {
         return id;
