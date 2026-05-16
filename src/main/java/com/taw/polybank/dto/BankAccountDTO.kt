@@ -14,11 +14,11 @@ data class BankAccountDTO (
   var badgeByBadgeId: BadgeDTO? = null
 ) {
   constructor(account: BankAccountEntity) : this() {
-    this.id = account.getId()
-    this.iban = account.getIban()
-    this.isActive = account.isActive()
-    this.balance = account.getBalance()
-    this.clientByClientId = ClientDTO(account.getClientByClientId())
-    this.badgeByBadgeId = BadgeDTO(account.getBadgeByBadgeId())
+    this.id = account.id
+    this.iban = account.iban
+    this.isActive = account.isActive
+    this.balance = account.balance
+    this.clientByClientId = ClientDTO(account.clientByClientId)
+    this.badgeByBadgeId = BadgeDTO(account.badgeByBadgeId)
   }
 }
