@@ -85,6 +85,9 @@
 					<java>
 						<googleJavaFormat/>
 					</java>
+					<kotlin>
+						<ktlint />
+					</kotlin>
 				</configuration>
 			</plugin>
 			<plugin>

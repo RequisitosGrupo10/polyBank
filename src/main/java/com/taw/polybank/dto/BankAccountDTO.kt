@@ -5,7 +5,7 @@ import com.taw.polybank.entity.BankAccountEntity
 /**
  * @author José Manuel Sánchez Rico
  */
-data class BankAccountDTO (
+data class BankAccountDTO(
   var id: Int = 0,
   var iban: String? = null,
   var isActive: Boolean = false,
