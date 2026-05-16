@@ -84,13 +84,13 @@ public class BankAccountService {
     }
 
     public BankAccountEntity toEntity(BankAccountDTO bankAccount, ClientService clientService, BadgeService badgeService) {
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.getId()).orElse(new BankAccountEntity());
-        bankAccountEntity.setId(bankAccount.getId());
-        bankAccountEntity.setIban(bankAccount.getIban());
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.id).orElse(new BankAccountEntity());
+        bankAccountEntity.setId(bankAccount.id);
+        bankAccountEntity.setIban(bankAccount.iban);
         bankAccountEntity.setActive(bankAccount.isActive());
-        bankAccountEntity.setBalance(bankAccount.getBalance());
-        bankAccountEntity.setClientByClientId(clientService.toEntidy(bankAccount.getClientByClientId()));
-        bankAccountEntity.setBadgeByBadgeId(badgeService.toEntity(bankAccount.getBadgeByBadgeId()));
+        bankAccountEntity.setBalance(bankAccount.balance);
+        bankAccountEntity.setClientByClientId(clientService.toEntidy(bankAccount.clientByClientId));
+        bankAccountEntity.setBadgeByBadgeId(badgeService.toEntity(bankAccount.badgeByBadgeId));
         return bankAccountEntity;
     }
 
@@ -116,16 +116,16 @@ public class BankAccountService {
         }
 
         bankAccountRepository.save(bankAccount);
-        bankAccountDTO.setId(bankAccount.getId());
+        bankAccountDTO.id = bankAccount.getId();
     }
 
     public int getBankAccountId(BankAccountDTO bankAccount) {
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findBankAccountEntityByIban(bankAccount.getIban());
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findBankAccountEntityByIban(bankAccount.iban);
         return bankAccountEntity.getId();
     }
 
     public void addAuthorizedAccount(BankAccountDTO bankAccount, AuthorizedAccountDTO authorizedAccount) {
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.getId()).orElse(null);
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.id).orElse(null);
         AuthorizedAccountEntity authorizedAccountEntity = authorizedAccountRepository.findById(authorizedAccount.getAuthorizedAccountId()).orElse(null);
         if (bankAccountEntity.getAuthorizedAccountsById() == null) {
             bankAccountEntity.setAuthorizedAccountsById(List.of(authorizedAccountEntity));
@@ -138,7 +138,7 @@ public class BankAccountService {
     public void save(BankAccountDTO bankAccountDTO, ClientService clientService, BadgeService badgeService) {
         BankAccountEntity bankAccount = this.toEntity(bankAccountDTO, clientService, badgeService);
         bankAccountRepository.save(bankAccount);
-        bankAccountDTO.setId(bankAccount.getId());
+        bankAccountDTO.id = bankAccount.getId();
     }
 
     public BankAccountDTO findBankAccountEntityByIban(String iban) {

@@ -140,7 +140,7 @@ public class ATMController {
             model.addAttribute("error", "The destination account is suspicious. You cannot transfer money to it.");
             return "atm/bankAccount_transferMenu";
         }
-        if(bankAccountReceiver != null && !bankAccountReceiver.getClientByClientId().getName().equals(receiverName)){
+        if(bankAccountReceiver != null && !bankAccountReceiver.clientByClientId.getName().equals(receiverName)){
             model.addAttribute("error", "The name of the proprietary of the destination account is not correct.");
             return "atm/bankAccount_transferMenu";
         }
@@ -186,7 +186,7 @@ public class ATMController {
         BadgeDTO emisorBadge = (BadgeDTO) session.getAttribute("badge");
         BadgeDTO badge = badgeService.findById(badgeId);
 
-        transactionService.makeTransaction(amount, bankAccount.getIban(), client.getName(), badge, emisorBadge, bankAccount, client);
+        transactionService.makeTransaction(amount, bankAccount.iban, client.getName(), badge, emisorBadge, bankAccount, client);
 
         BankAccountDTO bankAccountDTO = transactionService.updateBankAccount(bankAccount);
         session.setAttribute("bankAccount", bankAccountDTO);

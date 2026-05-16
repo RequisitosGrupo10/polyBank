@@ -139,7 +139,7 @@ public class ClientService {
     }
 
     public boolean isBlocked(ClientDTO client, CompanyDTO company, AuthorizedAccountService authorizedAccountService) {
-        List<AuthorizedAccountDTO> listOfAuthAccounts = authorizedAccountService.findAuthorizedAccountEntitiesOfGivenBankAccount(company.getBankAccountByBankAccountId().getId());
+        List<AuthorizedAccountDTO> listOfAuthAccounts = authorizedAccountService.findAuthorizedAccountEntitiesOfGivenBankAccount(company.getBankAccountByBankAccountId().id);
         boolean result = listOfAuthAccounts.stream()
                 .filter(authAcc -> authAcc.getClientByClientId().equals(client))
                 .findFirst()
