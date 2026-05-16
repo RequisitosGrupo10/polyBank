@@ -49,7 +49,7 @@ public class TransactionService {
 
 
     public List<TransactionDTO> findByBankAccountByBankAccountId(BankAccountDTO bankAccount) {
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.iban).orElse(null);
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.getIban()).orElse(null);
         List<TransactionEntity> transactionEntities = transactionRepository.findByBankAccountByBankAccountId(bankAccountEntity);
         return entityListToDTO(transactionEntities);
     }
@@ -69,7 +69,7 @@ public class TransactionService {
         List<ClientEntity> clients = clientRepository.findByNameOrSurname(filter.getTransactionOwner());
         BenficiaryEntity beneficiary = beneficiaryRepository.findByIban(filter.getBeneficiaryIban()).orElse(null);
 
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.iban).orElse(null);
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.getIban()).orElse(null);
         List<TransactionEntity> transactions;
 
         if(filter.getTransactionOwner().isBlank() || filter.getBeneficiaryIban().isBlank()){
@@ -114,7 +114,7 @@ public class TransactionService {
         }
 
         //Update the bank account(s)
-        BankAccountEntity bankAccountEmisor = bankAccountRepository.findByIban(bankAccountEmisorDTO.iban).orElse(null);
+        BankAccountEntity bankAccountEmisor = bankAccountRepository.findByIban(bankAccountEmisorDTO.getIban()).orElse(null);
         updateBankAccounts(amount, ibanReceptor, finalBadge, finalAmount, emisorBadge, bankAccountEmisor);
 
 
@@ -438,7 +438,7 @@ public class TransactionService {
     }
 
     public BankAccountDTO updateBankAccount(BankAccountDTO bankAccountEmisor) {
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccountEmisor.iban).orElse(null);
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccountEmisor.getIban()).orElse(null);
         return bankAccountEntity == null ? null : bankAccountEntity.toDTO();
     }
 }

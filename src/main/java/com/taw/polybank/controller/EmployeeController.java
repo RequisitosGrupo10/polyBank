@@ -155,7 +155,7 @@ public class EmployeeController {
             return ("redirect:/employee/manager/accounts/companies");
         model.addAttribute("company", companyDTOOptional.get());
         model.addAttribute("filtro", new TransactionFilterJose());
-        model.addAttribute("transactions", transactionService.findByBankId(companyDTOOptional.get().getBankAccountByBankAccountId().id));
+        model.addAttribute("transactions", transactionService.findByBankId(companyDTOOptional.get().getBankAccountByBankAccountId().getId()));
         return ("employee/manager/see_company_account");
     }
 
@@ -169,7 +169,7 @@ public class EmployeeController {
         CompanyDTO companyDTO = companyDTOOptional.get();
         model.addAttribute("company", companyDTO);
         model.addAttribute("transactions", transactionService
-                        .findByBankIdAndFilter(companyDTO.getBankAccountByBankAccountId().id, filter));
+                        .findByBankIdAndFilter(companyDTO.getBankAccountByBankAccountId().getId(), filter));
         return ("employee/manager/see_company_account");
     }
 

@@ -42,7 +42,7 @@ public class RequestService {
 
 
     public List<RequestDTO> findByBankAccountByBankAccountIdAndAndSolved(BankAccountDTO bankAccount, boolean b) {
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.iban).orElse(null);
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.getIban()).orElse(null);
         List<RequestEntity> requestEntityList = requestRepository.findByBankAccountByBankAccountIdAndSolved(bankAccountEntity, b);
         return entityListToDTO(requestEntityList);
     }
@@ -59,7 +59,7 @@ public class RequestService {
 
         List<EmployeeEntity> employees = employeeRepository.findEmployeeWithMinimmumRequests();
         ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.iban).orElse(null);
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findByIban(bankAccount.getIban()).orElse(null);
 
         RequestEntity request = new RequestEntity();
         request.setClientByClientId(clientEntity);

@@ -55,7 +55,7 @@ public class UserCompany {
         model.addAttribute("message", "Your access have has been revoked.");
 
         BankAccountDTO bankAccount = (BankAccountDTO) session.getAttribute("bankAccount");
-        List<RequestDTO> requests = requestService.findUnsolvedUnblockRequestByUserId(client.getId(), bankAccount.id);
+        List<RequestDTO> requests = requestService.findUnsolvedUnblockRequestByUserId(client.getId(), bankAccount.getId());
         model.addAttribute("requests", requests);
         return "/company/blockedUser";
     }
@@ -243,13 +243,13 @@ public class UserCompany {
         CompanyDTO company = (CompanyDTO) session.getAttribute("company");
         ClientDTO client = (ClientDTO) session.getAttribute("client");
         BankAccountDTO bankAccount = company.getBankAccountByBankAccountId();
-        if (bankAccount.balance < amount) {
+        if (bankAccount.getBalance() < amount) {
             //fail message not enough money
             model.addAttribute("message", "Money transfer was unsuccessful, not enough money in your bank account");
             return "/company/userHomepage";
         }
 
-        BadgeDTO originBadge = bankAccount.badgeByBadgeId;
+        BadgeDTO originBadge = bankAccount.getBadgeByBadgeId();
         BadgeDTO recipientBadge = new BadgeDTO();
         TransactionDTO transaction = defineTransaction(client, bankAccount);
         BenficiaryDTO beneficiary = beneficiaryService.findBenficiaryByNameAndIban(beneficiaryName, iban);
@@ -259,7 +259,7 @@ public class UserCompany {
         if (recipientBankAccount != null) {// Internal bank money transfer
             CompanyDTO companyRecipient = companyService.findCompanyByName(beneficiaryName);
             if (companyRecipient == null) { // Private Client is going to receive money, Authorized person can not figure as beneficiary only proper owner of the account.
-                ClientDTO clientRecipient = recipientBankAccount.clientByClientId;
+                ClientDTO clientRecipient = recipientBankAccount.getClientByClientId();
                 if (!clientRecipient.getName().equals(beneficiaryName)) {
                     // fail message name is not matching
                     model.addAttribute("message", "Money transfer was unsuccessful, recipient name is not correct");
@@ -267,7 +267,7 @@ public class UserCompany {
                 }
                 // name matching proceed to transfer.
             }// Company is going to receive money
-            recipientBadge = recipientBankAccount.badgeByBadgeId;
+            recipientBadge = recipientBankAccount.getBadgeByBadgeId();
 
             if (beneficiary == null) {
                 beneficiary = defineBeneficiary(beneficiaryName, iban, recipientBadge);
@@ -277,9 +277,9 @@ public class UserCompany {
 
             if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange?
                 CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction, payment);
-                recipientBankAccount.balance = recipientBankAccount.balance + currencyExchange.getFinalAmount();
+                recipientBankAccount.setBalance(recipientBankAccount.getBalance() + currencyExchange.getFinalAmount());
             } else {
-                recipientBankAccount.balance = recipientBankAccount.balance + amount;
+                recipientBankAccount.setBalance(recipientBankAccount.getBalance() + amount);
             }
             transaction.setPaymentByPaymentId(payment);
             bankAccountService.save(recipientBankAccount, clientService, badgeService);
@@ -303,11 +303,11 @@ public class UserCompany {
         paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
         transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
 
-        bankAccount.balance = bankAccount.balance - amount;
+        bankAccount.setBalance(bankAccount.getBalance() - amount);
         bankAccountService.save(bankAccount, clientService, badgeService);
 
         // success message
-        model.addAttribute("message", amount + " " + bankAccount.badgeByBadgeId.getName() + " was successfully transferred to " + beneficiaryName);
+        model.addAttribute("message", amount + " " + bankAccount.getBadgeByBadgeId().getName() + " was successfully transferred to " + beneficiaryName);
         return "/company/userHomepage";
     }
 
@@ -326,20 +326,20 @@ public class UserCompany {
         CompanyDTO company = (CompanyDTO) session.getAttribute("company");
         ClientDTO client = (ClientDTO) session.getAttribute("client");
         BankAccountDTO bankAccount = company.getBankAccountByBankAccountId();
-        BadgeDTO currentBadge = bankAccount.badgeByBadgeId;
+        BadgeDTO currentBadge = bankAccount.getBadgeByBadgeId();
         targetBadge = badgeService.findById(targetBadge.getId());
         TransactionDTO transaction = defineTransaction(client, bankAccount);
 
-        BenficiaryDTO beneficiary = defineBeneficiary(company.getName(), bankAccount.iban, targetBadge);
-        PaymentDTO payment = definePayment(bankAccount.balance, beneficiary);
+        BenficiaryDTO beneficiary = defineBeneficiary(company.getName(), bankAccount.getIban(), targetBadge);
+        PaymentDTO payment = definePayment(bankAccount.getBalance(), beneficiary);
 
         payment.setBenficiaryByBenficiaryId(beneficiary);
 
         if (currentBadge.getId() != targetBadge.getId()) {
-            CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, bankAccount.balance, transaction, payment);
+            CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, bankAccount.getBalance(), transaction, payment);
             transaction.setPaymentByPaymentId(payment);
-            bankAccount.balance = currencyExchange.getFinalAmount();
-            bankAccount.badgeByBadgeId = targetBadge;
+            bankAccount.setBalance(currencyExchange.getFinalAmount());
+            bankAccount.setBadgeByBadgeId(targetBadge);
             beneficiaryService.save(beneficiary);
             paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
             transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
@@ -374,7 +374,7 @@ public class UserCompany {
         BankAccountDTO bankAccount = company.getBankAccountByBankAccountId();
 
         if (transactionFilter == null) {
-            transactionList = transactionService.findTransactionsByBankAccountByBankAccountIdId(bankAccount.id);
+            transactionList = transactionService.findTransactionsByBankAccountByBankAccountIdId(bankAccount.getId());
             transactionFilter = new TransactionFilterIllya();
 
         } else {
@@ -383,27 +383,27 @@ public class UserCompany {
             if (transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
                 transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRange(
-                                bankAccount.id, dateAfter, dateBefore,
+                                bankAccount.getId(), dateAfter, dateBefore,
                                 transactionFilter.getMinAmount(), transactionFilter.getMaxAmount());
 
             } else if (!transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
                 transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDni(
-                                bankAccount.id, dateAfter, dateBefore,
+                                bankAccount.getId(), dateAfter, dateBefore,
                                 transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
                                 transactionFilter.getSenderId());
 
             } else if (transactionFilter.getSenderId().isBlank() && !transactionFilter.getRecipientName().isBlank()) {
                 transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenRecipientName(
-                                bankAccount.id, dateAfter, dateBefore,
+                                bankAccount.getId(), dateAfter, dateBefore,
                                 transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
                                 transactionFilter.getRecipientName());
 
             } else {
                 transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDniAndRecipientName(
-                                bankAccount.id, dateAfter, dateBefore,
+                                bankAccount.getId(), dateAfter, dateBefore,
                                 transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
                                 transactionFilter.getSenderId(), transactionFilter.getRecipientName());
             }

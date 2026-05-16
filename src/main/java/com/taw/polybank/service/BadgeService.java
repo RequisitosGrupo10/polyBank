@@ -33,7 +33,7 @@ public class BadgeService {
     private BadgeRepository badgeRepository;
 
     public BadgeDTO findByBankAccountsById(BankAccountDTO bankAccount) {
-        BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.id).orElse(null);
+        BankAccountEntity bankAccountEntity = bankAccountRepository.findById(bankAccount.getId()).orElse(null);
         if(bankAccountEntity != null){
             BadgeEntity badgeEntity = badgeRepository.findByBankAccountsById(bankAccountEntity);
             return badgeEntity.toDTO();

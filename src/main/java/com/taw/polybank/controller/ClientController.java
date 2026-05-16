@@ -87,7 +87,7 @@ public class ClientController {
         client.setCreationDate(Timestamp.from(Instant.now()));
         PasswordManager passwordManager = new PasswordManager(clientService);
         String[] saltAndPass = passwordManager.savePassword(client, password);
-        account.clientByClientId = client;
+        account.setClientByClientId(client);
         clientService.save(client, saltAndPass);
         bankAccountService.save(account, clientService, badgeService);
         return "redirect:/";
@@ -100,7 +100,7 @@ public class ClientController {
             return "redirect:/";
         BankAccountDTO account = bankAccountService.findById(accountID);
 
-        if (account.clientByClientId.equals(clientDTO)) {
+        if (account.getClientByClientId().equals(clientDTO)) {
             session.setAttribute("account", account);
             return "client/bankAccount/viewData";
         } else {
@@ -131,13 +131,13 @@ public class ClientController {
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
         if (account == null || !account.isActive())
             return "redirect:/";
-        if (account.balance < amount) {
+        if (account.getBalance() < amount) {
             //fail message not enough money
             model.addAttribute("message", "Money transfer was unsuccessful, not enough money in your bank account");
-            return "redirect:/client/account?id="+ account.id;
+            return "redirect:/client/account?id="+ account.getId();
         }
 
-        BadgeDTO originBadge = account.badgeByBadgeId;
+        BadgeDTO originBadge = account.getBadgeByBadgeId();
         BadgeDTO recipientBadge = new BadgeDTO();
         TransactionDTO transaction = defineTransaction(clientDTO, account);
         BenficiaryDTO beneficiary = beneficiaryService.findBenficiaryByNameAndIban(beneficiaryName, iban);
@@ -147,15 +147,15 @@ public class ClientController {
         if (recipientBankAccount != null) {// Internal bank money transfer
             CompanyDTO companyRecipient = companyService.findCompanyByName(beneficiaryName);
             if (companyRecipient == null) { // Private Client is going to receive money, Authorized person can not figure as beneficiary only proper owner of the account.
-                ClientDTO clientRecipient = recipientBankAccount.clientByClientId;
+                ClientDTO clientRecipient = recipientBankAccount.getClientByClientId();
                 if (!clientRecipient.getName().equals(beneficiaryName)) {
                     // fail message name is not matching
                     model.addAttribute("message", "Money transfer was unsuccessful, recipient name is not correct");
-                    return "redirect:/client/account?id="+ account.id;
+                    return "redirect:/client/account?id="+ account.getId();
                 }
                 // name matching proceed to transfer.
             }// Company is going to receive money
-            recipientBadge = recipientBankAccount.badgeByBadgeId;
+            recipientBadge = recipientBankAccount.getBadgeByBadgeId();
 
             if (beneficiary == null) {
                 beneficiary = defineBeneficiary(beneficiaryName, iban, recipientBadge);
@@ -165,9 +165,9 @@ public class ClientController {
 
             if (originBadge.getId() != recipientBadge.getId()) { // Do we need currency exchange?
                 CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(originBadge, recipientBadge, amount, transaction, payment);
-                recipientBankAccount.balance = recipientBankAccount.balance + currencyExchange.getFinalAmount();
+                recipientBankAccount.setBalance(recipientBankAccount.getBalance() + currencyExchange.getFinalAmount());
             } else {
-                recipientBankAccount.balance = recipientBankAccount.balance + amount;
+                recipientBankAccount.setBalance(recipientBankAccount.getBalance() + amount);
             }
             transaction.setPaymentByPaymentId(payment);
             bankAccountService.save(recipientBankAccount, clientService, badgeService);
@@ -191,12 +191,12 @@ public class ClientController {
         paymentService.save(payment, beneficiaryService, currencyExchangeService, badgeService);
         transactionService.save(transaction, clientService, bankAccountService, currencyExchangeService, paymentService, badgeService, beneficiaryService);
 
-        account.balance = account.balance - amount;
+        account.setBalance(account.getBalance() - amount);
         bankAccountService.save(account, clientService, badgeService);
 
         // success message
-        model.addAttribute("message", amount + " " + account.badgeByBadgeId.getName() + " was successfully transferred to " + beneficiaryName);
-        return "redirect:/client/account?id="+ account.id;
+        model.addAttribute("message", amount + " " + account.getBadgeByBadgeId().getName() + " was successfully transferred to " + beneficiaryName);
+        return "redirect:/client/account?id="+ account.getId();
     }
 
     @GetMapping("/account/moneyExchange")
@@ -217,25 +217,25 @@ public class ClientController {
         BankAccountDTO account = (BankAccountDTO) session.getAttribute("account");
         if (clientDTO == null || account == null)
             return "redirect:/";
-        BadgeDTO currentBadge = account.badgeByBadgeId;
+        BadgeDTO currentBadge = account.getBadgeByBadgeId();
         BadgeDTO targetBadge = badgeService.findById(badgeID);
 
         TransactionDTO transaction = defineTransaction(clientDTO, account);
         BenficiaryDTO beneficiary = beneficiaryService.findBenficiaryByNameAndIban(
-                clientDTO.getName(), account.iban
+                clientDTO.getName(), account.getIban()
         );
 
         if (beneficiary == null)
-            beneficiary = defineBeneficiary(clientDTO.getName(), account.iban, targetBadge);
-        PaymentDTO payment = definePayment(account.balance, beneficiary);
+            beneficiary = defineBeneficiary(clientDTO.getName(), account.getIban(), targetBadge);
+        PaymentDTO payment = definePayment(account.getBalance(), beneficiary);
 
         payment.setBenficiaryByBenficiaryId(beneficiary);
 
         if (currentBadge.getId() != targetBadge.getId()) {
-            CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, account.balance, transaction, payment);
+            CurrencyExchangeDTO currencyExchange = defineCurrencyExchange(currentBadge, targetBadge, account.getBalance(), transaction, payment);
             transaction.setPaymentByPaymentId(payment);
-            account.balance = currencyExchange.getFinalAmount();
-            account.badgeByBadgeId = targetBadge;
+            account.setBalance(currencyExchange.getFinalAmount());
+            account.setBadgeByBadgeId(targetBadge);
             beneficiary.setBadge(targetBadge.getName());
             beneficiary.setSwift("XXX" + targetBadge.getName() + "BNK");
             beneficiaryService.save(beneficiary);
@@ -246,7 +246,7 @@ public class ClientController {
             System.out.println("ERROR: Can't change currency to the same badge.");
         }
 
-        return "redirect:/client/account?id="+ account.id;
+        return "redirect:/client/account?id="+ account.getId();
     }
 
     @GetMapping("/account/operationHistory")
@@ -267,7 +267,7 @@ public class ClientController {
             return "redirect:/";
 
         if (transactionFilter == null) {
-            transactionList = transactionService.findTransactionsByBankAccountByBankAccountIdId(account.id);
+            transactionList = transactionService.findTransactionsByBankAccountByBankAccountIdId(account.getId());
             transactionFilter = new TransactionFilterIllya();
 
         } else {
@@ -276,27 +276,27 @@ public class ClientController {
             if (transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
                 transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRange(
-                                account.id, dateAfter, dateBefore,
+                                account.getId(), dateAfter, dateBefore,
                                 transactionFilter.getMinAmount(), transactionFilter.getMaxAmount());
 
             } else if (!transactionFilter.getSenderId().isBlank() && transactionFilter.getRecipientName().isBlank()) {
                 transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDni(
-                                account.id, dateAfter, dateBefore,
+                                account.getId(), dateAfter, dateBefore,
                                 transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
                                 transactionFilter.getSenderId());
 
             } else if (transactionFilter.getSenderId().isBlank() && !transactionFilter.getRecipientName().isBlank()) {
                 transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenRecipientName(
-                                account.id, dateAfter, dateBefore,
+                                account.getId(), dateAfter, dateBefore,
                                 transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
                                 transactionFilter.getRecipientName());
 
             } else {
                 transactionList = transactionService.
                         findAllTransactionsByBankAccountAndDatesAndSendAmountInRangeWithGivenSenderDniAndRecipientName(
-                                account.id, dateAfter, dateBefore,
+                                account.getId(), dateAfter, dateBefore,
                                 transactionFilter.getMinAmount(), transactionFilter.getMaxAmount(),
                                 transactionFilter.getSenderId(), transactionFilter.getRecipientName());
             }
@@ -328,7 +328,7 @@ public class ClientController {
         List<RequestDTO> requestsNotSolved = requestService.findByBankAccountByBankAccountIdAndAndSolved(account, false);
         if (requestsNotSolved.size() <= 0)
             requestService.createNewRequest(client, account, "activation", description);
-        return "redirect:/client/account?id="+ account.id;
+        return "redirect:/client/account?id="+ account.getId();
     }
 
     @GetMapping("/logout")
@@ -352,15 +352,15 @@ public class ClientController {
 
     private void defineBankAccount(BankAccountDTO bankAccount) {
         bankAccount.setActive(false);
-        bankAccount.badgeByBadgeId = badgeService.findBadgeEntityByName("USD");
+        bankAccount.setBadgeByBadgeId(badgeService.findBadgeEntityByName("USD"));
         Random random = new Random();
         StringBuilder iban = new StringBuilder();
         iban.append("ES44 5268 3000 ");
         for (int i = 0; i < 12; i++) {
             iban.append(random.nextInt(10));
         }
-        bankAccount.balance = 0.0;
-        bankAccount.iban = iban.toString();
+        bankAccount.setBalance(0.0);
+        bankAccount.setIban(iban.toString());
     }
     private PaymentDTO definePayment(Double amount, BenficiaryDTO beneficiary) {
         PaymentDTO payment = new PaymentDTO();

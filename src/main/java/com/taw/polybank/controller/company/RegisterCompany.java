@@ -62,7 +62,7 @@ public class RegisterCompany {
 
         BadgeDTO badge = badgeService.findById(badgeId);
         BankAccountDTO bankAccount = new BankAccountDTO();
-        bankAccount.badgeByBadgeId = badge;
+        bankAccount.setBadgeByBadgeId(badge);
         company.setBankAccountByBankAccountId(bankAccount);
         session.setAttribute("bankAccount", company.getBankAccountByBankAccountId());
         session.setAttribute("company", company);
@@ -79,7 +79,7 @@ public class RegisterCompany {
         RequestDTO request = new RequestDTO();
         updateBankAccount(bankAccount);
         // filling up bank account fields
-        bankAccount.clientByClientId = client;
+        bankAccount.setClientByClientId(client);
 
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()));
@@ -93,7 +93,7 @@ public class RegisterCompany {
         // saving DTOs
         clientService.save(client, saltAndPass);
         companyService.save(company, bankAccountService, clientService, badgeService);
-        bankAccount.id = bankAccountService.getBankAccountId(bankAccount);
+        bankAccount.setId(bankAccountService.getBankAccountId(bankAccount));
         requestService.save(request, clientService, bankAccountService, employeeService, badgeService);
 
         session.invalidate();
@@ -108,8 +108,8 @@ public class RegisterCompany {
         for (int i = 0; i < 12; i++) {
             iban.append(random.nextInt(10));
         }
-        bankAccount.balance = 0.0;
-        bankAccount.iban = iban.toString();
+        bankAccount.setBalance(0.0);
+        bankAccount.setIban(iban.toString());
     }
 
     private void defineActivationRequest(ClientDTO client, BankAccountDTO bankAccount, RequestDTO request) {
