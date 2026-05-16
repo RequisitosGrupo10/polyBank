@@ -150,22 +150,22 @@ public class BankAccountEntity {
 
     public BankAccountDTO toDTO() {
         BankAccountDTO bankAccountDTO = new BankAccountDTO();
-        bankAccountDTO.id = getId();
-        bankAccountDTO.iban = getIban();
+        bankAccountDTO.setId(getId());
+        bankAccountDTO.setIban(getIban());
         bankAccountDTO.setActive(isActive());
-        bankAccountDTO.balance = getBalance();
-        bankAccountDTO.clientByClientId = getClientByClientId().toDTO();
-        bankAccountDTO.badgeByBadgeId = getBadgeByBadgeId().toDTO();
+        bankAccountDTO.setBalance(getBalance());
+        bankAccountDTO.setClientByClientId(getClientByClientId().toDTO());
+        bankAccountDTO.setBadgeByBadgeId(getBadgeByBadgeId().toDTO());
         return bankAccountDTO;
     }
 
     public static BankAccountEntity toEntity(BankAccountDTO bankAccountDTO) {
         BankAccountEntity bankAccountEntity = new BankAccountEntity();
         bankAccountEntity.setActive(bankAccountDTO.isActive());
-        bankAccountEntity.setId(bankAccountDTO.id);
-        bankAccountEntity.setBalance(bankAccountDTO.balance);
-        bankAccountEntity.setIban(bankAccountDTO.iban);
-        bankAccountEntity.setClientByClientId(ClientEntity.toEntity(bankAccountDTO.clientByClientId));
+        bankAccountEntity.setId(bankAccountDTO.getId());
+        bankAccountEntity.setBalance(bankAccountDTO.getBalance());
+        bankAccountEntity.setIban(bankAccountDTO.getIban());
+        bankAccountEntity.setClientByClientId(ClientEntity.toEntity(bankAccountDTO.getClientByClientId()));
         return bankAccountEntity;
     }
 }
