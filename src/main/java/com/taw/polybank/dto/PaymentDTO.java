@@ -4,41 +4,41 @@ package com.taw.polybank.dto;
  * @author José Manuel Sánchez Rico
  */
 public class PaymentDTO {
-    private int id;
-    private double amount;
-    private BenficiaryDTO benficiaryByBenficiaryId;
-    private CurrencyExchangeDTO currencyExchangeByCurrencyExchangeId;
+  private int id;
+  private double amount;
+  private BenficiaryDTO benficiaryByBenficiaryId;
+  private CurrencyExchangeDTO currencyExchangeByCurrencyExchangeId;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public double getAmount() {
-        return amount;
-    }
+  public double getAmount() {
+    return amount;
+  }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+  public void setAmount(double amount) {
+    this.amount = amount;
+  }
 
-    public BenficiaryDTO getBenficiaryByBenficiaryId() {
-        return benficiaryByBenficiaryId;
-    }
+  public BenficiaryDTO getBenficiaryByBenficiaryId() {
+    return benficiaryByBenficiaryId;
+  }
 
-    public void setBenficiaryByBenficiaryId(BenficiaryDTO benficiaryByBenficiaryId) {
-        this.benficiaryByBenficiaryId = benficiaryByBenficiaryId;
-    }
+  public void setBenficiaryByBenficiaryId(BenficiaryDTO benficiaryByBenficiaryId) {
+    this.benficiaryByBenficiaryId = benficiaryByBenficiaryId;
+  }
 
-    public CurrencyExchangeDTO getCurrencyExchangeByCurrencyExchangeId() {
-        return currencyExchangeByCurrencyExchangeId;
-    }
+  public CurrencyExchangeDTO getCurrencyExchangeByCurrencyExchangeId() {
+    return currencyExchangeByCurrencyExchangeId;
+  }
 
-    public void setCurrencyExchangeByCurrencyExchangeId(CurrencyExchangeDTO currencyExchangeByCurrencyExchangeId) {
-        this.currencyExchangeByCurrencyExchangeId = currencyExchangeByCurrencyExchangeId;
-    }
-
+  public void setCurrencyExchangeByCurrencyExchangeId(
+      CurrencyExchangeDTO currencyExchangeByCurrencyExchangeId) {
+    this.currencyExchangeByCurrencyExchangeId = currencyExchangeByCurrencyExchangeId;
+  }
 }

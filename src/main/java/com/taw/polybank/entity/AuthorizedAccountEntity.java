@@ -6,78 +6,82 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "AuthorizedAccount", schema = "polyBank", catalog = "")
 public class AuthorizedAccountEntity {
-    @Basic
-    @Column(name = "blocked", nullable = false)
-    private boolean blocked;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "AuthorizedAccount_id", nullable = false)
-    private int authorizedAccountId;
-    @ManyToOne
-    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
-    private ClientEntity clientByClientId;
-    @ManyToOne
-    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
-    private BankAccountEntity bankAccountByBankAccountId;
+  @Basic
+  @Column(name = "blocked", nullable = false)
+  private boolean blocked;
 
-    public boolean getBlocked() {
-        return blocked;
-    }
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "AuthorizedAccount_id", nullable = false)
+  private int authorizedAccountId;
 
-    public void setBlocked(boolean blocked) {
-        this.blocked = blocked;
-    }
+  @ManyToOne
+  @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+  private ClientEntity clientByClientId;
 
-    public int getAuthorizedAccountId() {
-        return authorizedAccountId;
-    }
+  @ManyToOne
+  @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+  private BankAccountEntity bankAccountByBankAccountId;
 
-    public void setAuthorizedAccountId(int authorizedAccountId) {
-        this.authorizedAccountId = authorizedAccountId;
-    }
+  public boolean getBlocked() {
+    return blocked;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public void setBlocked(boolean blocked) {
+    this.blocked = blocked;
+  }
 
-        AuthorizedAccountEntity that = (AuthorizedAccountEntity) o;
+  public int getAuthorizedAccountId() {
+    return authorizedAccountId;
+  }
 
-        if (blocked != that.blocked) return false;
-        if (authorizedAccountId != that.authorizedAccountId) return false;
+  public void setAuthorizedAccountId(int authorizedAccountId) {
+    this.authorizedAccountId = authorizedAccountId;
+  }
 
-        return true;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    @Override
-    public int hashCode() {
-        int result = Boolean.hashCode(blocked);
-        result = 31 * result + authorizedAccountId;
-        return result;
-    }
+    AuthorizedAccountEntity that = (AuthorizedAccountEntity) o;
 
-    public ClientEntity getClientByClientId() {
-        return clientByClientId;
-    }
+    if (blocked != that.blocked) return false;
+    if (authorizedAccountId != that.authorizedAccountId) return false;
 
-    public void setClientByClientId(ClientEntity clientByClientId) {
-        this.clientByClientId = clientByClientId;
-    }
+    return true;
+  }
 
-    public BankAccountEntity getBankAccountByBankAccountId() {
-        return bankAccountByBankAccountId;
-    }
+  @Override
+  public int hashCode() {
+    int result = Boolean.hashCode(blocked);
+    result = 31 * result + authorizedAccountId;
+    return result;
+  }
 
-    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
-        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
-    }
+  public ClientEntity getClientByClientId() {
+    return clientByClientId;
+  }
 
-    public AuthorizedAccountDTO toDto(){
-        AuthorizedAccountDTO authorizedAccountDTO = new AuthorizedAccountDTO();
-        authorizedAccountDTO.setAuthorizedAccountId(this.authorizedAccountId);
-        authorizedAccountDTO.setBlocked(this.blocked);
-        authorizedAccountDTO.setClientByClientId(this.getClientByClientId().toDTO());
-        authorizedAccountDTO.setBankAccountByBankAccountId(this.getBankAccountByBankAccountId().toDTO());
-        return  authorizedAccountDTO;
-    }
+  public void setClientByClientId(ClientEntity clientByClientId) {
+    this.clientByClientId = clientByClientId;
+  }
+
+  public BankAccountEntity getBankAccountByBankAccountId() {
+    return bankAccountByBankAccountId;
+  }
+
+  public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+    this.bankAccountByBankAccountId = bankAccountByBankAccountId;
+  }
+
+  public AuthorizedAccountDTO toDto() {
+    AuthorizedAccountDTO authorizedAccountDTO = new AuthorizedAccountDTO();
+    authorizedAccountDTO.setAuthorizedAccountId(this.authorizedAccountId);
+    authorizedAccountDTO.setBlocked(this.blocked);
+    authorizedAccountDTO.setClientByClientId(this.getClientByClientId().toDTO());
+    authorizedAccountDTO.setBankAccountByBankAccountId(
+        this.getBankAccountByBankAccountId().toDTO());
+    return authorizedAccountDTO;
+  }
 }

@@ -9,14 +9,13 @@ import com.taw.polybank.service.EmployeeService;
 import com.taw.polybank.service.MessageService;
 import com.taw.polybank.ui.assistence.AssistantFilter;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.List;
 
 /**
  * @author Javier Jordán Luque
@@ -25,93 +24,105 @@ import java.util.List;
 @RequestMapping("employee/assistance")
 public class AssistantController {
 
-    @Autowired
-    protected EmployeeService employeeService;
+  @Autowired protected EmployeeService employeeService;
 
-    @Autowired
-    protected ChatService chatService;
+  @Autowired protected ChatService chatService;
 
-    @Autowired
-    protected MessageService messageService;
+  @Autowired protected MessageService messageService;
 
-    @GetMapping(value={"/", ""})
-    public String doListChats(Model model, HttpSession session) {
-        return processFilter(model, session, null);
-    }
+  @GetMapping(value = {"/", ""})
+  public String doListChats(Model model, HttpSession session) {
+    return processFilter(model, session, null);
+  }
 
-    @PostMapping("/filter")
-    public String doFilterChats(Model model, HttpSession session, @ModelAttribute("filter")AssistantFilter filter) {
-        return processFilter(model, session, filter);
-    }
+  @PostMapping("/filter")
+  public String doFilterChats(
+      Model model, HttpSession session, @ModelAttribute("filter") AssistantFilter filter) {
+    return processFilter(model, session, filter);
+  }
 
-    protected String processFilter(Model model, HttpSession session, AssistantFilter filter) {
-        List<ChatDTO> chatList;
-        EmployeeDTO employee = this.employeeService.findById(((EmployeeEntity) session.getAttribute("employee")).getId());
+  protected String processFilter(Model model, HttpSession session, AssistantFilter filter) {
+    List<ChatDTO> chatList;
+    EmployeeDTO employee =
+        this.employeeService.findById(((EmployeeEntity) session.getAttribute("employee")).getId());
 
-        if (employee != null) {
-            if (filter == null || (filter.getClientDni() == "" && filter.getClientName() == "" && filter.getRecent() == false)) {
-                chatList = this.chatService.findByEmployee(employee);
-                filter = new AssistantFilter();
-            } else {
-                if (filter.getClientDni() != "") {
-                    if (filter.getClientName() == "" && filter.getRecent() == false) {
-                        chatList = this.chatService.findByEmployeeAndClientDni(employee, filter.getClientDni());
-                    } else if (filter.getClientName() != "" && filter.getRecent() == false) {
-                        chatList = this.chatService.findByEmployeeAndClientDniAndClientName(employee, filter.getClientDni(), filter.getClientName());
-                    } else if (filter.getClientName() == "" && filter.getRecent() == true) {
-                        chatList = this.chatService.findByEmployeeAndClientDniAndRecent(employee, filter.getClientDni());
-                    } else {
-                        chatList = this.chatService.findByEmployeeAndClientDniAndClientNameAndRecent(employee, filter.getClientDni(), filter.getClientName());
-                    }
-                } else if (filter.getClientName() != "") {
-                    if (filter.getRecent() == false) {
-                        chatList = this.chatService.findByEmployeeAndClientName(employee, filter.getClientName());
-                    } else {
-                        chatList = this.chatService.findByEmployeeAndClientNameAndRecent(employee, filter.getClientName());
-                    }
-                } else {
-                    chatList = this.chatService.findByEmployeeAndRecent(employee);
-                }
-            }
-            model.addAttribute("chatList", chatList);
-            model.addAttribute("filter", filter);
-
-            return "assistance/assistantChatList";
+    if (employee != null) {
+      if (filter == null
+          || (filter.getClientDni() == ""
+              && filter.getClientName() == ""
+              && filter.getRecent() == false)) {
+        chatList = this.chatService.findByEmployee(employee);
+        filter = new AssistantFilter();
+      } else {
+        if (filter.getClientDni() != "") {
+          if (filter.getClientName() == "" && filter.getRecent() == false) {
+            chatList = this.chatService.findByEmployeeAndClientDni(employee, filter.getClientDni());
+          } else if (filter.getClientName() != "" && filter.getRecent() == false) {
+            chatList =
+                this.chatService.findByEmployeeAndClientDniAndClientName(
+                    employee, filter.getClientDni(), filter.getClientName());
+          } else if (filter.getClientName() == "" && filter.getRecent() == true) {
+            chatList =
+                this.chatService.findByEmployeeAndClientDniAndRecent(
+                    employee, filter.getClientDni());
+          } else {
+            chatList =
+                this.chatService.findByEmployeeAndClientDniAndClientNameAndRecent(
+                    employee, filter.getClientDni(), filter.getClientName());
+          }
+        } else if (filter.getClientName() != "") {
+          if (filter.getRecent() == false) {
+            chatList =
+                this.chatService.findByEmployeeAndClientName(employee, filter.getClientName());
+          } else {
+            chatList =
+                this.chatService.findByEmployeeAndClientNameAndRecent(
+                    employee, filter.getClientName());
+          }
+        } else {
+          chatList = this.chatService.findByEmployeeAndRecent(employee);
         }
+      }
+      model.addAttribute("chatList", chatList);
+      model.addAttribute("filter", filter);
 
-        return "error";
+      return "assistance/assistantChatList";
     }
 
-    @GetMapping("/chat")
-    public String doOpenChat (@RequestParam("id") Integer chatId, Model model) {
-        ChatDTO chat = this.chatService.findById(chatId);
-        if (chat != null) {
-            model.addAttribute("chat", chat);
-            model.addAttribute("messageList", messageService.findByChat(chat));
+    return "error";
+  }
 
-            return "assistance/assistantChat";
-        }
+  @GetMapping("/chat")
+  public String doOpenChat(@RequestParam("id") Integer chatId, Model model) {
+    ChatDTO chat = this.chatService.findById(chatId);
+    if (chat != null) {
+      model.addAttribute("chat", chat);
+      model.addAttribute("messageList", messageService.findByChat(chat));
 
-        return "error";
+      return "assistance/assistantChat";
     }
 
-    @PostMapping("/send")
-    public String doSend (@RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
-        ChatDTO chat = chatService.findById(chatId);
+    return "error";
+  }
 
-        if (chat != null) {
-            MessageDTO message = new MessageDTO();
-            message.setChat(chat);
-            message.setContent(content);
-            message.setTimestamp(Timestamp.from(Instant.now()));
-            message.setAssistant(chat.getAssistant());
-            message.setClient(null);
+  @PostMapping("/send")
+  public String doSend(
+      @RequestParam("content") String content, @RequestParam("chatId") Integer chatId) {
+    ChatDTO chat = chatService.findById(chatId);
 
-            this.messageService.save(message);
+    if (chat != null) {
+      MessageDTO message = new MessageDTO();
+      message.setChat(chat);
+      message.setContent(content);
+      message.setTimestamp(Timestamp.from(Instant.now()));
+      message.setAssistant(chat.getAssistant());
+      message.setClient(null);
 
-            return "redirect:/employee/assistance/chat?id=" + chatId;
-        }
+      this.messageService.save(message);
 
-        return "error";
+      return "redirect:/employee/assistance/chat?id=" + chatId;
     }
+
+    return "error";
+  }
 }

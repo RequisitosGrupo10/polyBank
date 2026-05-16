@@ -1,52 +1,52 @@
 package com.taw.polybank.dto;
+
 /**
  * @author José Manuel Sánchez Rico
  */
 public class BenficiaryDTO {
-    private int id;
-    private String name;
-    private String badge;
-    private String iban;
-    private String swift;
+  private int id;
+  private String name;
+  private String badge;
+  private String iban;
+  private String swift;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getBadge() {
-        return badge;
-    }
+  public String getBadge() {
+    return badge;
+  }
 
-    public void setBadge(String badge) {
-        this.badge = badge;
-    }
+  public void setBadge(String badge) {
+    this.badge = badge;
+  }
 
-    public String getIban() {
-        return iban;
-    }
+  public String getIban() {
+    return iban;
+  }
 
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
+  public void setIban(String iban) {
+    this.iban = iban;
+  }
 
-    public String getSwift() {
-        return swift;
-    }
+  public String getSwift() {
+    return swift;
+  }
 
-    public void setSwift(String swift) {
-        this.swift = swift;
-    }
-
+  public void setSwift(String swift) {
+    this.swift = swift;
+  }
 }

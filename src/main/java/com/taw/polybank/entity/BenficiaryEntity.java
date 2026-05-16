@@ -2,112 +2,116 @@ package com.taw.polybank.entity;
 
 import com.taw.polybank.dto.BenficiaryDTO;
 import jakarta.persistence.*;
-
 import java.util.Collection;
 
 @Entity
 @Table(name = "Benficiary", schema = "polyBank", catalog = "")
 public class BenficiaryEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private int id;
-    @Basic
-    @Column(name = "name", nullable = false, length = 45)
-    private String name;
-    @Basic
-    @Column(name = "badge", nullable = false, length = 3)
-    private String badge;
-    @Basic
-    @Column(name = "IBAN", nullable = false, length = 34)
-    private String iban;
-    @Basic
-    @Column(name = "swift", nullable = false, length = 45)
-    private String swift;
-    @OneToMany(mappedBy = "benficiaryByBenficiaryId")
-    private Collection<PaymentEntity> paymentsById;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id", nullable = false)
+  private int id;
 
-    public int getId() {
-        return id;
-    }
+  @Basic
+  @Column(name = "name", nullable = false, length = 45)
+  private String name;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  @Basic
+  @Column(name = "badge", nullable = false, length = 3)
+  private String badge;
 
-    public String getName() {
-        return name;
-    }
+  @Basic
+  @Column(name = "IBAN", nullable = false, length = 34)
+  private String iban;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Basic
+  @Column(name = "swift", nullable = false, length = 45)
+  private String swift;
 
-    public String getBadge() {
-        return badge;
-    }
+  @OneToMany(mappedBy = "benficiaryByBenficiaryId")
+  private Collection<PaymentEntity> paymentsById;
 
-    public void setBadge(String badge) {
-        this.badge = badge;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getIban() {
-        return iban;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getSwift() {
-        return swift;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setSwift(String swift) {
-        this.swift = swift;
-    }
+  public String getBadge() {
+    return badge;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public void setBadge(String badge) {
+    this.badge = badge;
+  }
 
-        BenficiaryEntity that = (BenficiaryEntity) o;
+  public String getIban() {
+    return iban;
+  }
 
-        if (id != that.id) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (badge != null ? !badge.equals(that.badge) : that.badge != null) return false;
-        if (iban != null ? !iban.equals(that.iban) : that.iban != null) return false;
-        if (swift != null ? !swift.equals(that.swift) : that.swift != null) return false;
+  public void setIban(String iban) {
+    this.iban = iban;
+  }
 
-        return true;
-    }
+  public String getSwift() {
+    return swift;
+  }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (badge != null ? badge.hashCode() : 0);
-        result = 31 * result + (iban != null ? iban.hashCode() : 0);
-        result = 31 * result + (swift != null ? swift.hashCode() : 0);
-        return result;
-    }
+  public void setSwift(String swift) {
+    this.swift = swift;
+  }
 
-    public Collection<PaymentEntity> getPaymentsById() {
-        return paymentsById;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    public void setPaymentsById(Collection<PaymentEntity> paymentsById) {
-        this.paymentsById = paymentsById;
-    }
+    BenficiaryEntity that = (BenficiaryEntity) o;
 
-    public BenficiaryDTO toDTO() {
-        BenficiaryDTO benficiaryDTO = new BenficiaryDTO();
-        benficiaryDTO.setBadge(getBadge());
-        benficiaryDTO.setIban(getIban());
-        benficiaryDTO.setName(getName());
-        benficiaryDTO.setSwift(getSwift());
-        benficiaryDTO.setId(getId());
-        return benficiaryDTO;
-    }
+    if (id != that.id) return false;
+    if (name != null ? !name.equals(that.name) : that.name != null) return false;
+    if (badge != null ? !badge.equals(that.badge) : that.badge != null) return false;
+    if (iban != null ? !iban.equals(that.iban) : that.iban != null) return false;
+    if (swift != null ? !swift.equals(that.swift) : that.swift != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    result = 31 * result + (badge != null ? badge.hashCode() : 0);
+    result = 31 * result + (iban != null ? iban.hashCode() : 0);
+    result = 31 * result + (swift != null ? swift.hashCode() : 0);
+    return result;
+  }
+
+  public Collection<PaymentEntity> getPaymentsById() {
+    return paymentsById;
+  }
+
+  public void setPaymentsById(Collection<PaymentEntity> paymentsById) {
+    this.paymentsById = paymentsById;
+  }
+
+  public BenficiaryDTO toDTO() {
+    BenficiaryDTO benficiaryDTO = new BenficiaryDTO();
+    benficiaryDTO.setBadge(getBadge());
+    benficiaryDTO.setIban(getIban());
+    benficiaryDTO.setName(getName());
+    benficiaryDTO.setSwift(getSwift());
+    benficiaryDTO.setId(getId());
+    return benficiaryDTO;
+  }
 }

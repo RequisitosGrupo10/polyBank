@@ -2,74 +2,76 @@ package com.taw.polybank.ui.companyFilters;
 
 import java.sql.Date;
 import java.util.Calendar;
+
 /**
  * @author Illya Rozumovskyy
  */
 public class TransactionFilterIllya {
-    private Date transactionAfter;
-    private Date transactionBefore;
-    private String senderId;
-    private String recipientName;
-    private double minAmount;
-    private double maxAmount;
-    public TransactionFilterIllya() {
+  private Date transactionAfter;
+  private Date transactionBefore;
+  private String senderId;
+  private String recipientName;
+  private double minAmount;
+  private double maxAmount;
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -1);
-        transactionAfter = new Date(cal.getTimeInMillis());
+  public TransactionFilterIllya() {
 
-        cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        transactionBefore = new Date(cal.getTimeInMillis());
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.YEAR, -1);
+    transactionAfter = new Date(cal.getTimeInMillis());
 
-        this.maxAmount = Double.MAX_VALUE;
-    }
+    cal = Calendar.getInstance();
+    cal.add(Calendar.DAY_OF_YEAR, 1);
+    transactionBefore = new Date(cal.getTimeInMillis());
 
-    public Date getTransactionAfter() {
-        return transactionAfter;
-    }
+    this.maxAmount = Double.MAX_VALUE;
+  }
 
-    public void setTransactionAfter(Date transactionAfter) {
-        this.transactionAfter = transactionAfter;
-    }
+  public Date getTransactionAfter() {
+    return transactionAfter;
+  }
 
-    public Date getTransactionBefore() {
-        return transactionBefore;
-    }
+  public void setTransactionAfter(Date transactionAfter) {
+    this.transactionAfter = transactionAfter;
+  }
 
-    public void setTransactionBefore(Date transactionBefore) {
-        this.transactionBefore = transactionBefore;
-    }
+  public Date getTransactionBefore() {
+    return transactionBefore;
+  }
 
-    public String getSenderId() {
-        return senderId;
-    }
+  public void setTransactionBefore(Date transactionBefore) {
+    this.transactionBefore = transactionBefore;
+  }
 
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
-    }
+  public String getSenderId() {
+    return senderId;
+  }
 
-    public String getRecipientName() {
-        return recipientName;
-    }
+  public void setSenderId(String senderId) {
+    this.senderId = senderId;
+  }
 
-    public void setRecipientName(String recipientName) {
-        this.recipientName = recipientName;
-    }
+  public String getRecipientName() {
+    return recipientName;
+  }
 
-    public double getMinAmount() {
-        return minAmount;
-    }
+  public void setRecipientName(String recipientName) {
+    this.recipientName = recipientName;
+  }
 
-    public void setMinAmount(double minAmount) {
-        this.minAmount = minAmount;
-    }
+  public double getMinAmount() {
+    return minAmount;
+  }
 
-    public double getMaxAmount() {
-        return maxAmount;
-    }
+  public void setMinAmount(double minAmount) {
+    this.minAmount = minAmount;
+  }
 
-    public void setMaxAmount(double maxAmount) {
-        this.maxAmount = maxAmount;
-    }
+  public double getMaxAmount() {
+    return maxAmount;
+  }
+
+  public void setMaxAmount(double maxAmount) {
+    this.maxAmount = maxAmount;
+  }
 }

@@ -1,100 +1,100 @@
 package com.taw.polybank.dto;
 
 import com.taw.polybank.entity.ClientEntity;
-
 import java.sql.Timestamp;
+
 /**
  * @author José Manuel Sánchez Rico 33%
  * @author Pablo Ruiz-Cruces 33%
  * @author Illya Rozumovskyy 34%
  */
 public class ClientDTO {
-    // It does not provide salt and password due to security concerns
+  // It does not provide salt and password due to security concerns
 
-    private int id;
-    private String dni;
-    private String name;
-    private String surname;
-    private Timestamp creationDate;
-    private boolean isNew;
-    
-    public ClientDTO(){}
-    
-    public ClientDTO(ClientEntity client){
-        this.id = client.getId();
-        this.dni = client.getDni();
-        this.name = client.getName();
-        this.surname = client.getSurname();
-        this.creationDate = client.getCreationDate();
-    }
+  private int id;
+  private String dni;
+  private String name;
+  private String surname;
+  private Timestamp creationDate;
+  private boolean isNew;
 
-    public int getId() {
-        return id;
-    }
+  public ClientDTO() {}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public ClientDTO(ClientEntity client) {
+    this.id = client.getId();
+    this.dni = client.getDni();
+    this.name = client.getName();
+    this.surname = client.getSurname();
+    this.creationDate = client.getCreationDate();
+  }
 
-    public String getDni() {
-        return dni;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getDni() {
+    return dni;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setDni(String dni) {
+    this.dni = dni;
+  }
 
-    public String getSurname() {
-        return surname;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Timestamp getCreationDate() {
-        return creationDate;
-    }
+  public String getSurname() {
+    return surname;
+  }
 
-    public void setCreationDate(Timestamp creationDate) {
-        this.creationDate = creationDate;
-    }
+  public void setSurname(String surname) {
+    this.surname = surname;
+  }
 
-    public boolean getIsNew() { return isNew; }
+  public Timestamp getCreationDate() {
+    return creationDate;
+  }
 
-    public void setIsNew(boolean isNew) {
-        this.isNew = isNew;
-    }
+  public void setCreationDate(Timestamp creationDate) {
+    this.creationDate = creationDate;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public boolean getIsNew() {
+    return isNew;
+  }
 
-        ClientDTO clientDTO = (ClientDTO) o;
+  public void setIsNew(boolean isNew) {
+    this.isNew = isNew;
+  }
 
-        if (id != clientDTO.id) return false;
-        if (!dni.equals(clientDTO.dni)) return false;
-        if (!name.equals(clientDTO.name)) return false;
-        return surname.equals(clientDTO.surname);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + dni.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + surname.hashCode();
-        return result;
-    }
+    ClientDTO clientDTO = (ClientDTO) o;
 
+    if (id != clientDTO.id) return false;
+    if (!dni.equals(clientDTO.dni)) return false;
+    if (!name.equals(clientDTO.name)) return false;
+    return surname.equals(clientDTO.surname);
+  }
 
+  @Override
+  public int hashCode() {
+    int result = id;
+    result = 31 * result + dni.hashCode();
+    result = 31 * result + name.hashCode();
+    result = 31 * result + surname.hashCode();
+    return result;
+  }
 }

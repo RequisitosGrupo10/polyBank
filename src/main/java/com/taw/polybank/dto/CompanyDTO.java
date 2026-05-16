@@ -1,36 +1,34 @@
 package com.taw.polybank.dto;
 
-
 /**
  * @author José Manuel Sánchez Rico
  */
 public class CompanyDTO {
-    private int id;
-    private String name;
-    private BankAccountDTO bankAccountByBankAccountId;
+  private int id;
+  private String name;
+  private BankAccountDTO bankAccountByBankAccountId;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
+  public BankAccountDTO getBankAccountByBankAccountId() {
+    return bankAccountByBankAccountId;
+  }
 
-    public BankAccountDTO getBankAccountByBankAccountId() {
-        return bankAccountByBankAccountId;
-    }
-
-    public void setBankAccountByBankAccountId(BankAccountDTO bankAccountByBankAccountId) {
-        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
-    }
+  public void setBankAccountByBankAccountId(BankAccountDTO bankAccountByBankAccountId) {
+    this.bankAccountByBankAccountId = bankAccountByBankAccountId;
+  }
 }

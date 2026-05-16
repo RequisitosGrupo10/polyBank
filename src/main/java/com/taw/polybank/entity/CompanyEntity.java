@@ -6,64 +6,66 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "Company", schema = "polyBank", catalog = "")
 public class CompanyEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private int id;
-    @Basic
-    @Column(name = "name", nullable = false, length = 45)
-    private String name;
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
-    private BankAccountEntity bankAccountByBankAccountId;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id", nullable = false)
+  private int id;
 
-    public int getId() {
-        return id;
-    }
+  @Basic
+  @Column(name = "name", nullable = false, length = 45)
+  private String name;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+  private BankAccountEntity bankAccountByBankAccountId;
 
-    public String getName() {
-        return name;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CompanyEntity company = (CompanyEntity) o;
-        if (id != company.id) return false;
-        if (name != null ? !name.equals(company.name) : company.name != null) return false;
+  public String getName() {
+    return name;
+  }
 
-        return true;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    CompanyEntity company = (CompanyEntity) o;
+    if (id != company.id) return false;
+    if (name != null ? !name.equals(company.name) : company.name != null) return false;
 
-    public BankAccountEntity getBankAccountByBankAccountId() {
-        return bankAccountByBankAccountId;
-    }
+    return true;
+  }
 
-    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
-        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
-    }
+  @Override
+  public int hashCode() {
+    int result = id;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    return result;
+  }
 
-    public CompanyDTO toDTO() {
-        CompanyDTO companyDTO = new CompanyDTO();
-        companyDTO.setId(getId());
-        companyDTO.setName(getName());
-        companyDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
-        return companyDTO;
-    }
+  public BankAccountEntity getBankAccountByBankAccountId() {
+    return bankAccountByBankAccountId;
+  }
+
+  public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+    this.bankAccountByBankAccountId = bankAccountByBankAccountId;
+  }
+
+  public CompanyDTO toDTO() {
+    CompanyDTO companyDTO = new CompanyDTO();
+    companyDTO.setId(getId());
+    companyDTO.setName(getName());
+    companyDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
+    return companyDTO;
+  }
 }

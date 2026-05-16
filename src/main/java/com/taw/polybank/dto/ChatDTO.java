@@ -1,47 +1,48 @@
 package com.taw.polybank.dto;
+
 /**
  * @author José Manuel Sánchez Rico 50%
  * @author Javier Jordán Luque 50%
  */
 public class ChatDTO {
-    private int id;
-    private boolean closed;
-    private ClientDTO client;
-    private EmployeeDTO assistant;
+  private int id;
+  private boolean closed;
+  private ClientDTO client;
+  private EmployeeDTO assistant;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public boolean isClosed() {
-        return closed;
-    }
+  public boolean isClosed() {
+    return closed;
+  }
 
-    public void setClosed(boolean closed) {
-        this.closed = closed;
-    }
+  public void setClosed(boolean closed) {
+    this.closed = closed;
+  }
 
-    public ClientDTO getClient() {
-        return client;
-    }
+  public ClientDTO getClient() {
+    return client;
+  }
 
-    public void setClient(ClientDTO client) {
-        this.client = client;
-    }
+  public void setClient(ClientDTO client) {
+    this.client = client;
+  }
 
-    public EmployeeDTO getAssistant() {
-        return assistant;
-    }
+  public EmployeeDTO getAssistant() {
+    return assistant;
+  }
 
-    public void setAssistant(EmployeeDTO assistant) {
-        this.assistant = assistant;
-    }
+  public void setAssistant(EmployeeDTO assistant) {
+    this.assistant = assistant;
+  }
 
-    public String isClosedToString() {
-        return (this.isClosed())? "Yes" : "No";
-    }
+  public String isClosedToString() {
+    return (this.isClosed()) ? "Yes" : "No";
+  }
 }

@@ -1,11 +1,9 @@
 package com.taw.polybank.dao;
 
-import com.taw.polybank.entity.BankAccountEntity;
 import com.taw.polybank.entity.BenficiaryEntity;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 /**
  * @author Illya Rozumovskyy 50%
@@ -14,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface BeneficiaryRepository extends JpaRepository<BenficiaryEntity, Integer> {
 
-    Optional<BenficiaryEntity> findByIban (String iban);
+  Optional<BenficiaryEntity> findByIban(String iban);
 
-    BenficiaryEntity findBenficiaryEntityByNameAndIban(String name, String iban);
+  BenficiaryEntity findBenficiaryEntityByNameAndIban(String name, String iban);
 }

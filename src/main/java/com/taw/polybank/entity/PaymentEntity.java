@@ -1,102 +1,106 @@
 package com.taw.polybank.entity;
 
-import com.taw.polybank.dto.CurrencyExchangeDTO;
 import com.taw.polybank.dto.PaymentDTO;
 import jakarta.persistence.*;
-
-import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "Payment", schema = "polyBank", catalog = "")
 public class PaymentEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private int id;
-    @Basic
-    @Column(name = "amount", nullable = false, precision = 0)
-    private double amount;
-    @ManyToOne
-    @JoinColumn(name = "Benficiary_id", referencedColumnName = "id", nullable = false)
-    private BenficiaryEntity benficiaryByBenficiaryId;
-    @ManyToOne
-    @JoinColumn(name = "CurrencyExchange_id", referencedColumnName = "id")
-    private CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId;
-    @OneToMany(mappedBy = "paymentByPaymentId")
-    private List<TransactionEntity> transactionsById;;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id", nullable = false)
+  private int id;
 
+  @Basic
+  @Column(name = "amount", nullable = false, precision = 0)
+  private double amount;
 
-    public int getId() {
-        return id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "Benficiary_id", referencedColumnName = "id", nullable = false)
+  private BenficiaryEntity benficiaryByBenficiaryId;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  @ManyToOne
+  @JoinColumn(name = "CurrencyExchange_id", referencedColumnName = "id")
+  private CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId;
 
-    public double getAmount() {
-        return amount;
-    }
+  @OneToMany(mappedBy = "paymentByPaymentId")
+  private List<TransactionEntity> transactionsById;
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+  ;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public int getId() {
+    return id;
+  }
 
-        PaymentEntity that = (PaymentEntity) o;
+  public void setId(int id) {
+    this.id = id;
+  }
 
-        if (id != that.id) return false;
-        if (Double.compare(that.amount, amount) != 0) return false;
+  public double getAmount() {
+    return amount;
+  }
 
-        return true;
-    }
+  public void setAmount(double amount) {
+    this.amount = amount;
+  }
 
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = id;
-        temp = Double.doubleToLongBits(amount);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    public BenficiaryEntity getBenficiaryByBenficiaryId() {
-        return benficiaryByBenficiaryId;
-    }
+    PaymentEntity that = (PaymentEntity) o;
 
-    public void setBenficiaryByBenficiaryId(BenficiaryEntity benficiaryByBenficiaryId) {
-        this.benficiaryByBenficiaryId = benficiaryByBenficiaryId;
-    }
+    if (id != that.id) return false;
+    if (Double.compare(that.amount, amount) != 0) return false;
 
-    public CurrencyExchangeEntity getCurrencyExchangeByCurrencyExchangeId() {
-        return currencyExchangeByCurrencyExchangeId;
-    }
+    return true;
+  }
 
-    public void setCurrencyExchangeByCurrencyExchangeId(CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId) {
-        this.currencyExchangeByCurrencyExchangeId = currencyExchangeByCurrencyExchangeId;
-    }
+  @Override
+  public int hashCode() {
+    int result;
+    long temp;
+    result = id;
+    temp = Double.doubleToLongBits(amount);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    return result;
+  }
 
-    public List<TransactionEntity> getTransactionById() {
-        return transactionsById;
-    }
+  public BenficiaryEntity getBenficiaryByBenficiaryId() {
+    return benficiaryByBenficiaryId;
+  }
 
-    public void setTransactionById(List<TransactionEntity> transactionById) {
-        this.transactionsById = transactionById;
-    }
+  public void setBenficiaryByBenficiaryId(BenficiaryEntity benficiaryByBenficiaryId) {
+    this.benficiaryByBenficiaryId = benficiaryByBenficiaryId;
+  }
 
-    public PaymentDTO toDTO() {
-        PaymentDTO paymentDTO = new PaymentDTO();
-        paymentDTO.setId(getId());
-        paymentDTO.setAmount(getAmount());
-        paymentDTO.setBenficiaryByBenficiaryId(benficiaryByBenficiaryId.toDTO());
-        if (getCurrencyExchangeByCurrencyExchangeId() != null)
-            paymentDTO.setCurrencyExchangeByCurrencyExchangeId(getCurrencyExchangeByCurrencyExchangeId().toDTO());
-        return paymentDTO;
-    }
+  public CurrencyExchangeEntity getCurrencyExchangeByCurrencyExchangeId() {
+    return currencyExchangeByCurrencyExchangeId;
+  }
+
+  public void setCurrencyExchangeByCurrencyExchangeId(
+      CurrencyExchangeEntity currencyExchangeByCurrencyExchangeId) {
+    this.currencyExchangeByCurrencyExchangeId = currencyExchangeByCurrencyExchangeId;
+  }
+
+  public List<TransactionEntity> getTransactionById() {
+    return transactionsById;
+  }
+
+  public void setTransactionById(List<TransactionEntity> transactionById) {
+    this.transactionsById = transactionById;
+  }
+
+  public PaymentDTO toDTO() {
+    PaymentDTO paymentDTO = new PaymentDTO();
+    paymentDTO.setId(getId());
+    paymentDTO.setAmount(getAmount());
+    paymentDTO.setBenficiaryByBenficiaryId(benficiaryByBenficiaryId.toDTO());
+    if (getCurrencyExchangeByCurrencyExchangeId() != null)
+      paymentDTO.setCurrencyExchangeByCurrencyExchangeId(
+          getCurrencyExchangeByCurrencyExchangeId().toDTO());
+    return paymentDTO;
+  }
 }

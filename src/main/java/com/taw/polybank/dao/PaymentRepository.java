@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
  * @author Lucía Gutiérrez Molina
  */
 @Repository
-public interface PaymentRepository extends JpaRepository<PaymentEntity, Integer> {
-}
+public interface PaymentRepository extends JpaRepository<PaymentEntity, Integer> {}

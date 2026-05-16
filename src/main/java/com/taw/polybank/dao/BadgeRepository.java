@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BadgeRepository extends JpaRepository<BadgeEntity, Integer> {
 
-    public BadgeEntity findByBankAccountsById(BankAccountEntity bankAccount);
+  public BadgeEntity findByBankAccountsById(BankAccountEntity bankAccount);
 
-    BadgeEntity findBadgeEntityByName(String name);
+  BadgeEntity findBadgeEntityByName(String name);
 }

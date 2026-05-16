@@ -2,107 +2,112 @@ package com.taw.polybank.entity;
 
 import com.taw.polybank.dto.BadgeDTO;
 import jakarta.persistence.*;
-
 import java.util.Collection;
 
 @Entity
 @Table(name = "Badge", schema = "polyBank", catalog = "")
 public class BadgeEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private int id;
-    @Basic
-    @Column(name = "value", nullable = false, precision = 0)
-    private double value;
-    @Basic
-    @Column(name = "name", nullable = false, length = 5)
-    private String name;
-    @OneToMany(mappedBy = "badgeByBadgeId")
-    private Collection<BankAccountEntity> bankAccountsById;
-    @OneToMany(mappedBy = "badgeByInitialBadgeId")
-    private Collection<CurrencyExchangeEntity> currencyExchangesById;
-    @OneToMany(mappedBy = "badgeByFinalBadgeId")
-    private Collection<CurrencyExchangeEntity> currencyExchangesById_0;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id", nullable = false)
+  private int id;
 
-    public int getId() {
-        return id;
-    }
+  @Basic
+  @Column(name = "value", nullable = false, precision = 0)
+  private double value;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  @Basic
+  @Column(name = "name", nullable = false, length = 5)
+  private String name;
 
-    public double getValue() {
-        return value;
-    }
+  @OneToMany(mappedBy = "badgeByBadgeId")
+  private Collection<BankAccountEntity> bankAccountsById;
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+  @OneToMany(mappedBy = "badgeByInitialBadgeId")
+  private Collection<CurrencyExchangeEntity> currencyExchangesById;
 
-    public String getName() {
-        return name;
-    }
+  @OneToMany(mappedBy = "badgeByFinalBadgeId")
+  private Collection<CurrencyExchangeEntity> currencyExchangesById_0;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public int getId() {
+    return id;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public void setId(int id) {
+    this.id = id;
+  }
 
-        BadgeEntity that = (BadgeEntity) o;
+  public double getValue() {
+    return value;
+  }
 
-        if (id != that.id) return false;
-        if (Double.compare(that.value, value) != 0) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+  public void setValue(double value) {
+    this.value = value;
+  }
 
-        return true;
-    }
+  public String getName() {
+    return name;
+  }
 
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = id;
-        temp = Double.doubleToLongBits(value);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Collection<BankAccountEntity> getBankAccountsById() {
-        return bankAccountsById;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    public void setBankAccountsById(Collection<BankAccountEntity> bankAccountsById) {
-        this.bankAccountsById = bankAccountsById;
-    }
+    BadgeEntity that = (BadgeEntity) o;
 
-    public Collection<CurrencyExchangeEntity> getCurrencyExchangesById() {
-        return currencyExchangesById;
-    }
+    if (id != that.id) return false;
+    if (Double.compare(that.value, value) != 0) return false;
+    if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
-    public void setCurrencyExchangesById(Collection<CurrencyExchangeEntity> currencyExchangesById) {
-        this.currencyExchangesById = currencyExchangesById;
-    }
+    return true;
+  }
 
-    public Collection<CurrencyExchangeEntity> getCurrencyExchangesById_0() {
-        return currencyExchangesById_0;
-    }
+  @Override
+  public int hashCode() {
+    int result;
+    long temp;
+    result = id;
+    temp = Double.doubleToLongBits(value);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    return result;
+  }
 
-    public void setCurrencyExchangesById_0(Collection<CurrencyExchangeEntity> currencyExchangesById_0) {
-        this.currencyExchangesById_0 = currencyExchangesById_0;
-    }
+  public Collection<BankAccountEntity> getBankAccountsById() {
+    return bankAccountsById;
+  }
 
-    public BadgeDTO toDTO(){
-        BadgeDTO badgeDTO = new BadgeDTO();
-        badgeDTO.setId(getId());
-        badgeDTO.setName(getName());
-        badgeDTO.setValue(getValue());
-        return badgeDTO;
-    }
+  public void setBankAccountsById(Collection<BankAccountEntity> bankAccountsById) {
+    this.bankAccountsById = bankAccountsById;
+  }
+
+  public Collection<CurrencyExchangeEntity> getCurrencyExchangesById() {
+    return currencyExchangesById;
+  }
+
+  public void setCurrencyExchangesById(Collection<CurrencyExchangeEntity> currencyExchangesById) {
+    this.currencyExchangesById = currencyExchangesById;
+  }
+
+  public Collection<CurrencyExchangeEntity> getCurrencyExchangesById_0() {
+    return currencyExchangesById_0;
+  }
+
+  public void setCurrencyExchangesById_0(
+      Collection<CurrencyExchangeEntity> currencyExchangesById_0) {
+    this.currencyExchangesById_0 = currencyExchangesById_0;
+  }
+
+  public BadgeDTO toDTO() {
+    BadgeDTO badgeDTO = new BadgeDTO();
+    badgeDTO.setId(getId());
+    badgeDTO.setName(getName());
+    badgeDTO.setValue(getValue());
+    return badgeDTO;
+  }
 }

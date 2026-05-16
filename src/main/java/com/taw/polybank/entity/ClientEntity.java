@@ -2,191 +2,203 @@ package com.taw.polybank.entity;
 
 import com.taw.polybank.dto.ClientDTO;
 import jakarta.persistence.*;
-
 import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
 @Table(name = "Client", schema = "polyBank", catalog = "")
 public class ClientEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private int id;
-    @Basic
-    @Column(name = "DNI", nullable = false, length = 45)
-    private String dni;
-    @Basic
-    @Column(name = "name", nullable = false, length = 45)
-    private String name;
-    @Basic
-    @Column(name = "password", nullable = false, length = 64)
-    private String password;
-    @Basic
-    @Column(name = "salt", nullable = false, length = 32)
-    private String salt;
-    @Basic
-    @Column(name = "surname", nullable = false, length = 45)
-    private String surname;
-    @Basic
-    @Column(name = "creationDate", nullable = false)
-    private Timestamp creationDate;
-    @OneToMany(mappedBy = "clientByClientId")
-    private Collection<AuthorizedAccountEntity> authorizedAccountsById;
-    @OneToMany(mappedBy = "clientByClientId")
-    private Collection<BankAccountEntity> bankAccountsById;
-    @OneToMany(mappedBy = "clientByClientId")
-    private Collection<ChatEntity> chatsById;
-    @OneToMany(mappedBy = "clientByClientId")
-    private Collection<MessageEntity> messagesById;
-    @OneToMany(mappedBy = "clientByClientId")
-    private Collection<RequestEntity> requestsById;
-    @OneToMany(mappedBy = "clientByClientId")
-    private Collection<TransactionEntity> transactionsById;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id", nullable = false)
+  private int id;
 
-    public int getId() {
-        return id;
-    }
+  @Basic
+  @Column(name = "DNI", nullable = false, length = 45)
+  private String dni;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  @Basic
+  @Column(name = "name", nullable = false, length = 45)
+  private String name;
 
-    public String getDni() {
-        return dni;
-    }
+  @Basic
+  @Column(name = "password", nullable = false, length = 64)
+  private String password;
 
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
+  @Basic
+  @Column(name = "salt", nullable = false, length = 32)
+  private String salt;
 
-    public String getName() {
-        return name;
-    }
+  @Basic
+  @Column(name = "surname", nullable = false, length = 45)
+  private String surname;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Basic
+  @Column(name = "creationDate", nullable = false)
+  private Timestamp creationDate;
 
-    public String getPassword() {
-        return password;
-    }
+  @OneToMany(mappedBy = "clientByClientId")
+  private Collection<AuthorizedAccountEntity> authorizedAccountsById;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  @OneToMany(mappedBy = "clientByClientId")
+  private Collection<BankAccountEntity> bankAccountsById;
 
-    public String getSalt() {
-        return salt;
-    }
+  @OneToMany(mappedBy = "clientByClientId")
+  private Collection<ChatEntity> chatsById;
 
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
+  @OneToMany(mappedBy = "clientByClientId")
+  private Collection<MessageEntity> messagesById;
 
-    public String getSurname() {
-        return surname;
-    }
+  @OneToMany(mappedBy = "clientByClientId")
+  private Collection<RequestEntity> requestsById;
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+  @OneToMany(mappedBy = "clientByClientId")
+  private Collection<TransactionEntity> transactionsById;
 
-    public Timestamp getCreationDate() {
-        return creationDate;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setCreationDate(Timestamp creationDate) {
-        this.creationDate = creationDate;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public String getDni() {
+    return dni;
+  }
 
-        ClientEntity that = (ClientEntity) o;
+  public void setDni(String dni) {
+    this.dni = dni;
+  }
 
-        if (id != that.id) return false;
-        if (!dni.equals(that.dni)) return false;
-        if (!name.equals(that.name)) return false;
-        return surname.equals(that.surname);
-    }
+  public String getName() {
+    return name;
+  }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + dni.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + surname.hashCode();
-        return result;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Collection<AuthorizedAccountEntity> getAuthorizedAccountsById() {
-        return authorizedAccountsById;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setAuthorizedAccountsById(Collection<AuthorizedAccountEntity> authorizedAccountsById) {
-        this.authorizedAccountsById = authorizedAccountsById;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public Collection<BankAccountEntity> getBankAccountsById() {
-        return bankAccountsById;
-    }
+  public String getSalt() {
+    return salt;
+  }
 
-    public void setBankAccountsById(Collection<BankAccountEntity> bankAccountsById) {
-        this.bankAccountsById = bankAccountsById;
-    }
+  public void setSalt(String salt) {
+    this.salt = salt;
+  }
 
-    public Collection<ChatEntity> getChatsById() {
-        return chatsById;
-    }
+  public String getSurname() {
+    return surname;
+  }
 
-    public void setChatsById(Collection<ChatEntity> chatsById) {
-        this.chatsById = chatsById;
-    }
+  public void setSurname(String surname) {
+    this.surname = surname;
+  }
 
-    public Collection<MessageEntity> getMessagesById() {
-        return messagesById;
-    }
+  public Timestamp getCreationDate() {
+    return creationDate;
+  }
 
-    public void setMessagesById(Collection<MessageEntity> messagesById) {
-        this.messagesById = messagesById;
-    }
+  public void setCreationDate(Timestamp creationDate) {
+    this.creationDate = creationDate;
+  }
 
-    public Collection<RequestEntity> getRequestsById() {
-        return requestsById;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    public void setRequestsById(Collection<RequestEntity> requestsById) {
-        this.requestsById = requestsById;
-    }
+    ClientEntity that = (ClientEntity) o;
 
-    public Collection<TransactionEntity> getTransactionsById() {
-        return transactionsById;
-    }
+    if (id != that.id) return false;
+    if (!dni.equals(that.dni)) return false;
+    if (!name.equals(that.name)) return false;
+    return surname.equals(that.surname);
+  }
 
-    public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
-        this.transactionsById = transactionsById;
-    }
+  @Override
+  public int hashCode() {
+    int result = id;
+    result = 31 * result + dni.hashCode();
+    result = 31 * result + name.hashCode();
+    result = 31 * result + surname.hashCode();
+    return result;
+  }
 
-    public ClientDTO toDTO() {
-        ClientDTO clientDTO = new ClientDTO();
-        clientDTO.setDni(getDni());
-        clientDTO.setId(getId());
-        clientDTO.setName(getName());
-        clientDTO.setCreationDate(getCreationDate());
-        clientDTO.setSurname(getSurname());
-        return clientDTO;
-    }
+  public Collection<AuthorizedAccountEntity> getAuthorizedAccountsById() {
+    return authorizedAccountsById;
+  }
 
-    public static ClientEntity toEntity(ClientDTO clientDTO) {
-        ClientEntity clientEntity = new ClientEntity();
-        clientEntity.setDni(clientDTO.getDni());
-        clientEntity.setId(clientDTO.getId());
-        clientEntity.setName(clientDTO.getName());
-        clientEntity.setCreationDate(clientDTO.getCreationDate());
-        clientEntity.setSurname(clientDTO.getSurname());
-        return  clientEntity;
-    }
+  public void setAuthorizedAccountsById(
+      Collection<AuthorizedAccountEntity> authorizedAccountsById) {
+    this.authorizedAccountsById = authorizedAccountsById;
+  }
+
+  public Collection<BankAccountEntity> getBankAccountsById() {
+    return bankAccountsById;
+  }
+
+  public void setBankAccountsById(Collection<BankAccountEntity> bankAccountsById) {
+    this.bankAccountsById = bankAccountsById;
+  }
+
+  public Collection<ChatEntity> getChatsById() {
+    return chatsById;
+  }
+
+  public void setChatsById(Collection<ChatEntity> chatsById) {
+    this.chatsById = chatsById;
+  }
+
+  public Collection<MessageEntity> getMessagesById() {
+    return messagesById;
+  }
+
+  public void setMessagesById(Collection<MessageEntity> messagesById) {
+    this.messagesById = messagesById;
+  }
+
+  public Collection<RequestEntity> getRequestsById() {
+    return requestsById;
+  }
+
+  public void setRequestsById(Collection<RequestEntity> requestsById) {
+    this.requestsById = requestsById;
+  }
+
+  public Collection<TransactionEntity> getTransactionsById() {
+    return transactionsById;
+  }
+
+  public void setTransactionsById(Collection<TransactionEntity> transactionsById) {
+    this.transactionsById = transactionsById;
+  }
+
+  public ClientDTO toDTO() {
+    ClientDTO clientDTO = new ClientDTO();
+    clientDTO.setDni(getDni());
+    clientDTO.setId(getId());
+    clientDTO.setName(getName());
+    clientDTO.setCreationDate(getCreationDate());
+    clientDTO.setSurname(getSurname());
+    return clientDTO;
+  }
+
+  public static ClientEntity toEntity(ClientDTO clientDTO) {
+    ClientEntity clientEntity = new ClientEntity();
+    clientEntity.setDni(clientDTO.getDni());
+    clientEntity.setId(clientDTO.getId());
+    clientEntity.setName(clientDTO.getName());
+    clientEntity.setCreationDate(clientDTO.getCreationDate());
+    clientEntity.setSurname(clientDTO.getSurname());
+    return clientEntity;
+  }
 }

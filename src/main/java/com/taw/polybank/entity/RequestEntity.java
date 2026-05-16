@@ -2,151 +2,161 @@ package com.taw.polybank.entity;
 
 import com.taw.polybank.dto.RequestDTO;
 import jakarta.persistence.*;
-
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "Request", schema = "polyBank", catalog = "")
 public class RequestEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", nullable = false)
-    private int id;
-    @Basic
-    @Column(name = "solved", nullable = false)
-    private boolean solved;
-    @Basic
-    @Column(name = "timestamp", nullable = false)
-    private Timestamp timestamp;
-    @Basic
-    @Column(name = "type", nullable = false)
-    private Object type;
-    @Basic
-    @Column(name = "description", nullable = false, length = 100)
-    private String description;
-    @Basic
-    @Column(name = "approved", nullable = true)
-    private boolean approved;
-    @ManyToOne
-    @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
-    private ClientEntity clientByClientId;
-    @ManyToOne
-    @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
-    private BankAccountEntity bankAccountByBankAccountId;
-    @ManyToOne
-    @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = false)
-    private EmployeeEntity employeeByEmployeeId;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id", nullable = false)
+  private int id;
 
-    public int getId() {
-        return id;
-    }
+  @Basic
+  @Column(name = "solved", nullable = false)
+  private boolean solved;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  @Basic
+  @Column(name = "timestamp", nullable = false)
+  private Timestamp timestamp;
 
-    public boolean isSolved() {
-        return solved;
-    }
+  @Basic
+  @Column(name = "type", nullable = false)
+  private Object type;
 
-    public void setSolved(boolean solved) {
-        this.solved = solved;
-    }
+  @Basic
+  @Column(name = "description", nullable = false, length = 100)
+  private String description;
 
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
+  @Basic
+  @Column(name = "approved", nullable = true)
+  private boolean approved;
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
+  @ManyToOne
+  @JoinColumn(name = "Client_id", referencedColumnName = "id", nullable = false)
+  private ClientEntity clientByClientId;
 
-    public Object getType() {
-        return type;
-    }
+  @ManyToOne
+  @JoinColumn(name = "BankAccount_id", referencedColumnName = "id", nullable = false)
+  private BankAccountEntity bankAccountByBankAccountId;
 
-    public void setType(Object type) {
-        this.type = type;
-    }
+  @ManyToOne
+  @JoinColumn(name = "Employee_id", referencedColumnName = "id", nullable = false)
+  private EmployeeEntity employeeByEmployeeId;
 
-    public String getDescription() {
-        return description;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public boolean isApproved() {
-        return approved;
-    }
+  public boolean isSolved() {
+    return solved;
+  }
 
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
+  public void setSolved(boolean solved) {
+    this.solved = solved;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public Timestamp getTimestamp() {
+    return timestamp;
+  }
 
-        RequestEntity request = (RequestEntity) o;
+  public void setTimestamp(Timestamp timestamp) {
+    this.timestamp = timestamp;
+  }
 
-        if (id != request.id) return false;
-        if (solved != request.solved) return false;
-        if (timestamp != null ? !timestamp.equals(request.timestamp) : request.timestamp != null) return false;
-        if (type != null ? !type.equals(request.type) : request.type != null) return false;
-        if (description != null ? !description.equals(request.description) : request.description != null) return false;
-        if (approved != request.approved) return false;
+  public Object getType() {
+    return type;
+  }
 
-        return true;
-    }
+  public void setType(Object type) {
+    this.type = type;
+  }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (solved? 1 : 0);
-        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + ((approved)? 1 : 0);
-        return result;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public ClientEntity getClientByClientId() {
-        return clientByClientId;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setClientByClientId(ClientEntity clientByClientId) {
-        this.clientByClientId = clientByClientId;
-    }
+  public boolean isApproved() {
+    return approved;
+  }
 
-    public BankAccountEntity getBankAccountByBankAccountId() {
-        return bankAccountByBankAccountId;
-    }
+  public void setApproved(boolean approved) {
+    this.approved = approved;
+  }
 
-    public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
-        this.bankAccountByBankAccountId = bankAccountByBankAccountId;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    public EmployeeEntity getEmployeeByEmployeeId() {
-        return employeeByEmployeeId;
-    }
+    RequestEntity request = (RequestEntity) o;
 
-    public void setEmployeeByEmployeeId(EmployeeEntity employeeByEmployeeId) {
-        this.employeeByEmployeeId = employeeByEmployeeId;
-    }
+    if (id != request.id) return false;
+    if (solved != request.solved) return false;
+    if (timestamp != null ? !timestamp.equals(request.timestamp) : request.timestamp != null)
+      return false;
+    if (type != null ? !type.equals(request.type) : request.type != null) return false;
+    if (description != null
+        ? !description.equals(request.description)
+        : request.description != null) return false;
+    if (approved != request.approved) return false;
 
-    public RequestDTO toDTO(){
-        RequestDTO requestDTO = new RequestDTO();
-        requestDTO.setId(getId());
-        requestDTO.setSolved(isSolved());
-        requestDTO.setTimestamp(getTimestamp());
-        requestDTO.setApproved(isApproved());
-        requestDTO.setClientByClientId(getClientByClientId().toDTO());
-        requestDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
-        requestDTO.setEmployeeByEmployeeId(getEmployeeByEmployeeId().toDTO());
-        requestDTO.setDescription(getDescription());
-        return requestDTO;
-    }
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id;
+    result = 31 * result + (solved ? 1 : 0);
+    result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
+    result = 31 * result + (type != null ? type.hashCode() : 0);
+    result = 31 * result + (description != null ? description.hashCode() : 0);
+    result = 31 * result + ((approved) ? 1 : 0);
+    return result;
+  }
+
+  public ClientEntity getClientByClientId() {
+    return clientByClientId;
+  }
+
+  public void setClientByClientId(ClientEntity clientByClientId) {
+    this.clientByClientId = clientByClientId;
+  }
+
+  public BankAccountEntity getBankAccountByBankAccountId() {
+    return bankAccountByBankAccountId;
+  }
+
+  public void setBankAccountByBankAccountId(BankAccountEntity bankAccountByBankAccountId) {
+    this.bankAccountByBankAccountId = bankAccountByBankAccountId;
+  }
+
+  public EmployeeEntity getEmployeeByEmployeeId() {
+    return employeeByEmployeeId;
+  }
+
+  public void setEmployeeByEmployeeId(EmployeeEntity employeeByEmployeeId) {
+    this.employeeByEmployeeId = employeeByEmployeeId;
+  }
+
+  public RequestDTO toDTO() {
+    RequestDTO requestDTO = new RequestDTO();
+    requestDTO.setId(getId());
+    requestDTO.setSolved(isSolved());
+    requestDTO.setTimestamp(getTimestamp());
+    requestDTO.setApproved(isApproved());
+    requestDTO.setClientByClientId(getClientByClientId().toDTO());
+    requestDTO.setBankAccountByBankAccountId(getBankAccountByBankAccountId().toDTO());
+    requestDTO.setEmployeeByEmployeeId(getEmployeeByEmployeeId().toDTO());
+    requestDTO.setDescription(getDescription());
+    return requestDTO;
+  }
 }
