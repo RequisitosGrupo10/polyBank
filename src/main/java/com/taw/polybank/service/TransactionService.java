@@ -55,20 +55,20 @@ public class TransactionService {
   }
 
   public List<TransactionDTO> filter(BankAccountDTO bankAccount, TransactionFilterLucia filter) {
-    Timestamp begin = Timestamp.valueOf(filter.getTimestampBegin().toLocalDate().atTime(0, 0));
-    Timestamp end = Timestamp.valueOf(filter.getTimestampEnd().toLocalDate().atTime(23, 59));
+    Timestamp begin = Timestamp.valueOf(filter.timestampBegin.toLocalDate().atTime(0, 0));
+    Timestamp end = Timestamp.valueOf(filter.timestampEnd.toLocalDate().atTime(23, 59));
 
-    List<ClientEntity> clients = clientRepository.findByNameOrSurname(filter.getTransactionOwner());
+    List<ClientEntity> clients = clientRepository.findByNameOrSurname(filter.transactionOwner);
     BenficiaryEntity beneficiary =
-        beneficiaryRepository.findByIban(filter.getBeneficiaryIban()).orElse(null);
+        beneficiaryRepository.findByIban(filter.beneficiaryIban).orElse(null);
 
     BankAccountEntity bankAccountEntity =
         bankAccountRepository.findByIban(bankAccount.getIban()).orElse(null);
     List<TransactionEntity> transactions;
 
-    if (filter.getTransactionOwner().isBlank() || filter.getBeneficiaryIban().isBlank()) {
-      if (filter.getTransactionOwner().isBlank()) {
-        if (filter.getBeneficiaryIban().isBlank()) {
+    if (filter.transactionOwner.isBlank() || filter.beneficiaryIban.isBlank()) {
+      if (filter.transactionOwner.isBlank()) {
+        if (filter.beneficiaryIban.isBlank()) {
           transactions =
               transactionRepository.filterByBankAccount_TimestampRange_Amount(
                   bankAccountEntity, begin, end, filter.getAmount());
