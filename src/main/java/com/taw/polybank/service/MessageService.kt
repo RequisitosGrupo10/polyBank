@@ -7,7 +7,6 @@ import com.taw.polybank.dao.MessageRepository
 import com.taw.polybank.dto.ChatDTO
 import com.taw.polybank.dto.MessageDTO
 import com.taw.polybank.entity.MessageEntity
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 /**
