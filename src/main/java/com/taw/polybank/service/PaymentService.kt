@@ -11,43 +11,43 @@ import org.springframework.stereotype.Service
  */
 @Service
 class PaymentService(
-    private val paymentRepository: PaymentRepository,
+  private val paymentRepository: PaymentRepository,
 ) {
-    fun save(
-        paymentDTO: PaymentDTO,
-        beneficiaryService: BeneficiaryService,
-        currencyExchangeService: CurrencyExchangeService,
-        badgeService: BadgeService,
-    ) {
-        val payment =
-            this.toEntity(paymentDTO, beneficiaryService, currencyExchangeService, badgeService)
-        paymentRepository.save<PaymentEntity>(payment)
-        paymentDTO.setId(payment.getId())
-    }
+  fun save(
+    paymentDTO: PaymentDTO,
+    beneficiaryService: BeneficiaryService,
+    currencyExchangeService: CurrencyExchangeService,
+    badgeService: BadgeService,
+  ) {
+    val payment =
+      this.toEntity(paymentDTO, beneficiaryService, currencyExchangeService, badgeService)
+    paymentRepository.save<PaymentEntity>(payment)
+    paymentDTO.setId(payment.getId())
+  }
 
-    fun toEntity(
-        paymentDTO: PaymentDTO,
-        beneficiaryService: BeneficiaryService,
-        currencyExchangeService: CurrencyExchangeService,
-        badgeService: BadgeService,
-    ): PaymentEntity {
-        val payment =
-            paymentRepository.findById(paymentDTO.getId()).orElse(PaymentEntity())
-        payment.setId(paymentDTO.getId())
-        payment.setAmount(paymentDTO.getAmount())
-        payment.setBenficiaryByBenficiaryId(
-            beneficiaryService.toEntity(paymentDTO.getBenficiaryByBenficiaryId()),
+  fun toEntity(
+    paymentDTO: PaymentDTO,
+    beneficiaryService: BeneficiaryService,
+    currencyExchangeService: CurrencyExchangeService,
+    badgeService: BadgeService,
+  ): PaymentEntity {
+    val payment =
+      paymentRepository.findById(paymentDTO.getId()).orElse(PaymentEntity())
+    payment.setId(paymentDTO.getId())
+    payment.setAmount(paymentDTO.getAmount())
+    payment.setBenficiaryByBenficiaryId(
+      beneficiaryService.toEntity(paymentDTO.getBenficiaryByBenficiaryId()),
+    )
+    val currencyExchangeEntity =
+      if (paymentDTO.getCurrencyExchangeByCurrencyExchangeId() == null) {
+        null
+      } else {
+        currencyExchangeService.toEntity(
+          paymentDTO.getCurrencyExchangeByCurrencyExchangeId(),
+          badgeService,
         )
-        val currencyExchangeEntity =
-            if (paymentDTO.getCurrencyExchangeByCurrencyExchangeId() == null) {
-                null
-            } else {
-                currencyExchangeService.toEntity(
-                    paymentDTO.getCurrencyExchangeByCurrencyExchangeId(),
-                    badgeService,
-                )
-            }
-        payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeEntity)
-        return payment
-    }
+      }
+    payment.setCurrencyExchangeByCurrencyExchangeId(currencyExchangeEntity)
+    return payment
+  }
 }

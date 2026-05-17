@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service
  */
 @Service
 class SuspiciousAccountService(
-    private val suspiciousAccountRepository: SuspiciousAccountRepository,
+  private val suspiciousAccountRepository: SuspiciousAccountRepository,
 ) {
-    fun isSuspicious(bankAccountReceiverIBAN: String?): Boolean {
-        val suspiciousAccountEntity =
-            suspiciousAccountRepository.findByIban(bankAccountReceiverIBAN).orElse(null)
-        return suspiciousAccountEntity != null
-    }
+  fun isSuspicious(bankAccountReceiverIBAN: String?): Boolean {
+    val suspiciousAccountEntity =
+      suspiciousAccountRepository.findByIban(bankAccountReceiverIBAN).orElse(null)
+    return suspiciousAccountEntity != null
+  }
 }

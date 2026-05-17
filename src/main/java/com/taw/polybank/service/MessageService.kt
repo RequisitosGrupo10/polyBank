@@ -14,54 +14,54 @@ import org.springframework.stereotype.Service
  */
 @Service
 class MessageService(
-    private val messageRepository: MessageRepository,
-    private val chatRepository: ChatRepository,
-    private val employeeRepository: EmployeeRepository,
-    private val clientRepository: ClientRepository,
+  private val messageRepository: MessageRepository,
+  private val chatRepository: ChatRepository,
+  private val employeeRepository: EmployeeRepository,
+  private val clientRepository: ClientRepository,
 ) {
-    fun findByChat(chat: ChatDTO): MutableList<MessageDTO?> {
-        val chatEntity = chatRepository.findById(chat.getId()).orElse(null)
-        var messageList: MutableList<MessageDTO?> = ArrayList()
+  fun findByChat(chat: ChatDTO): MutableList<MessageDTO?> {
+    val chatEntity = chatRepository.findById(chat.getId()).orElse(null)
+    var messageList: MutableList<MessageDTO?> = ArrayList()
 
-        if (chatEntity != null) {
-            val messageEntityList = messageRepository.findByChat(chatEntity)
-            messageList = this.listToDTO(messageEntityList)
-        }
-
-        return messageList
+    if (chatEntity != null) {
+      val messageEntityList = messageRepository.findByChat(chatEntity)
+      messageList = this.listToDTO(messageEntityList)
     }
 
-    fun save(message: MessageDTO) {
-        val messageEntity = MessageEntity()
+    return messageList
+  }
 
-        messageEntity.setChatByChatId(chatRepository.findById(message.getChat().getId()).orElse(null))
-        messageEntity.setContent(message.getContent())
-        messageEntity.setTimestamp(message.getTimestamp())
+  fun save(message: MessageDTO) {
+    val messageEntity = MessageEntity()
 
-        if (message.getAssistant() == null) {
-            messageEntity.setEmployeeByEmployeeId(null)
-        } else {
-            messageEntity.setEmployeeByEmployeeId(
-                employeeRepository.findById(message.getAssistant().getId()).orElse(null),
-            )
-        }
+    messageEntity.setChatByChatId(chatRepository.findById(message.getChat().getId()).orElse(null))
+    messageEntity.setContent(message.getContent())
+    messageEntity.setTimestamp(message.getTimestamp())
 
-        if (message.getClient() == null) {
-            messageEntity.setClientByClientId(null)
-        } else {
-            messageEntity.setClientByClientId(
-                clientRepository.findById(message.getClient().getId()).orElse(null),
-            )
-        }
-
-        this.messageRepository.save<MessageEntity>(messageEntity)
+    if (message.getAssistant() == null) {
+      messageEntity.setEmployeeByEmployeeId(null)
+    } else {
+      messageEntity.setEmployeeByEmployeeId(
+        employeeRepository.findById(message.getAssistant().getId()).orElse(null),
+      )
     }
 
-    fun listToDTO(messageEntityList: MutableList<MessageEntity>): MutableList<MessageDTO?> {
-        val messageList = ArrayList<MessageDTO?>()
-        for (messageEntity in messageEntityList) {
-            messageList.add(messageEntity.toDTO())
-        }
-        return messageList
+    if (message.getClient() == null) {
+      messageEntity.setClientByClientId(null)
+    } else {
+      messageEntity.setClientByClientId(
+        clientRepository.findById(message.getClient().getId()).orElse(null),
+      )
     }
+
+    this.messageRepository.save<MessageEntity>(messageEntity)
+  }
+
+  fun listToDTO(messageEntityList: MutableList<MessageEntity>): MutableList<MessageDTO?> {
+    val messageList = ArrayList<MessageDTO?>()
+    for (messageEntity in messageEntityList) {
+      messageList.add(messageEntity.toDTO())
+    }
+    return messageList
+  }
 }

@@ -59,9 +59,15 @@ dependencies {
 spotless {
   java {
     googleJavaFormat()
+    removeUnusedImports()
   }
   kotlin {
-    ktlint()
+    ktlint().editorConfigOverride(mapOf(
+      "indent_size" to "2",
+      "continuation_indent_size" to "2",
+      "insert_final_newline" to "true",
+      "ktlint_standard_unused-import" to "error"
+    ))
   }
 }
 
