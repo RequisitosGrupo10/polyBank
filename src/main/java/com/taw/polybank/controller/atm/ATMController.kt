@@ -3,6 +3,7 @@ package com.taw.polybank.controller.atm
 import com.taw.polybank.dto.BadgeDTO
 import com.taw.polybank.dto.BankAccountDTO
 import com.taw.polybank.dto.ClientDTO
+import com.taw.polybank.entity.RequestEntity
 import com.taw.polybank.service.*
 import jakarta.servlet.http.HttpSession
 import org.springframework.beans.factory.annotation.Autowired
@@ -280,7 +281,7 @@ class ATMController {
       return "atm/index"
     }
 
-    requestService!!.createNewRequest(client, bankAccount, "activation", description)
+    requestService!!.createNewRequest(client, bankAccount, RequestEntity.RequestType.ACTIVATION, description)
 
     return "redirect:/atm/requestUnban"
   }

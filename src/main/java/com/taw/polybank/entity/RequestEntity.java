@@ -22,7 +22,7 @@ public class RequestEntity {
 
   @Basic
   @Column(name = "type", nullable = false)
-  private Object type;
+  private RequestType type;
 
   @Basic
   @Column(name = "description", nullable = false, length = 100)
@@ -72,7 +72,7 @@ public class RequestEntity {
     return type;
   }
 
-  public void setType(Object type) {
+  public void setType(RequestType type) {
     this.type = type;
   }
 
@@ -158,5 +158,19 @@ public class RequestEntity {
     requestDTO.setEmployeeByEmployeeId(getEmployeeByEmployeeId().toDTO());
     requestDTO.setDescription(getDescription());
     return requestDTO;
+  }
+
+  public enum RequestType {
+    ACTIVATION("activation"),
+    OTHER("other");
+    private String type;
+
+    RequestType(String type) {
+      this.type = type;
+    }
+
+    public String getType() {
+      return type;
+    }
   }
 }

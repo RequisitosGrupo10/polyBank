@@ -35,8 +35,9 @@ class LoginCompany {
     @RequestParam("password") password: String?,
     model: Model,
     session: HttpSession
-  ): String {
-    val client = clientService!!.findByDNI(dni)
+  ): String
+  {
+      val client = clientService!!.findByDNI(dni)
     if (client != null) {
       val passwordManager = PasswordManager(clientService!!)
       if (passwordManager.verifyPassword(client, password)) {

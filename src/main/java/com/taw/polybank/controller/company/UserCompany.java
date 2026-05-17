@@ -2,6 +2,7 @@ package com.taw.polybank.controller.company;
 
 import com.taw.polybank.controller.PasswordManager;
 import com.taw.polybank.dto.*;
+import com.taw.polybank.entity.RequestEntity;
 import com.taw.polybank.service.*;
 import com.taw.polybank.ui.companyFilters.ClientFilter;
 import com.taw.polybank.ui.companyFilters.TransactionFilterIllya;
@@ -60,7 +61,7 @@ public class UserCompany {
 
     request.setSolved(false);
     request.setTimestamp(Timestamp.from(Instant.now()));
-    request.setType("activation");
+    request.setType(RequestEntity.RequestType.ACTIVATION);
     request.setDescription(message);
     request.setApproved(false);
     request.setBankAccountByBankAccountId(bankAccount);

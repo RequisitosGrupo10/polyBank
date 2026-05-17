@@ -48,9 +48,13 @@ public class RequestService {
   }
 
   public void createNewRequest(
-      ClientDTO client, BankAccountDTO bankAccount, String activation, String description) {
+      ClientDTO client,
+      BankAccountDTO bankAccount,
+      RequestEntity.RequestType activation,
+      String description) {
 
-    List<EmployeeEntity> employees = employeeRepository.findEmployeeWithMinimmumRequests();
+    List<EmployeeEntity> employees =
+        employeeRepository.findEmployeeWithMinimmumRequests(EmployeeEntity.EmployeeType.MANAGER);
     ClientEntity clientEntity = clientRepository.findByDNI(client.getDni());
     BankAccountEntity bankAccountEntity =
         bankAccountRepository.findByIban(bankAccount.getIban()).orElse(null);
@@ -99,7 +103,8 @@ public class RequestService {
 
   public List<RequestDTO> findUnsolvedUnblockRequestByUserId(int clientId, int bankAccountId) {
     List<RequestEntity> requestEntities =
-        requestRepository.findUnsolvedUnblockRequestByUserId(clientId, bankAccountId);
+        requestRepository.findUnsolvedUnblockRequestByUserId(
+            clientId, bankAccountId, RequestEntity.RequestType.ACTIVATION);
     List<RequestDTO> requestDTOS =
         requestEntities.stream().map(req -> req.toDTO()).collect(Collectors.toList());
     return requestDTOS;

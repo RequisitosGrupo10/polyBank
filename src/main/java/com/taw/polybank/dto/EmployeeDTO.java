@@ -1,5 +1,7 @@
 package com.taw.polybank.dto;
 
+import com.taw.polybank.entity.EmployeeEntity;
+
 /**
  * @author José Manuel Sánchez Rico
  */
@@ -8,7 +10,7 @@ public class EmployeeDTO {
   private int id;
   private String dni;
   private String name;
-  private Object type;
+  private EmployeeEntity.EmployeeType type;
 
   public int getId() {
     return id;
@@ -34,11 +36,11 @@ public class EmployeeDTO {
     this.name = name;
   }
 
-  public Object getType() {
+  public EmployeeEntity.EmployeeType getType() {
     return type;
   }
 
-  public void setType(Object type) {
+  public void setType(EmployeeEntity.EmployeeType type) {
     this.type = type;
   }
 }

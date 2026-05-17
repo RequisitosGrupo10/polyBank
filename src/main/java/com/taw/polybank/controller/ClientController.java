@@ -368,7 +368,8 @@ public class ClientController {
     List<RequestDTO> requestsNotSolved =
         requestService.findByBankAccountByBankAccountIdAndAndSolved(account, false);
     if (requestsNotSolved.size() <= 0)
-      requestService.createNewRequest(client, account, "activation", description);
+      requestService.createNewRequest(
+          client, account, RequestEntity.RequestType.ACTIVATION, description);
     return "redirect:/client/account?id=" + account.getId();
   }
 

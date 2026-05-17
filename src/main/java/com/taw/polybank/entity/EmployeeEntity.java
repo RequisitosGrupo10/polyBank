@@ -26,7 +26,7 @@ public class EmployeeEntity {
 
   @Basic
   @Column(name = "type", nullable = false)
-  private Object type;
+  private EmployeeType type;
 
   @Basic
   @Column(name = "salt", nullable = true, length = 32)
@@ -73,11 +73,11 @@ public class EmployeeEntity {
     this.password = password;
   }
 
-  public Object getType() {
+  public EmployeeType getType() {
     return type;
   }
 
-  public void setType(Object type) {
+  public void setType(EmployeeType type) {
     this.type = type;
   }
 
@@ -148,5 +148,20 @@ public class EmployeeEntity {
     employeeDTO.setName(getName());
     employeeDTO.setType(getType());
     return employeeDTO;
+  }
+
+  public enum EmployeeType {
+    ASSISTANT("assistant"),
+    MANAGER("manager");
+
+    private String type;
+
+    EmployeeType(String type) {
+      this.type = type;
+    }
+
+    public String getType() {
+      return type;
+    }
   }
 }

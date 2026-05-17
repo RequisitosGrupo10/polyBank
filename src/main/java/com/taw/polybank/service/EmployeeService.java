@@ -74,7 +74,7 @@ public class EmployeeService {
 
   public EmployeeDTO findManager() {
     EmployeeEntity manager =
-        employeeRepository.findAllManagers().stream()
+        employeeRepository.findAllManagers(EmployeeEntity.EmployeeType.MANAGER).stream()
             .min(Comparator.comparingInt(mgr -> mgr.getRequestsById().size()))
             .orElse(null);
     return manager == null ? null : manager.toDTO();

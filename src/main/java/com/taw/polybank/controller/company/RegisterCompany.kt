@@ -5,6 +5,7 @@ import com.taw.polybank.dto.BankAccountDTO
 import com.taw.polybank.dto.ClientDTO
 import com.taw.polybank.dto.CompanyDTO
 import com.taw.polybank.dto.RequestDTO
+import com.taw.polybank.entity.RequestEntity
 import com.taw.polybank.service.*
 import jakarta.servlet.http.HttpSession
 import org.springframework.beans.factory.annotation.Autowired
@@ -115,10 +116,11 @@ class RegisterCompany {
     bankAccount.iban = iban.toString()
   }
 
-  private fun defineActivationRequest(client: ClientDTO?, bankAccount: BankAccountDTO?, request: RequestDTO) {
-    request.setSolved(false)
+  private fun defineActivationRequest(client: ClientDTO?, bankAccount: BankAccountDTO?, request: RequestDTO)
+  {
+      request.setSolved(false)
     request.setTimestamp(Timestamp.from(Instant.now()))
-    request.setType("activation")
+    request.setType(RequestEntity.RequestType.ACTIVATION)
     request.setDescription("Activate company bank Account")
     request.setApproved(false)
     request.setBankAccountByBankAccountId(bankAccount)

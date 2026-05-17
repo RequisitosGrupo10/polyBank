@@ -1,5 +1,6 @@
 package com.taw.polybank.dto;
 
+import com.taw.polybank.entity.RequestEntity;
 import java.sql.Timestamp;
 
 /**
@@ -9,7 +10,7 @@ public class RequestDTO {
   private int id;
   private boolean solved;
   private Timestamp timestamp;
-  private Object type;
+  private RequestEntity.RequestType type;
   private String description;
   private boolean approved;
   private ClientDTO clientByClientId;
@@ -40,11 +41,11 @@ public class RequestDTO {
     this.timestamp = timestamp;
   }
 
-  public Object getType() {
+  public RequestEntity.RequestType getType() {
     return type;
   }
 
-  public void setType(Object type) {
+  public void setType(RequestEntity.RequestType type) {
     this.type = type;
   }
 
