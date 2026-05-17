@@ -34,7 +34,7 @@ class CompanyService(private val companyRepository: CompanyRepository) {
     return companyDTOOptional
   }
 
-  fun findCompanyRepresentedByClient(id: Int): MutableList<CompanyDTO?> = companyRepository.findCompanyRepresentedByClient(id).stream()
+  fun findCompanyRepresentedByClient(id: Int): MutableList<CompanyDTO> = companyRepository.findCompanyRepresentedByClient(id).stream()
     .map { company: CompanyEntity? -> company!!.toDTO() }
     .collect(Collectors.toList())
 

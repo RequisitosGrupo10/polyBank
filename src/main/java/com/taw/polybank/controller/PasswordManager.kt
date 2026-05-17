@@ -43,7 +43,7 @@ class PasswordManager(
   ): Boolean {
     var result = false
     if (client != null) {
-      val salt = clientService.getSalt(client.getId())
+      val salt = clientService.getSalt(client.id)
       val seed: ByteArray = salt.toByteArray(StandardCharsets.ISO_8859_1)
       primeRandom(seed)
       initializeEncoder()
