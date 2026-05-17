@@ -198,7 +198,7 @@ class EmployeeController(
 
   @GetMapping("manager/block/account/{id}")
   fun getBlocked(
-    @PathVariable("id") id: Int?,
+    @PathVariable("id") @NotNull id: Int,
   ): String {
     bankAccountService.blockAccountById(id)
     return ("redirect:/employee/manager/suspicious")
@@ -206,7 +206,7 @@ class EmployeeController(
 
   @GetMapping("manager/disable/account/{id}")
   fun getDisabled(
-    @PathVariable("id") id: Int?,
+    @PathVariable("id") @NotNull id: Int,
   ): String {
     bankAccountService.blockAccountById(id)
     return ("redirect:/employee/manager/accounts/inactive")
