@@ -12,7 +12,6 @@ import com.taw.polybank.ui.company.CompanyFilter
 import com.taw.polybank.ui.transaction.TransactionFilterJose
 import jakarta.servlet.http.HttpSession
 import org.jetbrains.annotations.NotNull
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping

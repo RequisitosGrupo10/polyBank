@@ -55,11 +55,11 @@ class BadgeService(
     // TODO add currency exchange to badge
   }
 
-  val randomBadge: BadgeDTO?
+  val randomBadge: BadgeDTO
     get() {
       val allBadges = badgeRepository.findAll()
       return allBadges.get(Random().nextInt(allBadges.size)).toDTO()
     }
 
-  fun findBadgeEntityByName(badge: String?): BadgeDTO? = badgeRepository.findBadgeEntityByName(badge).toDTO()
+  fun findBadgeEntityByName(badge: String?): BadgeDTO = badgeRepository.findBadgeEntityByName(badge).toDTO()
 }
