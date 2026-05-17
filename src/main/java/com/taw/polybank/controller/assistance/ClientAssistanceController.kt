@@ -8,6 +8,7 @@ import com.taw.polybank.service.ClientService
 import com.taw.polybank.service.EmployeeService
 import com.taw.polybank.service.MessageService
 import jakarta.servlet.http.HttpSession
+import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -52,7 +53,7 @@ class ClientAssistanceController {
 
   @GetMapping("/chat")
   fun doOpenChat(
-    @RequestParam("id") chatId: Int?,
+    @RequestParam("id") @NotNull chatId: Int,
     model: Model,
   ): String {
     val chat = this.chatService!!.findById(chatId)
@@ -90,7 +91,7 @@ class ClientAssistanceController {
   @PostMapping("/send")
   fun doSend(
     @RequestParam("content") content: String?,
-    @RequestParam("chatId") chatId: Int?,
+    @RequestParam("chatId") @NotNull chatId: Int,
   ): String {
     val chat = chatService!!.findById(chatId)
 
@@ -112,7 +113,7 @@ class ClientAssistanceController {
 
   @PostMapping("/close")
   fun doSend(
-    @RequestParam("chatId") chatId: Int?,
+    @RequestParam("chatId") @NotNull chatId: Int,
   ): String {
     val chat = chatService!!.findById(chatId)
 
