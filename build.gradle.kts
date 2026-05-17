@@ -4,13 +4,13 @@ plugins {
   id("io.spring.dependency-management") version "1.1.0"
 
   // Kotlin plugins matching your Maven configurations (jpa, all-open, spring)
-  kotlin("jvm") version "2.3.10"
-  kotlin("plugin.spring") version "2.3.10"
-  kotlin("plugin.jpa") version "2.3.10"
-  kotlin("plugin.allopen") version "2.3.10"
+  kotlin("jvm") version "2.3.21"
+  kotlin("plugin.spring") version "2.3.21"
+  kotlin("plugin.jpa") version "2.3.21"
+  kotlin("plugin.allopen") version "2.3.21"
 
   // Code formatting (Spotless)
-  id("com.diffplug.spotless") version "6.25.0" // Clean modern version for Gradle
+  id("com.diffplug.spotless") version "8.5.1" // Clean modern version for Gradle
 }
 
 group = "com.taw"
@@ -55,9 +55,9 @@ spotless {
   java {
     googleJavaFormat()
   }
-//  kotlin {
-//    ktlint()
-//  }
+  kotlin {
+    ktlint()
+  }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

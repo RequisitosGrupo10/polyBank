@@ -12,22 +12,18 @@ import org.springframework.web.bind.annotation.GetMapping
  */
 @Controller
 class LoginController {
-  @Autowired
-  private val authorizedAccountRepository: AuthorizedAccountRepository? = null
+    @Autowired
+    private val authorizedAccountRepository: AuthorizedAccountRepository? = null
 
-  @Autowired
-  private val clientRepository: ClientRepository? = null
+    @Autowired
+    private val clientRepository: ClientRepository? = null
 
-  @Autowired
-  private val bankAccountRepository: BankAccountRepository? = null
+    @Autowired
+    private val bankAccountRepository: BankAccountRepository? = null
 
-  @GetMapping("/")
-  fun doShowIndex(): String {
-    return "index"
-  }
+    @GetMapping("/")
+    fun doShowIndex(): String = "index"
 
-  @GetMapping("/login")
-  fun doLogin(): String {
-    return ("login")
-  }
+    @GetMapping("/login")
+    fun doLogin(): String = ("login")
 }
