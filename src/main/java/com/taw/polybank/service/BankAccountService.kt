@@ -46,11 +46,7 @@ class BankAccountService(
     return bankAccountDTOList
   }
 
-  fun findById(bankAccountId: Int): BankAccountDTO? {
-    val bankAccountEntity =
-      bankAccountRepository.findById(bankAccountId).orElse(null)
-    return if (bankAccountEntity == null) null else bankAccountEntity.toDTO()
-  }
+  fun findById(bankAccountId: Int): BankAccountDTO = bankAccountRepository.findById(bankAccountId).orElse(BankAccountEntity()).toDTO()
 
   fun findByIban(bankAccountIBAN: String?): BankAccountDTO? {
     val bankAccountEntity =

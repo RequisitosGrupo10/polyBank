@@ -11,7 +11,7 @@ data class BankAccountDTO(
   var isActive: Boolean = false,
   var balance: Double = 0.0,
   var clientByClientId: ClientDTO? = null,
-  var badgeByBadgeId: BadgeDTO? = null,
+  var badgeByBadgeId: BadgeDTO = BadgeDTO(),
 ) {
   constructor(account: BankAccountEntity) : this() {
     this.id = account.id

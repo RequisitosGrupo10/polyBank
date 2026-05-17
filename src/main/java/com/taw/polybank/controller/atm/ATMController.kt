@@ -29,25 +29,14 @@ import java.time.LocalDate
  */
 @Controller
 @RequestMapping("/atm")
-class ATMController {
-  @Autowired
-  private val bankAccountService: BankAccountService? = null
-
-  @Autowired
-  private val clientService: ClientService? = null
-
-  @Autowired
-  private val beneficiaryService: BeneficiaryService? = null
-
-  @Autowired
-  private val badgeService: BadgeService? = null
-
-  @Autowired
-  private val transactionService: TransactionService? = null
-
-  @Autowired
-  private val requestService: RequestService? = null
-
+class ATMController(
+  private val bankAccountService: BankAccountService,
+  private val clientService: ClientService,
+  private val beneficiaryService: BeneficiaryService,
+  private val badgeService: BadgeService,
+  private val transactionService: TransactionService,
+  private val requestService: RequestService,
+) {
   @Autowired
   private val suspiciousAccountService: SuspiciousAccountService? = null
 
@@ -60,7 +49,7 @@ class ATMController {
     if (client == null) {
       return "atm/index"
     } else {
-      val bankAccounts = bankAccountService!!.findByClient(client)
+      val bankAccounts = bankAccountService.findByClient(client)
       model.addAttribute("bankAccounts", bankAccounts)
       return "atm/user_data"
     }
@@ -73,7 +62,7 @@ class ATMController {
     model: Model,
     session: HttpSession,
   ): String {
-    val client = clientService!!.autenticar(user, password)
+    val client = clientService.autenticar(user, password)
     if (client == null) {
       model.addAttribute("error", "User with given ID and password is not found")
       return "atm/index"
@@ -104,8 +93,8 @@ class ATMController {
     session: HttpSession,
   ): String {
     if (session.getAttribute("client") == null) return "atm/index"
-    clientService!!.guardarCliente(client, "")
-    beneficiaryService!!.guardarBeneficiarios(client)
+    clientService.guardarCliente(client, "")
+    beneficiaryService.guardarBeneficiarios(client)
     session.setAttribute("client", client)
     model.addAttribute("bankAccounts", bankAccountService!!.findByClient(client))
     return "atm/user_data"
@@ -129,7 +118,7 @@ class ATMController {
       model.addAttribute("client", client)
       return "atm/user_edit"
     }
-    clientService!!.guardarCliente(client, password)
+    clientService.guardarCliente(client, password)
     session.setAttribute("client", client)
     model.addAttribute("bankAccounts", bankAccountService!!.findByClient(client))
     return "atm/user_data"
@@ -144,9 +133,9 @@ class ATMController {
     if (client == null) return "atm/index"
 
     if (bankAccountId != null) {
-      val bankAccount = bankAccountService!!.findById(bankAccountId)
+      val bankAccount = bankAccountService.findById(bankAccountId)
       session.setAttribute("bankAccount", bankAccount)
-      val badge = badgeService!!.findByBankAccountsById(bankAccount)
+      val badge = badgeService.findByBankAccountsById(bankAccount)
       session.setAttribute("badge", badge)
     }
 
@@ -169,7 +158,7 @@ class ATMController {
   ): String {
     if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null) return "atm/index"
 
-    val bankAccountReceiver = bankAccountService!!.findByIban(receiverIBAN)
+    val bankAccountReceiver = bankAccountService.findByIban(receiverIBAN)
 
     if (suspiciousAccountService!!.isSuspicious(receiverIBAN)) {
       model.addAttribute(
@@ -179,7 +168,7 @@ class ATMController {
       return "atm/bankAccount_transferMenu"
     }
     if (bankAccountReceiver != null &&
-      bankAccountReceiver.clientByClientId!!.getName() != receiverName
+      bankAccountReceiver.clientByClientId?.getName() != receiverName
     ) {
       model.addAttribute(
         "error",
@@ -191,7 +180,7 @@ class ATMController {
     val emisorBadge = session.getAttribute("badge") as BadgeDTO
     val badgeReceiver: BadgeDTO
     if (bankAccountReceiver != null) {
-      badgeReceiver = badgeService!!.findByBankAccountsById(bankAccountReceiver)
+      badgeReceiver = badgeService.findByBankAccountsById(bankAccountReceiver)
     } else {
       badgeReceiver = session.getAttribute("badge") as BadgeDTO
     }
@@ -222,7 +211,7 @@ class ATMController {
   ): String {
     if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null) return "atm/index"
 
-    val badges = badgeService!!.findAllBadges()
+    val badges = badgeService.findAllBadges()
     model.addAttribute("badges", badges)
 
     return "atm/bankAccount_takeOut"
@@ -239,9 +228,9 @@ class ATMController {
     val bankAccount = session.getAttribute("bankAccount") as BankAccountDTO
     val client = session.getAttribute("client") as ClientDTO
     val emisorBadge = session.getAttribute("badge") as BadgeDTO
-    val badge = badgeService!!.findById(badgeId)
+    val badge = badgeService.findById(badgeId)
 
-    transactionService!!.makeTransaction(
+    transactionService.makeTransaction(
       amount,
       bankAccount.iban,
       client.getName(),
@@ -266,7 +255,7 @@ class ATMController {
 
     val bankAccount = session.getAttribute("bankAccount") as BankAccountDTO
     val transactions =
-      transactionService!!.findByBankAccountByBankAccountId(bankAccount)
+      transactionService.findByBankAccountByBankAccountId(bankAccount)
     val filter =
       TransactionFilterLucia(
         Date.valueOf(LocalDate.now()),
@@ -290,7 +279,7 @@ class ATMController {
     if (session.getAttribute("client") == null || session.getAttribute("bankAccount") == null) return "atm/index"
 
     val bankAccount = session.getAttribute("bankAccount") as BankAccountDTO
-    val transactions = transactionService!!.filter(bankAccount, filter)
+    val transactions = transactionService.filter(bankAccount, filter)
 
     model.addAttribute("transactions", transactions)
     return "atm/bankAccount_transactions"
@@ -308,7 +297,7 @@ class ATMController {
     }
 
     val requestsNotSolved =
-      requestService!!.findByBankAccountByBankAccountIdAndAndSolved(bankAccount, false)
+      requestService.findByBankAccountByBankAccountIdAndAndSolved(bankAccount, false)
 
     if (requestsNotSolved.size == 0) {
       return "atm/requestUnban"
@@ -330,7 +319,7 @@ class ATMController {
       return "atm/index"
     }
 
-    requestService!!.createNewRequest(client, bankAccount, RequestEntity.RequestType.ACTIVATION, description)
+    requestService.createNewRequest(client, bankAccount, RequestEntity.RequestType.ACTIVATION, description)
 
     return "redirect:/atm/requestUnban"
   }
