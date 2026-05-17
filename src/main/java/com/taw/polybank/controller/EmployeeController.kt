@@ -11,6 +11,7 @@ import com.taw.polybank.ui.client.ClientFilter
 import com.taw.polybank.ui.company.CompanyFilter
 import com.taw.polybank.ui.transaction.TransactionFilterJose
 import jakarta.servlet.http.HttpSession
+import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -155,7 +156,7 @@ class EmployeeController {
 
     @PostMapping("manager/account/client/{id}")
     fun postClientAccount(
-        @PathVariable("id") id: Int?,
+        @PathVariable @NotNull id: Int,
         @ModelAttribute("filtro") filter: TransactionFilterJose,
         model: Model,
     ): String {
@@ -168,7 +169,7 @@ class EmployeeController {
 
     @GetMapping("manager/account/company/{id}")
     fun getCompanyAccount(
-        @PathVariable("id") id: Int?,
+        @PathVariable @NotNull id: Int,
         model: Model,
     ): String {
         val companyDTOOptional = companyService!!.findById(id)

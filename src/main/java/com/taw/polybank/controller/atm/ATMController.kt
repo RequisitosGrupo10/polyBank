@@ -12,6 +12,7 @@ import com.taw.polybank.service.RequestService
 import com.taw.polybank.service.SuspiciousAccountService
 import com.taw.polybank.service.TransactionService
 import jakarta.servlet.http.HttpSession
+import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -161,7 +162,7 @@ class ATMController {
     @PostMapping("/makeTransfer")
     fun doMakeTransfer(
         @RequestParam("amount") amount: Double,
-        @RequestParam("receiver") receiverIBAN: String?,
+        @RequestParam("receiver") @NotNull receiverIBAN: String,
         @RequestParam("receiverName") receiverName: String?,
         model: Model,
         session: HttpSession,

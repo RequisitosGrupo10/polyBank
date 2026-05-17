@@ -7,7 +7,7 @@ import com.taw.polybank.entity.BankAccountEntity
  */
 data class BankAccountDTO(
     var id: Int = 0,
-    var iban: String? = null,
+    var iban: String = "",
     var isActive: Boolean = false,
     var balance: Double = 0.0,
     var clientByClientId: ClientDTO? = null,
