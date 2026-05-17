@@ -46,9 +46,14 @@ dependencies {
   // Kotlin standards
   implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
+  // Lomboc
+  compileOnly("org.projectlombok:lombok")
+  annotationProcessor("org.projectlombok:lombok")
+
   // Testing
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test")
+  testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 spotless {
