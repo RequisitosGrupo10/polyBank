@@ -30,28 +30,17 @@ import java.util.Random
  */
 @Controller
 @RequestMapping("/company")
-class RegisterCompany {
-    @Autowired
-    protected var badgeService: BadgeService? = null
-
-    @Autowired
-    protected var bankAccountService: BankAccountService? = null
-
-    @Autowired
-    protected var clientService: ClientService? = null
-
-    @Autowired
-    protected var companyService: CompanyService? = null
-
-    @Autowired
-    protected var requestService: RequestService? = null
-
-    @Autowired
-    protected var employeeService: EmployeeService? = null
-
+class RegisterCompany(
+    private val badgeService: BadgeService,
+    private val bankAccountService: BankAccountService,
+    private val clientService: ClientService,
+    private val companyService: CompanyService,
+    private val requestService: RequestService,
+    private val employeeService: EmployeeService,
+) {
     @GetMapping("/registerCompany")
     fun doRegister(model: Model): String {
-        val badgeList = badgeService!!.findAll()
+        val badgeList = badgeService.findAll()
         model.addAttribute("badgeList", badgeList)
 
         return "/company/registerCompany"
@@ -70,7 +59,7 @@ class RegisterCompany {
         val company = CompanyDTO()
         company.setName(companyName)
 
-        val badge = badgeService!!.findById(badgeId!!)
+        val badge = badgeService.findById(badgeId!!)
         val bankAccount = BankAccountDTO()
         bankAccount.badgeByBadgeId = badge
         company.setBankAccountByBankAccountId(bankAccount)
@@ -96,17 +85,17 @@ class RegisterCompany {
         // filling up Client fields
         client.setCreationDate(Timestamp.from(Instant.now()))
 
-        val passwordManager = PasswordManager(clientService!!)
+        val passwordManager = PasswordManager(clientService)
         val saltAndPass = passwordManager.savePassword(client, password)
 
         // creating activation request
         defineActivationRequest(client, bankAccount, request)
 
         // saving DTOs
-        clientService!!.save(client, saltAndPass)
-        companyService!!.save(company, bankAccountService, clientService, badgeService)
-        bankAccount.id = bankAccountService!!.getBankAccountId(bankAccount)
-        requestService!!.save(request, clientService, bankAccountService, employeeService, badgeService)
+        clientService.save(client, saltAndPass)
+        companyService.save(company, bankAccountService, clientService, badgeService)
+        bankAccount.id = bankAccountService.getBankAccountId(bankAccount)
+        requestService.save(request, clientService, bankAccountService, employeeService, badgeService)
 
         session.invalidate()
         return "redirect:/"
@@ -136,7 +125,7 @@ class RegisterCompany {
         request.setApproved(false)
         request.setBankAccountByBankAccountId(bankAccount)
 
-        val manager = employeeService!!.findManager()
+        val manager = employeeService.findManager()
         request.setEmployeeByEmployeeId(manager)
         request.setClientByClientId(client)
     }
