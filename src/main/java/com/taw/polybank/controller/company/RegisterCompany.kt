@@ -76,7 +76,7 @@ class RegisterCompany(
     session: HttpSession,
   ): String {
     val bankAccount = session.getAttribute("bankAccount") as BankAccountDTO
-    val company = session.getAttribute("company") as CompanyDTO?
+    val company = session.getAttribute("company") as CompanyDTO
     val request = RequestDTO()
     updateBankAccount(bankAccount)
     // filling up bank account fields

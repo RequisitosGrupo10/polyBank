@@ -174,7 +174,7 @@ class EmployeeController(
 
   @PostMapping("manager/account/company/{id}")
   fun postCompanyAccount(
-    @PathVariable("id") id: Int?,
+    @PathVariable("id") @NotNull id: Int,
     @ModelAttribute("filtro") filter: TransactionFilterJose,
     model: Model,
   ): String {
